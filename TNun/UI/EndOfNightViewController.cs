@@ -485,8 +485,8 @@ namespace PSS.Game.NunVsZombies.UI
 
     public override void Cleanup()
     {
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_textureEon);
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_textureMenu1);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_textureEon);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_textureMenu1);
       this.m_hero = (PlayableCharacter) null;
       for (int index = 0; index < 6; ++index)
         this.m_weaponButtons[index].Cleanup();
@@ -503,8 +503,8 @@ namespace PSS.Game.NunVsZombies.UI
     public void Initialize(PlayableCharacter hero)
     {
       this.Initialize();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_textureEon);
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_textureMenu1);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_textureEon);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_textureMenu1);
       this.m_textureEon = ResourceManager.GetInstance().LoadTexture("Textures\\texture_eon");
       this.m_textureMenu1 = ResourceManager.GetInstance().LoadTexture("Textures\\texture_menu_1");
       this.m_hero = hero;

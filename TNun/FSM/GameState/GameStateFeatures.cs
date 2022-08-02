@@ -91,8 +91,8 @@ namespace PSS.Game.NunVsZombies.FSM.GameState
             this.BuyRequest = false;
             GuideManager.Instance.RequestShowMarketplace = true;
           }
-          if (Guide.IsVisible)
-            break;
+          //if (Guide.IsVisible)
+          //  break;
           this.m_timer -= gameTime;
           if ((double) this.m_timer > 0.0)
             break;
@@ -115,8 +115,8 @@ namespace PSS.Game.NunVsZombies.FSM.GameState
             stateMachine.SetState((IState) GameStateMainMenu.GetInstance());
             break;
           }
-          if (Guide.IsVisible)
-            break;
+          //if (Guide.IsVisible)
+          //  break;
           GameApplication.GetInstance().ExitRequest = true;
           break;
       }

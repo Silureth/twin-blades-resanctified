@@ -175,7 +175,7 @@ namespace PSS.Game.NunVsZombies.UI
     public void Initialize(GameWorld.DayPart dayPart)
     {
       base.Initialize();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_mapTexture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_mapTexture);
       this.m_map.Initialize("Anims\\map");
       this.m_map.SetLoop(Animation2DLoop.Always);
       switch (dayPart)
@@ -248,7 +248,7 @@ namespace PSS.Game.NunVsZombies.UI
       this.m_shopWarning.Cleanup();
       this.m_hero.Cleanup();
       this.m_compass.Cleanup();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_mapTexture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_mapTexture);
       base.Cleanup();
     }
 

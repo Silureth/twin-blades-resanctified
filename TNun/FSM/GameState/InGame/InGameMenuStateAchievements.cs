@@ -25,7 +25,7 @@ namespace PSS.Game.NunVsZombies.FSM.GameState.InGame
     public void Enter(IFiniteStateMachine stateMachine)
     {
       this.BackRequest = false;
-      AchievementManager.Instance.SynchronizeAchievements(false);
+     //AchievementManager.Instance.SynchronizeAchievements(false);
       Application.GetInstance().AddResponder((Responder) GameApplication.GetInstance().GetInGameAchievementsView());
     }
 

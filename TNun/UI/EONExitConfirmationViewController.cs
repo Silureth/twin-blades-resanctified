@@ -42,7 +42,7 @@ namespace PSS.Game.NunVsZombies.UI
     public override void Initialize()
     {
       base.Initialize();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
       this.m_menuTexture = ResourceManager.GetInstance().LoadTexture("Textures\\texture_menu_1");
       this.m_buttonBack.Initialize((ViewController) this, 56f, 56f);
       this.m_buttonBack.GetTransform().SetPosition(36f, 40f);
@@ -56,7 +56,7 @@ namespace PSS.Game.NunVsZombies.UI
     {
       this.m_buttonOk.Cleanup();
       this.m_buttonBack.Cleanup();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
       base.Cleanup();
     }
 

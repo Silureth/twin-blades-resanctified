@@ -92,7 +92,7 @@ namespace PSS.Game.NunVsZombies.FSM.GameState
           {
             if (textures[index2].GetResourceFilename().StartsWith("textures\\sky"))
             {
-              Resource.SafeRelease<Texture>(ref textures[index2]);
+              GameEngine.Resources.Resource.SafeRelease<Texture>(ref textures[index2]);
               switch (currentWorld.GetDayPart())
               {
                 case GameWorld.DayPart.Morning:
@@ -113,7 +113,7 @@ namespace PSS.Game.NunVsZombies.FSM.GameState
             }
             else if (textures[index2].GetResourceFilename().StartsWith("textures\\texture"))
             {
-              Resource.SafeRelease<Texture>(ref textures[index2]);
+              GameEngine.Resources.Resource.SafeRelease<Texture>(ref textures[index2]);
               switch (currentWorld.GetDayPart())
               {
                 case GameWorld.DayPart.Morning:
@@ -145,7 +145,7 @@ namespace PSS.Game.NunVsZombies.FSM.GameState
         int entitiesByType = currentWorld.GetEntityManager().GetEntitiesByType(1, (Entity[]) buffer, 128);
         for (int index = 0; index < entitiesByType; ++index)
           buffer[index].MoveRelativeToCamera(currentWorld.GetCamera(), currentWorld.GetCamera().GetTransform().GetWorldPosition());
-        this.m_numFontsToLoad = instance.BeginLoadingResources(Resource.ResourceType.Font);
+        this.m_numFontsToLoad = instance.BeginLoadingResources(GameEngine.Resources.Resource.ResourceType.Font);
         this.m_currentResourceIndex = 0;
         ++this.m_phase;
       }
@@ -161,7 +161,7 @@ namespace PSS.Game.NunVsZombies.FSM.GameState
         else
         {
           instance.EndLoadingResources();
-          this.m_numAnimsToLoad = instance.BeginLoadingResources(Resource.ResourceType.Animation2DModel);
+          this.m_numAnimsToLoad = instance.BeginLoadingResources(GameEngine.Resources.Resource.ResourceType.Animation2DModel);
           this.m_currentResourceIndex = 0;
           this.m_percentageFonts = 100;
           ++this.m_phase;
@@ -181,7 +181,7 @@ namespace PSS.Game.NunVsZombies.FSM.GameState
           instance.EndLoadingResources();
           if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
             this.RemapParallaxTextures();
-          this.m_numTexturesToLoad = instance.BeginLoadingResources(Resource.ResourceType.Texture);
+          this.m_numTexturesToLoad = instance.BeginLoadingResources(GameEngine.Resources.Resource.ResourceType.Texture);
           this.m_currentResourceIndex = 0;
           this.m_percentageAnims = 100;
           ++this.m_phase;
@@ -201,7 +201,7 @@ namespace PSS.Game.NunVsZombies.FSM.GameState
         else
         {
           instance.EndLoadingResources();
-          this.m_numSoundsToLoad = instance.BeginLoadingResources(Resource.ResourceType.SoundModel);
+          this.m_numSoundsToLoad = instance.BeginLoadingResources(GameEngine.Resources.Resource.ResourceType.SoundModel);
           this.m_currentResourceIndex = 0;
           this.m_percentageTextures = 100;
           ++this.m_phase;

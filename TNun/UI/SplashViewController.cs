@@ -54,7 +54,7 @@ namespace PSS.Game.NunVsZombies.UI
     public override void Initialize()
     {
       base.Initialize();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_splashTexture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_splashTexture);
       this.m_splashTexture = ResourceManager.GetInstance().LoadTexture("Textures\\texture_splash");
       QuadFactory.CreateAnchoredQuad(this.m_quadBackground, 0.0f, 192f, 480f, 320f, 512f, 512f, Anchor.Bottom);
       QuadFactory.CreateAnchoredQuad(this.m_quadTitle, 0.0f, 0.0f, 170f, 160f, 512f, 512f, Anchor.HCenter);
@@ -67,7 +67,7 @@ namespace PSS.Game.NunVsZombies.UI
     public override void Cleanup()
     {
       this.m_buttonStart.Cleanup();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_splashTexture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_splashTexture);
       Application.GetInstance().RemoveResponder((Responder) this);
       base.Cleanup();
     }

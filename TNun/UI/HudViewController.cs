@@ -275,9 +275,9 @@ namespace PSS.Game.NunVsZombies.UI
     public void Initialize(PlayableCharacter hero, NPCBoss boss)
     {
       this.Initialize();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_hudTexture);
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_hud64Texture);
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_fx2Texture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_hudTexture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_hud64Texture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_fx2Texture);
       this.m_hudTexture = ResourceManager.GetInstance().LoadTexture("Textures\\texture_hud");
       this.m_hud64Texture = ResourceManager.GetInstance().LoadTexture("Textures\\texture_hud_64");
       this.m_fx2Texture = ResourceManager.GetInstance().LoadTexture("Textures\\fx2");
@@ -348,9 +348,9 @@ namespace PSS.Game.NunVsZombies.UI
     public override void Cleanup()
     {
       Application.GetInstance().RemoveResponder((Responder) this);
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_hudTexture);
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_hud64Texture);
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_fx2Texture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_hudTexture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_hud64Texture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_fx2Texture);
       this.m_buttonGun.Cleanup();
       this.m_buttonScythe.Cleanup();
       this.m_leftThumbstick.Cleanup();

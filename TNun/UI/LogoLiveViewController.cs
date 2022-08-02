@@ -29,14 +29,14 @@ namespace PSS.Game.NunVsZombies.UI
     public override void Initialize()
     {
       base.Initialize();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_texture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_texture);
       this.m_texture = ResourceManager.GetInstance().LoadTexture("Textures\\logo_live");
       QuadFactory.CreateAnchoredQuad(this.m_quadBackground, 0.0f, 0.0f, 480f, 320f, 512f, 512f, Anchor.Bottom);
     }
 
     public override void Cleanup()
     {
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_texture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_texture);
       Application.GetInstance().RemoveResponder((Responder) this);
       base.Cleanup();
     }

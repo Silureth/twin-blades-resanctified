@@ -83,8 +83,8 @@ namespace PSS.Game.NunVsZombies.UI
       this.m_indexToBlink = indexToBlink;
       this.m_timer = 0.0f;
       base.Initialize();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
-      Resource.SafeRelease<Font>(ref this.m_font);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
+      GameEngine.Resources.Resource.SafeRelease<Font>(ref this.m_font);
       if (this.m_texturedBackground)
       {
         this.m_menuTexture = ResourceManager.GetInstance().LoadTexture("Textures\\texture_menu_1");
@@ -119,8 +119,8 @@ namespace PSS.Game.NunVsZombies.UI
       this.m_buttonBack.Cleanup();
       this.m_buttonNext.Cleanup();
       this.m_buttonPrevious.Cleanup();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
-      Resource.SafeRelease<Font>(ref this.m_font);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
+      GameEngine.Resources.Resource.SafeRelease<Font>(ref this.m_font);
       Application.GetInstance().RemoveResponder((Responder) this);
       base.Cleanup();
     }

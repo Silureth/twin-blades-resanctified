@@ -72,7 +72,7 @@ namespace PSS.Game.NunVsZombies.UI
     {
       this.m_endingMode = endingMode;
       base.Initialize();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
       this.m_menuTexture = ResourceManager.GetInstance().LoadTexture("Textures\\texture_menu_1");
       QuadFactory.CreateAnchoredQuad(this.m_quadBackground, 0.0f, 0.0f, 480f, 320f, 512f, 512f, Anchor.Bottom);
       if (!this.m_endingMode)
@@ -88,7 +88,7 @@ namespace PSS.Game.NunVsZombies.UI
     public override void Cleanup()
     {
       this.m_buttonBack.Cleanup();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
       Application.GetInstance().RemoveResponder((Responder) this);
       base.Cleanup();
     }

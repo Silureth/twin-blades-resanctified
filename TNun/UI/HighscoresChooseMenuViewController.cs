@@ -52,8 +52,8 @@ namespace PSS.Game.NunVsZombies.UI
     {
       this.m_texturedBackground = texturedBackground;
       base.Initialize();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
-      Resource.SafeRelease<Font>(ref this.m_font);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
+      GameEngine.Resources.Resource.SafeRelease<Font>(ref this.m_font);
       if (this.m_texturedBackground)
       {
         this.m_font = ResourceManager.Instance.LoadFont("Fonts/charlemagnestd50.xml");
@@ -80,8 +80,8 @@ namespace PSS.Game.NunVsZombies.UI
 
     public override void Cleanup()
     {
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
-      Resource.SafeRelease<Font>(ref this.m_font);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
+      GameEngine.Resources.Resource.SafeRelease<Font>(ref this.m_font);
       this.m_buttonBack.Cleanup();
       this.m_buttonStory.Cleanup();
       this.m_buttonSurvival.Cleanup();

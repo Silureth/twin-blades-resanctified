@@ -189,9 +189,9 @@ namespace PSS.Game.NunVsZombies.UI
       this.m_pageIndex = 0;
       this.m_selectedAward = AchievementsMenuViewController.MenuAwardId.Achievement_Story_100ZombiesKilled;
       base.Initialize();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_awardsTexture);
-      Resource.SafeRelease<Font>(ref this.m_font);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_awardsTexture);
+      GameEngine.Resources.Resource.SafeRelease<Font>(ref this.m_font);
       if (this.m_texturedBackground)
       {
         this.m_menuTexture = ResourceManager.GetInstance().LoadTexture("Textures\\texture_menu_1");
@@ -251,9 +251,9 @@ namespace PSS.Game.NunVsZombies.UI
       this.m_buttonPrevious.Cleanup();
       for (int index = 0; index < 10; ++index)
         this.m_buttonArray[index].Cleanup();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_awardsTexture);
-      Resource.SafeRelease<Font>(ref this.m_font);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_awardsTexture);
+      GameEngine.Resources.Resource.SafeRelease<Font>(ref this.m_font);
       Application.GetInstance().RemoveResponder((Responder) this);
       base.Cleanup();
     }
@@ -292,12 +292,12 @@ namespace PSS.Game.NunVsZombies.UI
         PSS.GameEngine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 8, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Back));
       }
       this.m_stringBuilder.Length = 0;
-      StringHelper.Append(this.m_stringBuilder, AchievementManager.Instance.GetEarnGamerScore());
+     // StringHelper.Append(this.m_stringBuilder,//AchievementManager.Instance.GetEarnGamerScore());
       this.m_stringBuilder.Append(" / 200G");
       this.m_t.SetPosition(430f, 230f, 0.0f);
       instance.DrawString(font, this.m_t, 9, GameConstant.MENU_TEXT_COLOR, this.m_stringBuilder);
       this.m_stringBuilder.Length = 0;
-      StringHelper.Append(this.m_stringBuilder, AchievementManager.Instance.GetNbUnlockedAchievements());
+      //StringHelper.Append(this.m_stringBuilder,//AchievementManager.Instance.GetNbUnlockedAchievements());
       this.m_stringBuilder.Append(" / 20 ");
       this.m_stringBuilder.Append(GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievements));
       this.m_t.SetPosition(30f, 230f, 0.0f);

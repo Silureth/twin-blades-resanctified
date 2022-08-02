@@ -47,8 +47,8 @@ namespace PSS.Game.NunVsZombies.UI
     public override void Initialize()
     {
       base.Initialize();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
-      Resource.SafeRelease<Font>(ref this.m_font);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
+      GameEngine.Resources.Resource.SafeRelease<Font>(ref this.m_font);
       this.m_menuTexture = ResourceManager.GetInstance().LoadTexture("Textures\\texture_menu_1");
       this.m_font = ResourceManager.Instance.LoadFont("Fonts/charlemagnestd50.xml");
       QuadFactory.CreateAnchoredQuad(this.m_quadBackground, 0.0f, 0.0f, 480f, 320f, 512f, 512f, Anchor.Bottom);
@@ -66,8 +66,8 @@ namespace PSS.Game.NunVsZombies.UI
       this.m_buttonBack.Cleanup();
       this.m_buttonStartNewGame.Cleanup();
       this.m_buttonContinueGame.Cleanup();
-      Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
-      Resource.SafeRelease<Font>(ref this.m_font);
+      GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_menuTexture);
+      GameEngine.Resources.Resource.SafeRelease<Font>(ref this.m_font);
       base.Cleanup();
     }
 

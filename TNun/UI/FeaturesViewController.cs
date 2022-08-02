@@ -80,7 +80,7 @@ namespace PSS.Game.NunVsZombies.UI
       base.Initialize();
       this.BackToArcade = false;
       for (int index = 0; index < 5; ++index)
-        Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_featuresTextureArray[index]);
+        GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_featuresTextureArray[index]);
       this.m_featuresTextureArray[0] = (PSS.GameEngine.Resources.Texture) null;
       this.m_featuresTextureArray[1] = ResourceManager.GetInstance().LoadTexture("Textures\\screenshot2");
       this.m_featuresTextureArray[2] = ResourceManager.GetInstance().LoadTexture("Textures\\screenshot1");
@@ -99,7 +99,7 @@ namespace PSS.Game.NunVsZombies.UI
     public override void Cleanup()
     {
       for (int index = 0; index < 5; ++index)
-        Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_featuresTextureArray[index]);
+        GameEngine.Resources.Resource.SafeRelease<PSS.GameEngine.Resources.Texture>(ref this.m_featuresTextureArray[index]);
       base.Cleanup();
     }
 
