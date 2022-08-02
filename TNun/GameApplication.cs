@@ -402,22 +402,22 @@ namespace PSS.Game.NunVsZombies
             }
             else
             {
-                //try
-                //{
+                try
+                {
                 //    //LeaderboardManager.Instance.Update();
                 //    //AchievementManager.Instance.Update();
                 //    GuideManager.Instance.Update();
-                //    base.Update(gameTime);
-                //}
+                    base.Update(gameTime);
+                }
                 //catch (GameUpdateRequiredException ex)
                 //{
                 //    GuideManager.Instance.RequestShowGameUpdateRequired = true;
                 //}
-                //catch (Exception ex)
-                //{
-                //}
+                catch (Exception ex)
+                {
+                }
                 //if (Guide.IsVisible)
-                //    InGameStatePlay.Instance.InGameMenuRequest = true;
+                    InGameStatePlay.Instance.InGameMenuRequest = true;
                 GameFSM.Instance.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                 this.m_textBoxViewController.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                 if (this.m_gameMode != GameApplication.GameMode.Story)
