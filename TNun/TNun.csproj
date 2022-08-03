@@ -18,7 +18,7 @@
     <PackageReference Include="MonoGame.Framework.Android" Version="3.8.1.303" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NewGameEngine\NewGameEngine.csproj" />
+    <ProjectReference Include="..\NewGameEngine\GameEngine.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\**\*.xnb">
