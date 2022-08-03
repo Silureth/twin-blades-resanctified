@@ -22,10 +22,13 @@ namespace PSS.GameEngine.Graphics.Renderer
   {
     public const float SCREEN_WIDTH_LANDSCAPE = 480f;
     public const float SCREEN_HEIGHT_LANDSCAPE = 320f;
+
     public const float SCREEN_WIDTH_PORTRAIT = 320f;
     public const float SCREEN_HEIGHT_PORTRAIT = 480f;
+
     public const float SCREEN_WIDTH = 480f;
     public const float SCREEN_HEIGHT = 320f;
+
     private const int TOPLEVELVIEWLIST_CAPACITY = 256;
     private const int RENDERVIEWLIST_CAPACITY = 256;
     private const int DRAWSTRING_MAX_CHARS = 2048;

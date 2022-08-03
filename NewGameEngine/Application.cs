@@ -176,7 +176,7 @@ namespace PSS.GameEngine
         private Vector2 ConvertNativeTouchPositionToVirtualScreenPosition(Vector2 nativeTouchPos)
         {
             nativeTouchPos.X *= 480f / this.m_deviceScreenWidth;
-            nativeTouchPos.Y = 320f - nativeTouchPos.Y;
+            nativeTouchPos.Y = 320f - nativeTouchPos.Y;//Fixed: for pixel5 original:  400f 
             return nativeTouchPos;
         }
 
