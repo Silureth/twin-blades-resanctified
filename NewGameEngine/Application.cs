@@ -74,7 +74,7 @@ namespace PSS.GameEngine
                 this.m_dispatchedTouchArray[index] = (PSS.GameEngine.UI.Touch)null;
             }
             //this.m_accelerometer.CurrentValueChanged += new SensorReadingEventArgs<AccelerometerReading>(this.OnAccelerometerReadingChanged);
-           // this.m_accelerometer.CurrentValueChanged += new EventHandler<SensorReadingEventArgs<AccelerometerReading>>(this.OnAccelerometerReadingChanged);
+            this.m_accelerometer.CurrentValueChanged += new EventHandler<SensorReadingEventArgs<AccelerometerReading>>(this.OnAccelerometerReadingChanged);            
             try
             {
                 this.m_accelerometerTimer = 0.0f;
@@ -110,7 +110,7 @@ namespace PSS.GameEngine
             PSS.GameEngine.Graphics.Renderer.Renderer.GetInstance().Cleanup();
         }
 
-        //private void OnAccelerometerReadingChanged(object sender, SensorReadingEventArgs<AccelerometerReading> e) => this.AccelerometerShakeReadingChanged(e);
+        private void OnAccelerometerReadingChanged(object sender, SensorReadingEventArgs<AccelerometerReading> e) => this.AccelerometerShakeReadingChanged(e);
         //private void OnAccelerometerReadingChanged(object sender, SensorReadingEventArgs<AccelerometerReading> e) => ((DependencyObject)Deployment.Current).Dispatcher.BeginInvoke((Action)(() => this.AccelerometerShakeReadingChanged(e)));
 
         private void AccelerometerShakeReadingChanged(SensorReadingEventArgs<AccelerometerReading> e)

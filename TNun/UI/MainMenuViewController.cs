@@ -151,7 +151,7 @@ namespace PSS.Game.NunVsZombies.UI
     {
       if (!this.m_visible)
         return;
-      PSS.GameEngine.Graphics.Renderer.Renderer instance = PSS.GameEngine.Graphics.Renderer.Renderer.GetInstance();
+      GameEngine.Graphics.Renderer.Renderer instance = GameEngine.Graphics.Renderer.Renderer.GetInstance();
       instance.Begin2DMode(false);
       instance.DrawQuad<VertexPositionTexture>(this.m_quadBackground, VertexFormat.Position3Texture, (Transform) null, this.m_splashTexture);
       instance.DrawQuad<VertexPositionColor>(this.m_quadBackgroundBlack, VertexFormat.Position3Color, (Transform) null, (PSS.GameEngine.Resources.Texture) null, GameConstant.OUTGAME_BLACKBACKGROUND_COLOR);
@@ -160,7 +160,7 @@ namespace PSS.Game.NunVsZombies.UI
       instance.DrawQuad<VertexPositionTexture>(this.m_quadTitle, VertexFormat.Position3Texture, this.m_t, this.m_splashTexture);
       Font font = GameApplication.GetInstance().GetFont();
       this.m_t.SetPosition(150f, 280f, 0.0f);
-      instance.DrawString(font, this.m_t, 4, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.StoryMode));
+      instance.DrawString(font, this.m_t, 4, GameConstant.SHIELD_FIRE_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.StoryMode));//HERE!!
       this.m_t.SetPosition(150f, 240f, 0.0f);
       instance.DrawString(font, this.m_t, 4, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.SurvivalMode));
       this.m_t.SetPosition(150f, 120f, 0.0f);
