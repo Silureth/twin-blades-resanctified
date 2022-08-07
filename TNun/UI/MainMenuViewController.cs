@@ -53,10 +53,12 @@ namespace PSS.Game.NunVsZombies.UI
         public const float TITLE_HIGHSCORES_TOP_Y = 446f;
         public const float TITLE_HIGHSCORES_WIDTH = 222f;
         public const float TITLE_HIGHSCORES_HEIGHT = 60f;
+
         public const float TITLE_STORY_LEFT = 290f;
         public const float TITLE_STORY_TOP = 326f;
         public const float TITLE_STORY_WIDTH = 115f;
         public const float TITLE_STORY_HEIGHT = 58f;
+
         public const float TITLE_SURVIVAL_LEFT = 242f;
         public const float TITLE_SURVIVAL_TOP = 386f;
         public const float TITLE_SURVIVAL_WIDTH = 161f;
@@ -122,20 +124,22 @@ namespace PSS.Game.NunVsZombies.UI
             QuadFactory.CreateQuad(this.m_quadBackgroundBlack, 0.0f, 320f, 480f, 320f, GameConstant.OUTGAME_BLACKBACKGROUND_COLOR);
 
             this.m_buttonStory.Initialize((ViewController)this, 200f, 30f);
+            //            this.m_buttonStory.GetTransform().SetPosition(Application.Instance.ConvertPositionX(150f), Application.Instance.ConvertPositionY(270f));
             this.m_buttonStory.GetTransform().SetPosition(150f, 270f);
-
 
             this.m_buttonSurvival.Initialize((ViewController)this, 200f, 30f);
             this.m_buttonSurvival.GetTransform().SetPosition(150f, 230f);
 
-            this.m_buttonOptions.Initialize((ViewController)this, 200f, 30f);
-            this.m_buttonOptions.GetTransform().SetPosition(150f, 110f);
+            this.m_buttonAchievements.Initialize((ViewController)this, 200f, 30f);
+            this.m_buttonAchievements.GetTransform().SetPosition(150f, 190f);
 
             this.m_buttonHighscores.Initialize((ViewController)this, 200f, 30f);
             this.m_buttonHighscores.GetTransform().SetPosition(150f, 150f);
 
-            this.m_buttonAchievements.Initialize((ViewController)this, 200f, 30f);
-            this.m_buttonAchievements.GetTransform().SetPosition(150f, 190f);
+            this.m_buttonOptions.Initialize((ViewController)this, 200f, 30f);
+            this.m_buttonOptions.GetTransform().SetPosition(150f, 110f);
+
+
 
             this.m_buttonUnlock.Initialize((ViewController)this, 200f, 30f);
             this.m_buttonUnlock.GetTransform().SetPosition(150f, 70f);

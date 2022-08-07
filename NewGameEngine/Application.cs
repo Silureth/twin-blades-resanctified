@@ -18,7 +18,7 @@ using System.Windows;
 using System;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-
+using PSS.GameEngine.Graphics.Renderer;
 
 namespace PSS.GameEngine
 {
@@ -74,7 +74,7 @@ namespace PSS.GameEngine
                 this.m_dispatchedTouchArray[index] = (PSS.GameEngine.UI.Touch)null;
             }
             //this.m_accelerometer.CurrentValueChanged += new SensorReadingEventArgs<AccelerometerReading>(this.OnAccelerometerReadingChanged);
-            this.m_accelerometer.CurrentValueChanged += new EventHandler<SensorReadingEventArgs<AccelerometerReading>>(this.OnAccelerometerReadingChanged);            
+            this.m_accelerometer.CurrentValueChanged += new EventHandler<SensorReadingEventArgs<AccelerometerReading>>(this.OnAccelerometerReadingChanged);
             try
             {
                 this.m_accelerometerTimer = 0.0f;
@@ -176,8 +176,27 @@ namespace PSS.GameEngine
         private Vector2 ConvertNativeTouchPositionToVirtualScreenPosition(Vector2 nativeTouchPos)
         {
             nativeTouchPos.X *= 480f / this.m_deviceScreenWidth;
-            nativeTouchPos.Y = 320f - nativeTouchPos.Y;//Fixed: for pixel5 original:  400f 
+            //nativeTouchPos.Y = 320f - nativeTouchPos.Y;//Fixed: for pixel5 original:  400f 
+
+            nativeTouchPos.Y = Math.Abs(nativeTouchPos.Y - this.m_deviceScreenHeight) / (this.m_deviceScreenHeight / 320f);//320f - nativeTouchPos.Y;
             return nativeTouchPos;
+        }
+
+        public float ConvertPositionX(float x)
+        {
+            float oldXPercent = Renderer.OLD_SCREEN_WIDTH / x;
+
+            float newXPercent = this.m_deviceScreenWidth / oldXPercent;
+
+            return newXPercent;
+        }
+        public float ConvertPositionY(float y)
+        {
+            float oldYPercent = Renderer.OLD_SCREEN_HEIGHT / y;
+
+            float newYPercent = this.m_deviceScreenHeight / oldYPercent;
+
+            return newYPercent;
         }
 
         private void UpdateTouchEvents()
