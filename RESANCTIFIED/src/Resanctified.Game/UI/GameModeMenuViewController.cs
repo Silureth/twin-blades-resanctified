@@ -57,10 +57,7 @@ namespace Resanctified.Game.UI
             this.m_buttonBack.GetTransform().SetPosition(36f, 40f);
 
             this.m_buttonStartNewGame.Initialize((ViewController)this, 200f, 30f);
-            // this.m_buttonStartNewGame.GetTransform().SetPosition(240f, 95f);
-            this.m_buttonStartNewGame.GetTransform().SetPosition(240f, 150f);
-
-
+            this.m_buttonStartNewGame.GetTransform().SetPosition(240f, 95f);
             this.m_buttonContinueGame.Initialize((ViewController)this, 200f, 30f);
             this.m_buttonContinueGame.GetTransform().SetPosition(240f, 140f);
         }

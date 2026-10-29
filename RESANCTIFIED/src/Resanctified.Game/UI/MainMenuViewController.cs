@@ -7,7 +7,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Resanctified.Game.FSM.GameState.MainMenu;
-using Resanctified.Engine;
 using Resanctified.Engine.Graphics;
 using Resanctified.Engine.Input;
 using Resanctified.Engine.Maths;
@@ -124,26 +123,17 @@ namespace Resanctified.Game.UI
             QuadFactory.CreateQuad(this.m_quadBackgroundBlack, 0.0f, 320f, 480f, 320f, GameConstant.OUTGAME_BLACKBACKGROUND_COLOR);
 
             this.m_buttonStory.Initialize((ViewController)this, 200f, 30f);
-            //            this.m_buttonStory.GetTransform().SetPosition(Application.Instance.ConvertPositionX(150f), Application.Instance.ConvertPositionY(270f));
             this.m_buttonStory.GetTransform().SetPosition(150f, 270f);
-
             this.m_buttonSurvival.Initialize((ViewController)this, 200f, 30f);
             this.m_buttonSurvival.GetTransform().SetPosition(150f, 230f);
-
-            this.m_buttonAchievements.Initialize((ViewController)this, 200f, 30f);
-            this.m_buttonAchievements.GetTransform().SetPosition(150f, 190f);
-
-            this.m_buttonHighscores.Initialize((ViewController)this, 200f, 30f);
-            this.m_buttonHighscores.GetTransform().SetPosition(150f, 150f);
-
             this.m_buttonOptions.Initialize((ViewController)this, 200f, 30f);
             this.m_buttonOptions.GetTransform().SetPosition(150f, 110f);
-
-
-
+            this.m_buttonHighscores.Initialize((ViewController)this, 200f, 30f);
+            this.m_buttonHighscores.GetTransform().SetPosition(150f, 150f);
+            this.m_buttonAchievements.Initialize((ViewController)this, 200f, 30f);
+            this.m_buttonAchievements.GetTransform().SetPosition(150f, 190f);
             this.m_buttonUnlock.Initialize((ViewController)this, 200f, 30f);
             this.m_buttonUnlock.GetTransform().SetPosition(150f, 70f);
-
             this.m_buttonExit.Initialize((ViewController)this, 200f, 30f);
             this.m_buttonExit.GetTransform().SetPosition(150f, 30f);
         }
@@ -174,7 +164,7 @@ namespace Resanctified.Game.UI
             instance.DrawQuad<VertexPositionTexture>(this.m_quadTitle, VertexFormat.Position3Texture, this.m_t, this.m_splashTexture);
             Font font = GameApplication.GetInstance().GetFont();
             this.m_t.SetPosition(150f, 280f, 0.0f);
-            instance.DrawString(font, this.m_t, 4, GameConstant.SHIELD_FIRE_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.StoryMode));//HERE!!
+            instance.DrawString(font, this.m_t, 4, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.StoryMode));
             this.m_t.SetPosition(150f, 240f, 0.0f);
             instance.DrawString(font, this.m_t, 4, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.SurvivalMode));
             this.m_t.SetPosition(150f, 120f, 0.0f);
