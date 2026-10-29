@@ -1,10 +1,10 @@
+using System;
+using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Resanctified.Engine.Graphics;
 using Resanctified.Engine.IO;
-using System;
-using System.IO;
 
 namespace Resanctified.Desktop
 {
@@ -77,7 +77,7 @@ namespace Resanctified.Desktop
             while (this.m_nextClickIndex < this.m_debugOptions.Clicks.Count && this.m_debugOptions.Clicks[this.m_nextClickIndex].Seconds <= time)
             {
                 Vector2 position = this.m_debugOptions.Clicks[this.m_nextClickIndex++].Position;
-                Resanctified.Engine.Application.Instance.InjectTap(position);
+                Engine.Application.Instance.InjectTap(position);
                 Console.WriteLine($"[{time:0.00}s] click {position.X},{position.Y}");
             }
 

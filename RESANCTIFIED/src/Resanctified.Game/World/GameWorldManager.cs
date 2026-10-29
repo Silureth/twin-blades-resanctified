@@ -1,38 +1,32 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Game.World.GameWorldManager
-// Assembly: TwinBlades, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F185CF1-B1A3-44DD-BD34-391B69A73148
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\TwinBlades.dll
-
 using Resanctified.Engine.World;
 
 namespace Resanctified.Game.World
 {
-  public class GameWorldManager : WorldManager
-  {
-    public static GameWorldManager Instance
+    public class GameWorldManager : WorldManager
     {
-      get
-      {
-        if (WorldManager.m_instance == null)
-          WorldManager.m_instance = (WorldManager) new GameWorldManager();
-        return (GameWorldManager) WorldManager.m_instance;
-      }
+        public static GameWorldManager Instance
+        {
+            get
+            {
+                if (m_instance == null)
+                    m_instance = new GameWorldManager();
+                return (GameWorldManager)m_instance;
+            }
+        }
+
+        public static GameWorldManager GetInstance()
+        {
+            if (m_instance == null)
+                m_instance = new GameWorldManager();
+            return (GameWorldManager)m_instance;
+        }
+
+        public override void Initialize() => base.Initialize();
+
+        public override void Cleanup() => base.Cleanup();
+
+        public override void Cleanup(bool cleanupWorlds, bool deleteWorlds) => base.Cleanup(cleanupWorlds, deleteWorlds);
+
+        public override void Update(float gameTime) => base.Update(gameTime);
     }
-
-    public static GameWorldManager GetInstance()
-    {
-      if (WorldManager.m_instance == null)
-        WorldManager.m_instance = (WorldManager) new GameWorldManager();
-      return (GameWorldManager) WorldManager.m_instance;
-    }
-
-    public override void Initialize() => base.Initialize();
-
-    public override void Cleanup() => base.Cleanup();
-
-    public override void Cleanup(bool cleanupWorlds, bool deleteWorlds) => base.Cleanup(cleanupWorlds, deleteWorlds);
-
-    public override void Update(float gameTime) => base.Update(gameTime);
-  }
 }

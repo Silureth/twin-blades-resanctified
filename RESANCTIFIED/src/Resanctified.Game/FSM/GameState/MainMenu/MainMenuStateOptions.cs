@@ -1,64 +1,57 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Game.FSM.GameState.MainMenu.MainMenuStateOptions
-// Assembly: TwinBlades, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F185CF1-B1A3-44DD-BD34-391B69A73148
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\TwinBlades.dll
-
 using Resanctified.Engine;
 using Resanctified.Engine.FSM;
 using Resanctified.Engine.Input;
-using Resanctified.Engine.UI;
 
 namespace Resanctified.Game.FSM.GameState.MainMenu
 {
-  public class MainMenuStateOptions : IDrawableState, IState
-  {
-    private static MainMenuStateOptions m_instance = new MainMenuStateOptions();
-    public bool BackRequest;
-    public bool LanguageSelectionRequest;
-
-    public static MainMenuStateOptions Instance => MainMenuStateOptions.m_instance;
-
-    public static MainMenuStateOptions GetInstance() => MainMenuStateOptions.m_instance;
-
-    public MainMenuStateOptions()
+    public class MainMenuStateOptions : IDrawableState, IState
     {
-      this.BackRequest = false;
-      this.LanguageSelectionRequest = false;
-    }
+        private static MainMenuStateOptions m_instance = new MainMenuStateOptions();
+        public bool BackRequest;
+        public bool LanguageSelectionRequest;
 
-    public void Enter(IFiniteStateMachine stateMachine)
-    {
-      this.BackRequest = false;
-      this.LanguageSelectionRequest = false;
-      Application.GetInstance().AddResponder((Responder) GameStateMainMenu.GetInstance().GetOptionsView());
-    }
+        public static MainMenuStateOptions Instance => m_instance;
 
-    public void Update(IFiniteStateMachine stateMachine, float gameTime)
-    {
-      if (InputManager.GetInstance().IsBackPressed())
-        this.BackRequest = true;
-      if (this.BackRequest)
-      {
-        stateMachine.SetState((IState) MainMenuStateHelpAndOptions.GetInstance());
-        GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Previous);
-      }
-      else
-      {
-        if (!this.LanguageSelectionRequest)
-          return;
-        stateMachine.SetState((IState) MainMenuStateLanguageSelection.GetInstance());
-      }
-    }
+        public static MainMenuStateOptions GetInstance() => m_instance;
 
-    public void Exit(IFiniteStateMachine stateMachine)
-    {
-      this.BackRequest = false;
-      this.LanguageSelectionRequest = false;
-      Application.GetInstance().RemoveResponder((Responder) GameStateMainMenu.GetInstance().GetOptionsView());
-      GameApplication.Instance.SaveSettings();
-    }
+        public MainMenuStateOptions()
+        {
+            this.BackRequest = false;
+            this.LanguageSelectionRequest = false;
+        }
 
-    public void Draw(IFiniteStateMachine stateMachine) => GameStateMainMenu.GetInstance().GetOptionsView().Draw();
-  }
+        public void Enter(IFiniteStateMachine stateMachine)
+        {
+            this.BackRequest = false;
+            this.LanguageSelectionRequest = false;
+            Application.GetInstance().AddResponder(GameStateMainMenu.GetInstance().GetOptionsView());
+        }
+
+        public void Update(IFiniteStateMachine stateMachine, float gameTime)
+        {
+            if (InputManager.GetInstance().IsBackPressed())
+                this.BackRequest = true;
+            if (this.BackRequest)
+            {
+                stateMachine.SetState(MainMenuStateHelpAndOptions.GetInstance());
+                GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Previous);
+            }
+            else
+            {
+                if (!this.LanguageSelectionRequest)
+                    return;
+                stateMachine.SetState(MainMenuStateLanguageSelection.GetInstance());
+            }
+        }
+
+        public void Exit(IFiniteStateMachine stateMachine)
+        {
+            this.BackRequest = false;
+            this.LanguageSelectionRequest = false;
+            Application.GetInstance().RemoveResponder(GameStateMainMenu.GetInstance().GetOptionsView());
+            GameApplication.Instance.SaveSettings();
+        }
+
+        public void Draw(IFiniteStateMachine stateMachine) => GameStateMainMenu.GetInstance().GetOptionsView().Draw();
+    }
 }

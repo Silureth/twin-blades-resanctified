@@ -1,61 +1,55 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Engine.World.Zone.GameZone
-// Assembly: GameEngine, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 094D4C29-E313-46E6-B898-5E30B122B0C6
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\Resanctified.Engine.dll
-
 using Microsoft.Xna.Framework;
 using Resanctified.Engine.World.Entities;
 
 namespace Resanctified.Engine.World.Zone
 {
-  public class GameZone
-  {
-    public Vector3 Position;
-
-    public float Width { get; protected set; }
-
-    public float Height { get; protected set; }
-
-    public string Name { get; protected set; }
-
-    public GameZone(string name, Vector3 position, float width, float height)
+    public class GameZone
     {
-      this.Name = name;
-      this.Position = position;
-      this.Width = width;
-      this.Height = height;
-    }
+        public Vector3 Position;
 
-    public void ConstraintEntity(Entity entity, float left, float right, float bottom, float top)
-    {
-    }
+        public float Width { get; protected set; }
 
-    public void ConstraintCamera(
-      CameraEntity entity,
-      float left,
-      float right,
-      float bottom,
-      float top)
-    {
-    }
+        public float Height { get; protected set; }
 
-    public void ConstraintPosition(
-      ref Vector3 position,
-      float left,
-      float right,
-      float bottom,
-      float top)
-    {
-      if ((double) position.X + (double) left < (double) this.Position.X)
-        position.X = this.Position.X - left;
-      if ((double) position.X + (double) right > (double) this.Position.X + (double) this.Width)
-        position.X = this.Position.X + this.Width - right;
-      if ((double) position.Y + (double) bottom < (double) this.Position.Y)
-        position.Y = this.Position.Y - bottom;
-      if ((double) position.Y + (double) top <= (double) this.Position.Y + (double) this.Height)
-        return;
-      position.Y = this.Position.Y + this.Height - top;
+        public string Name { get; protected set; }
+
+        public GameZone(string name, Vector3 position, float width, float height)
+        {
+            this.Name = name;
+            this.Position = position;
+            this.Width = width;
+            this.Height = height;
+        }
+
+        public void ConstraintEntity(Entity entity, float left, float right, float bottom, float top)
+        {
+        }
+
+        public void ConstraintCamera(
+          CameraEntity entity,
+          float left,
+          float right,
+          float bottom,
+          float top)
+        {
+        }
+
+        public void ConstraintPosition(
+          ref Vector3 position,
+          float left,
+          float right,
+          float bottom,
+          float top)
+        {
+            if (position.X + (double)left < this.Position.X)
+                position.X = this.Position.X - left;
+            if (position.X + (double)right > this.Position.X + (double)this.Width)
+                position.X = this.Position.X + this.Width - right;
+            if (position.Y + (double)bottom < this.Position.Y)
+                position.Y = this.Position.Y - bottom;
+            if (position.Y + (double)top <= this.Position.Y + (double)this.Height)
+                return;
+            position.Y = this.Position.Y + this.Height - top;
+        }
     }
-  }
 }

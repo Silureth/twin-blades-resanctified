@@ -1,9 +1,3 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Engine.Graphics.Animation2D
-// Assembly: GameEngine, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 094D4C29-E313-46E6-B898-5E30B122B0C6
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\Resanctified.Engine.dll
-
 using Microsoft.Xna.Framework;
 using Resanctified.Engine.Maths;
 using Resanctified.Engine.Resources;
@@ -20,7 +14,7 @@ namespace Resanctified.Engine.Graphics
 
         public Animation2D()
         {
-            this.m_model = (Animation2DModel)null;
+            this.m_model = null;
             this.m_time = 0.0f;
             this.m_speed = 1f;
             this.m_loop = Animation2DLoop.None;
@@ -35,7 +29,7 @@ namespace Resanctified.Engine.Graphics
 
         public void Initialize(Animation2DModel model)
         {
-            Resources.Resource.SafeRelease<Animation2DModel>(ref this.m_model);
+            Resource.SafeRelease(ref this.m_model);
             this.m_model = model;
             this.m_model.AddRef();
             this.m_time = 0.0f;
@@ -46,7 +40,7 @@ namespace Resanctified.Engine.Graphics
 
         public void Cleanup()
         {
-            Resources.Resource.SafeRelease<Animation2DModel>(ref this.m_model);
+            Resource.SafeRelease(ref this.m_model);
             this.m_time = 0.0f;
             this.m_speed = 1f;
             this.m_loop = Animation2DLoop.None;
@@ -135,12 +129,12 @@ namespace Resanctified.Engine.Graphics
                 frame = 0;
             else if (frame >= this.GetFrameCount())
                 frame = this.GetFrameCount() - 1;
-            this.SetTime((float)frame / this.GetFPS());
+            this.SetTime(frame / this.GetFPS());
         }
 
         public int GetFrame()
         {
-            int frame = (int)((double)this.GetFPS() * (double)this.m_time);
+            int frame = (int)((double)this.GetFPS() * this.m_time);
             if (frame < 0)
                 frame = 0;
             else if (frame >= this.GetFrameCount())
@@ -160,7 +154,7 @@ namespace Resanctified.Engine.Graphics
 
         public int GetFrameCount() => this.m_model.GetFrameCount();
 
-        public float GetDuration() => (float)this.GetFrameCount() / this.GetFPS();
+        public float GetDuration() => this.GetFrameCount() / this.GetFPS();
 
         public bool IsEndOfAnimationReached() => this.m_isEndOfAnimationReached;
 

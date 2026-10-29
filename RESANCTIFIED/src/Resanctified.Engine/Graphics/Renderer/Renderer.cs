@@ -1,9 +1,6 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Engine.Graphics.Renderer.Renderer
-// Assembly: GameEngine, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 094D4C29-E313-46E6-B898-5E30B122B0C6
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\Resanctified.Engine.dll
-
+using System;
+using System.Collections.Generic;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Resanctified.Engine.Maths;
@@ -12,9 +9,6 @@ using Resanctified.Engine.Tools;
 using Resanctified.Engine.UI;
 using Resanctified.Engine.World;
 using Resanctified.Engine.World.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Resanctified.Engine.Graphics.Renderer
 {
@@ -34,7 +28,7 @@ namespace Resanctified.Engine.Graphics.Renderer
         private const int TOPLEVELVIEWLIST_CAPACITY = 256;
         private const int RENDERVIEWLIST_CAPACITY = 256;
         private const int DRAWSTRING_MAX_CHARS = 2048;
-        private static readonly Resanctified.Engine.Graphics.Renderer.Renderer s_instance = new Resanctified.Engine.Graphics.Renderer.Renderer();
+        private static readonly Renderer s_instance = new Renderer();
         public Color ClearColor;
         private bool m_stringShadow;
         private VertexPositionTexture[] m_stringVertices;
@@ -48,9 +42,9 @@ namespace Resanctified.Engine.Graphics.Renderer
         private List<View> m_topLevelViewList;
         private List<View> m_renderViewList;
 
-        public static Resanctified.Engine.Graphics.Renderer.Renderer Instance => Resanctified.Engine.Graphics.Renderer.Renderer.s_instance;
+        public static Renderer Instance => s_instance;
 
-        public static Resanctified.Engine.Graphics.Renderer.Renderer GetInstance() => Resanctified.Engine.Graphics.Renderer.Renderer.s_instance;
+        public static Renderer GetInstance() => s_instance;
 
         public void Initialize()
         {
@@ -87,11 +81,11 @@ namespace Resanctified.Engine.Graphics.Renderer
             if (this.m_effect != null)
             {
                 this.m_effect.Dispose();
-                this.m_effect = (BasicEffect)null;
+                this.m_effect = null;
             }
-            this.m_graphics = (GraphicsDevice)null;
-            this.m_stringVertices = (VertexPositionTexture[])null;
-            this.m_stringIndices = (short[])null;
+            this.m_graphics = null;
+            this.m_stringVertices = null;
+            this.m_stringIndices = null;
         }
 
         public void Draw(bool clearColor, AABB cameraBoundingBox)
@@ -215,32 +209,32 @@ namespace Resanctified.Engine.Graphics.Renderer
                 short[] stringIndices1 = this.m_stringIndices;
                 int index6 = num5;
                 int num6 = index6 + 1;
-                int num7 = (int)(short)num4;
+                int num7 = (short)num4;
                 stringIndices1[index6] = (short)num7;
                 short[] stringIndices2 = this.m_stringIndices;
                 int index7 = num6;
                 int num8 = index7 + 1;
-                int num9 = (int)(short)(num4 + 2);
+                int num9 = (short)(num4 + 2);
                 stringIndices2[index7] = (short)num9;
                 short[] stringIndices3 = this.m_stringIndices;
                 int index8 = num8;
                 int num10 = index8 + 1;
-                int num11 = (int)(short)(num4 + 1);
+                int num11 = (short)(num4 + 1);
                 stringIndices3[index8] = (short)num11;
                 short[] stringIndices4 = this.m_stringIndices;
                 int index9 = num10;
                 int num12 = index9 + 1;
-                int num13 = (int)(short)(num4 + 2);
+                int num13 = (short)(num4 + 2);
                 stringIndices4[index9] = (short)num13;
                 short[] stringIndices5 = this.m_stringIndices;
                 int index10 = num12;
                 int num14 = index10 + 1;
-                int num15 = (int)(short)(num4 + 3);
+                int num15 = (short)(num4 + 3);
                 stringIndices5[index10] = (short)num15;
                 short[] stringIndices6 = this.m_stringIndices;
                 int index11 = num14;
                 num5 = index11 + 1;
-                int num16 = (int)(short)(num4 + 1);
+                int num16 = (short)(num4 + 1);
                 stringIndices6[index11] = (short)num16;
                 num4 += 4;
             }
@@ -257,14 +251,14 @@ namespace Resanctified.Engine.Graphics.Renderer
                 --matrix.M41;
                 ++matrix.M42;
                 this.m_effect.World = matrix;
-                this.SetColor(Resanctified.Engine.Graphics.Renderer.Renderer.STRING_SHADOW_COLOR);
+                this.SetColor(STRING_SHADOW_COLOR);
                 pass.Apply();
-                this.m_graphics.DrawUserIndexedPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, this.m_stringVertices, 0, numVertices, this.m_stringIndices, 0, num5 / 3);
+                this.m_graphics.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, this.m_stringVertices, 0, numVertices, this.m_stringIndices, 0, num5 / 3);
                 this.m_effect.World = world;
             }
             this.SetColor(color);
             pass.Apply();
-            this.m_graphics.DrawUserIndexedPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, this.m_stringVertices, 0, numVertices, this.m_stringIndices, 0, num5 / 3);
+            this.m_graphics.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, this.m_stringVertices, 0, numVertices, this.m_stringIndices, 0, num5 / 3);
         }
 
         public void DrawString(Font font, Transform transform, int anchor, Color color, string s) => this.DrawString(font, transform, anchor, color, s, true);
@@ -364,7 +358,7 @@ namespace Resanctified.Engine.Graphics.Renderer
             if (pass == null)
                 return;
             pass.Apply();
-            this.m_graphics.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleStrip, vertexBuffer, 0, 2);
+            this.m_graphics.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertexBuffer, 0, 2);
         }
 
         public void DrawQuad<T>(
@@ -391,8 +385,8 @@ namespace Resanctified.Engine.Graphics.Renderer
             float d2 = 0.0f;
             if (anchor != 0)
             {
-                float num1 = VertexFormatHelper.GetVertexPosition<T>(vertexBuffer[1], vertexFormat).X - VertexFormatHelper.GetVertexPosition<T>(vertexBuffer[0], vertexFormat).X;
-                float num2 = VertexFormatHelper.GetVertexPosition<T>(vertexBuffer[0], vertexFormat).Y - VertexFormatHelper.GetVertexPosition<T>(vertexBuffer[2], vertexFormat).Y;
+                float num1 = VertexFormatHelper.GetVertexPosition(vertexBuffer[1], vertexFormat).X - VertexFormatHelper.GetVertexPosition(vertexBuffer[0], vertexFormat).X;
+                float num2 = VertexFormatHelper.GetVertexPosition(vertexBuffer[0], vertexFormat).Y - VertexFormatHelper.GetVertexPosition(vertexBuffer[2], vertexFormat).Y;
                 if ((anchor & 4) != 0)
                     d1 = (float)(-(double)num1 * 0.5);
                 else if ((anchor & 1) != 0)
@@ -417,13 +411,13 @@ namespace Resanctified.Engine.Graphics.Renderer
             switch (vertexFormat)
             {
                 case VertexFormat.Position3Color:
-                    this.m_graphics.DrawUserPrimitives<VertexPositionColor>(PrimitiveType.TriangleStrip, vertexBuffer as VertexPositionColor[], 0, 2);
+                    this.m_graphics.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertexBuffer as VertexPositionColor[], 0, 2);
                     break;
                 case VertexFormat.Position3ColorTexture:
-                    this.m_graphics.DrawUserPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleStrip, vertexBuffer as VertexPositionColorTexture[], 0, 2);
+                    this.m_graphics.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertexBuffer as VertexPositionColorTexture[], 0, 2);
                     break;
                 case VertexFormat.Position3Texture:
-                    this.m_graphics.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleStrip, vertexBuffer as VertexPositionTexture[], 0, 2);
+                    this.m_graphics.DrawUserPrimitives(PrimitiveType.TriangleStrip, vertexBuffer as VertexPositionTexture[], 0, 2);
                     break;
             }
         }
@@ -432,7 +426,7 @@ namespace Resanctified.Engine.Graphics.Renderer
           T[] vertexBuffer,
           VertexFormat vertexFormat,
           Transform transform,
-          Resanctified.Engine.Resources.Texture texture,
+          Resources.Texture texture,
           Color color,
           int anchor,
           bool intCoords,
@@ -440,67 +434,67 @@ namespace Resanctified.Engine.Graphics.Renderer
           bool opaque)
           where T : IVertexType
         {
-            this.DrawQuad<T>(vertexBuffer, vertexFormat, transform, texture == null ? (Texture2D)null : texture.m_xnaTexture, color, anchor, intCoords, blendFunc, opaque);
+            this.DrawQuad(vertexBuffer, vertexFormat, transform, texture == null ? null : texture.m_xnaTexture, color, anchor, intCoords, blendFunc, opaque);
         }
 
         public void DrawQuad<T>(
           T[] vertexBuffer,
           VertexFormat vertexFormat,
           Transform transform,
-          Resanctified.Engine.Resources.Texture texture,
+          Resources.Texture texture,
           Color color,
           int anchor,
           bool intCoords,
           BlendFunc blendFunc)
           where T : IVertexType
         {
-            this.DrawQuad<T>(vertexBuffer, vertexFormat, transform, texture == null ? (Texture2D)null : texture.m_xnaTexture, color, anchor, intCoords, blendFunc, false);
+            this.DrawQuad(vertexBuffer, vertexFormat, transform, texture == null ? null : texture.m_xnaTexture, color, anchor, intCoords, blendFunc, false);
         }
 
         public void DrawQuad<T>(
           T[] vertexBuffer,
           VertexFormat vertexFormat,
           Transform transform,
-          Resanctified.Engine.Resources.Texture texture,
+          Resources.Texture texture,
           Color color,
           int anchor,
           bool intCoords)
           where T : IVertexType
         {
-            this.DrawQuad<T>(vertexBuffer, vertexFormat, transform, texture == null ? (Texture2D)null : texture.m_xnaTexture, color, anchor, intCoords, BlendFunc.SrcAlpha_InvSrcAlpha, false);
+            this.DrawQuad(vertexBuffer, vertexFormat, transform, texture == null ? null : texture.m_xnaTexture, color, anchor, intCoords, BlendFunc.SrcAlpha_InvSrcAlpha, false);
         }
 
         public void DrawQuad<T>(
           T[] vertexBuffer,
           VertexFormat vertexFormat,
           Transform transform,
-          Resanctified.Engine.Resources.Texture texture,
+          Resources.Texture texture,
           Color color,
           int anchor)
           where T : IVertexType
         {
-            this.DrawQuad<T>(vertexBuffer, vertexFormat, transform, texture == null ? (Texture2D)null : texture.m_xnaTexture, color, anchor, true, BlendFunc.SrcAlpha_InvSrcAlpha, false);
+            this.DrawQuad(vertexBuffer, vertexFormat, transform, texture == null ? null : texture.m_xnaTexture, color, anchor, true, BlendFunc.SrcAlpha_InvSrcAlpha, false);
         }
 
         public void DrawQuad<T>(
           T[] vertexBuffer,
           VertexFormat vertexFormat,
           Transform transform,
-          Resanctified.Engine.Resources.Texture texture,
+          Resources.Texture texture,
           Color color)
           where T : IVertexType
         {
-            this.DrawQuad<T>(vertexBuffer, vertexFormat, transform, texture == null ? (Texture2D)null : texture.m_xnaTexture, color, 0, true, BlendFunc.SrcAlpha_InvSrcAlpha, false);
+            this.DrawQuad(vertexBuffer, vertexFormat, transform, texture == null ? null : texture.m_xnaTexture, color, 0, true, BlendFunc.SrcAlpha_InvSrcAlpha, false);
         }
 
         public void DrawQuad<T>(
           T[] vertexBuffer,
           VertexFormat vertexFormat,
           Transform transform,
-          Resanctified.Engine.Resources.Texture texture)
+          Resources.Texture texture)
           where T : IVertexType
         {
-            this.DrawQuad<T>(vertexBuffer, vertexFormat, transform, texture == null ? (Texture2D)null : texture.m_xnaTexture, Color.White, 0, true, BlendFunc.SrcAlpha_InvSrcAlpha, false);
+            this.DrawQuad(vertexBuffer, vertexFormat, transform, texture == null ? null : texture.m_xnaTexture, Color.White, 0, true, BlendFunc.SrcAlpha_InvSrcAlpha, false);
         }
 
         public void DrawAnimation2DModel(
@@ -510,8 +504,8 @@ namespace Resanctified.Engine.Graphics.Renderer
           BlendFunc blendFunc,
           bool useCustomColor,
           Color customColor,
-          Resanctified.Engine.Resources.Texture srcTexture,
-          Resanctified.Engine.Resources.Texture dstTexture,
+          Resources.Texture srcTexture,
+          Resources.Texture dstTexture,
           bool opaque)
         {
             if (transform != null)
@@ -547,13 +541,13 @@ namespace Resanctified.Engine.Graphics.Renderer
                         diffuseColor.R = customColor.R;
                         diffuseColor.G = customColor.G;
                         diffuseColor.B = customColor.B;
-                        diffuseColor.A = (byte)((int)diffuseColor.A * (int)customColor.A >> 8);
+                        diffuseColor.A = (byte)(diffuseColor.A * customColor.A >> 8);
                     }
                     this.SetColor(diffuseColor);
-                    Resanctified.Engine.Resources.Texture texture = model.m_textures[model.m_materials[meshMaterialIndex].diffuseTextureIndex];
+                    Resources.Texture texture = model.m_textures[model.m_materials[meshMaterialIndex].diffuseTextureIndex];
                     if (texture != null)
                     {
-                        if (object.ReferenceEquals((object)texture, (object)srcTexture))
+                        if (ReferenceEquals(texture, srcTexture))
                             texture = dstTexture;
                         this.SetTexture(texture);
                     }
@@ -561,7 +555,7 @@ namespace Resanctified.Engine.Graphics.Renderer
                         this.SetTexture((Texture2D)null);
                 }
                 pass.Apply();
-                this.m_graphics.DrawUserIndexedPrimitives<VertexPositionColorTexture>(PrimitiveType.TriangleList, vertexBuffer, 0, vertexBuffer.Length, indexBuffer, 0, indexBuffer.Length / 3);
+                this.m_graphics.DrawUserIndexedPrimitives(PrimitiveType.TriangleList, vertexBuffer, 0, vertexBuffer.Length, indexBuffer, 0, indexBuffer.Length / 3);
             }
         }
 
@@ -572,8 +566,8 @@ namespace Resanctified.Engine.Graphics.Renderer
           BlendFunc blendFunc,
           bool useCustomColor,
           Color customColor,
-          Resanctified.Engine.Resources.Texture srcTexture,
-          Resanctified.Engine.Resources.Texture dstTexture)
+          Resources.Texture srcTexture,
+          Resources.Texture dstTexture)
         {
             this.DrawAnimation2DModel(model, frame, transform, blendFunc, useCustomColor, customColor, srcTexture, dstTexture, false);
         }
@@ -586,7 +580,7 @@ namespace Resanctified.Engine.Graphics.Renderer
           bool useCustomColor,
           Color customColor)
         {
-            this.DrawAnimation2DModel(model, frame, transform, blendFunc, useCustomColor, customColor, (Resanctified.Engine.Resources.Texture)null, (Resanctified.Engine.Resources.Texture)null, false);
+            this.DrawAnimation2DModel(model, frame, transform, blendFunc, useCustomColor, customColor, null, null, false);
         }
 
         public void DrawAnimation2DModel(
@@ -598,7 +592,7 @@ namespace Resanctified.Engine.Graphics.Renderer
           Color customColor,
           bool opaque)
         {
-            this.DrawAnimation2DModel(model, frame, transform, blendFunc, useCustomColor, customColor, (Resanctified.Engine.Resources.Texture)null, (Resanctified.Engine.Resources.Texture)null, opaque);
+            this.DrawAnimation2DModel(model, frame, transform, blendFunc, useCustomColor, customColor, null, null, opaque);
         }
 
         public void DrawAnimation2DModel(
@@ -607,7 +601,7 @@ namespace Resanctified.Engine.Graphics.Renderer
           Transform transform,
           BlendFunc blendFunc)
         {
-            this.DrawAnimation2DModel(model, frame, transform, blendFunc, false, Color.White, (Resanctified.Engine.Resources.Texture)null, (Resanctified.Engine.Resources.Texture)null, false);
+            this.DrawAnimation2DModel(model, frame, transform, blendFunc, false, Color.White, null, null, false);
         }
 
         public void DrawAnimation2DModel(
@@ -617,7 +611,7 @@ namespace Resanctified.Engine.Graphics.Renderer
           BlendFunc blendFunc,
           bool opaque)
         {
-            this.DrawAnimation2DModel(model, frame, transform, blendFunc, false, Color.White, (Resanctified.Engine.Resources.Texture)null, (Resanctified.Engine.Resources.Texture)null, opaque);
+            this.DrawAnimation2DModel(model, frame, transform, blendFunc, false, Color.White, null, null, opaque);
         }
 
         public void DrawAABB(AABB box, Transform transform, Color color)
@@ -629,7 +623,7 @@ namespace Resanctified.Engine.Graphics.Renderer
         public void DrawEntityCollisionBoxes(Entity entity)
         {
             foreach (CollisionBox collisionBox in entity.GetCollisionBoxes())
-                this.DrawAABB(collisionBox.box, (Transform)null);
+                this.DrawAABB(collisionBox.box, null);
         }
 
         public void DrawEntityBox(Entity entity, Animation2D anim, string boxname)
@@ -640,7 +634,7 @@ namespace Resanctified.Engine.Graphics.Renderer
             Matrix worldTransform = entity.GetTransform().GetWorldTransform();
             AABB transformedBox;
             MathHelperEx.TransformBox(out transformedBox, box.Value, worldTransform);
-            this.DrawAABB(transformedBox, (Transform)null);
+            this.DrawAABB(transformedBox, null);
         }
 
         public void AddTopLevelView(View view, Transform parentTransform)
@@ -713,7 +707,7 @@ namespace Resanctified.Engine.Graphics.Renderer
             this.m_effect.Alpha = vector4.W;
         }
 
-        private void SetTexture(Resanctified.Engine.Resources.Texture texture) => this.SetTexture(texture.m_xnaTexture);
+        private void SetTexture(Resources.Texture texture) => this.SetTexture(texture.m_xnaTexture);
 
         private void SetTexture(Texture2D texture) => this.m_effect.Texture = texture;
 

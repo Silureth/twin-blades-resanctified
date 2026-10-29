@@ -1,7 +1,7 @@
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.IO;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace Resanctified.Engine.Graphics
 {
@@ -25,9 +25,9 @@ namespace Resanctified.Engine.Graphics
         private string m_pendingScreenshotPath;
         private bool m_pendingScreenshotIsWindow;
 
-        public static VirtualScreen Instance => VirtualScreen.s_instance;
+        public static VirtualScreen Instance => s_instance;
 
-        public static VirtualScreen GetInstance() => VirtualScreen.s_instance;
+        public static VirtualScreen GetInstance() => s_instance;
 
         private VirtualScreen()
         {
@@ -106,7 +106,7 @@ namespace Resanctified.Engine.Graphics
             RasterizerState rasterizerState = this.m_graphics.RasterizerState;
             SamplerState samplerState = this.m_graphics.SamplerStates[0];
 
-            this.m_spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, VirtualScreen.ChooseSampler(destination), DepthStencilState.None, RasterizerState.CullNone);
+            this.m_spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, ChooseSampler(destination), DepthStencilState.None, RasterizerState.CullNone);
             this.m_spriteBatch.Draw(this.m_renderTarget, destination, Color.White);
             this.m_spriteBatch.End();
 
@@ -132,17 +132,17 @@ namespace Resanctified.Engine.Graphics
         public Rectangle GetDestinationRectangle()
         {
             PresentationParameters pp = this.m_graphics.PresentationParameters;
-            return VirtualScreen.ComputeDestinationRectangle(pp.BackBufferWidth, pp.BackBufferHeight);
+            return ComputeDestinationRectangle(pp.BackBufferWidth, pp.BackBufferHeight);
         }
 
         /// <summary>Window (back buffer) pixel position, Y down -> virtual screen position, Y up.</summary>
-        public Vector2 WindowToVirtual(Vector2 windowPos) => VirtualScreen.WindowToVirtual(windowPos, this.GetDestinationRectangle());
+        public Vector2 WindowToVirtual(Vector2 windowPos) => WindowToVirtual(windowPos, this.GetDestinationRectangle());
 
         /// <summary>Inverse of <see cref="WindowToVirtual(Vector2)"/>; used to inject synthetic taps.</summary>
-        public Vector2 VirtualToWindow(Vector2 virtualPos) => VirtualScreen.VirtualToWindow(virtualPos, this.GetDestinationRectangle());
+        public Vector2 VirtualToWindow(Vector2 virtualPos) => VirtualToWindow(virtualPos, this.GetDestinationRectangle());
 
         /// <summary>False when the position lies in a letterbox bar (or the window is minimized).</summary>
-        public bool IsInside(Vector2 windowPos) => VirtualScreen.IsInside(windowPos, this.GetDestinationRectangle());
+        public bool IsInside(Vector2 windowPos) => IsInside(windowPos, this.GetDestinationRectangle());
 
         public static Rectangle ComputeDestinationRectangle(int backBufferWidth, int backBufferHeight)
         {
@@ -204,12 +204,12 @@ namespace Resanctified.Engine.Graphics
 
         private static SamplerState ChooseSampler(Rectangle destination)
         {
-            return VirtualScreen.IsIntegerScale(destination) ? SamplerState.PointClamp : SamplerState.LinearClamp;
+            return IsIntegerScale(destination) ? SamplerState.PointClamp : SamplerState.LinearClamp;
         }
 
         private void SaveScreenshot(string path)
         {
-            using (FileStream stream = VirtualScreen.CreateScreenshotFile(path))
+            using (FileStream stream = CreateScreenshotFile(path))
                 this.m_renderTarget.SaveAsPng(stream, WIDTH, HEIGHT);
         }
 
@@ -219,7 +219,7 @@ namespace Resanctified.Engine.Graphics
             Color[] pixels = new Color[pp.BackBufferWidth * pp.BackBufferHeight];
             this.m_graphics.GetBackBufferData(pixels);
             using (Texture2D texture = new Texture2D(this.m_graphics, pp.BackBufferWidth, pp.BackBufferHeight))
-            using (FileStream stream = VirtualScreen.CreateScreenshotFile(path))
+            using (FileStream stream = CreateScreenshotFile(path))
             {
                 texture.SetData(pixels);
                 texture.SaveAsPng(stream, pp.BackBufferWidth, pp.BackBufferHeight);

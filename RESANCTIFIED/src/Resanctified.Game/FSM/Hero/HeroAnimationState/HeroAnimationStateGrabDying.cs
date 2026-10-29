@@ -1,38 +1,31 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Game.FSM.Hero.HeroAnimationState.HeroAnimationStateGrabDying
-// Assembly: TwinBlades, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F185CF1-B1A3-44DD-BD34-391B69A73148
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\TwinBlades.dll
-
-using Resanctified.Game.World.Entities;
 using Resanctified.Engine.FSM;
-using Resanctified.Engine.UI;
+using Resanctified.Game.World.Entities;
 
 namespace Resanctified.Game.FSM.Hero.HeroAnimationState
 {
-  public class HeroAnimationStateGrabDying : IState
-  {
-    private static HeroAnimationStateGrabDying m_instance = new HeroAnimationStateGrabDying();
-
-    public static HeroAnimationStateGrabDying Instance => HeroAnimationStateGrabDying.m_instance;
-
-    public static HeroAnimationStateGrabDying GetInstance() => HeroAnimationStateGrabDying.m_instance;
-
-    public void Enter(IFiniteStateMachine stateMachine)
+    public class HeroAnimationStateGrabDying : IState
     {
-      HeroAnimationFSM heroAnimationFsm = (HeroAnimationFSM) stateMachine;
-      PlayableCharacter entity = (PlayableCharacter) heroAnimationFsm.GetEntity();
-      entity.GetView().RemoveSubview((View) entity.GetGunView());
-      entity.GetView().SetAnimation2D(heroAnimationFsm.AnimationArray[13]);
-      entity.GetView().GetAnimation2D().SetTime(0.0f);
-    }
+        private static HeroAnimationStateGrabDying m_instance = new HeroAnimationStateGrabDying();
 
-    public void Update(IFiniteStateMachine stateMachine, float gameTime)
-    {
-    }
+        public static HeroAnimationStateGrabDying Instance => m_instance;
 
-    public void Exit(IFiniteStateMachine stateMachine)
-    {
+        public static HeroAnimationStateGrabDying GetInstance() => m_instance;
+
+        public void Enter(IFiniteStateMachine stateMachine)
+        {
+            HeroAnimationFSM heroAnimationFsm = (HeroAnimationFSM)stateMachine;
+            PlayableCharacter entity = (PlayableCharacter)heroAnimationFsm.GetEntity();
+            entity.GetView().RemoveSubview(entity.GetGunView());
+            entity.GetView().SetAnimation2D(heroAnimationFsm.AnimationArray[13]);
+            entity.GetView().GetAnimation2D().SetTime(0.0f);
+        }
+
+        public void Update(IFiniteStateMachine stateMachine, float gameTime)
+        {
+        }
+
+        public void Exit(IFiniteStateMachine stateMachine)
+        {
+        }
     }
-  }
 }

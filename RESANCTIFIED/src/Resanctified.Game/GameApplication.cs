@@ -1,28 +1,18 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Game.GameApplication
-// Assembly: TwinBlades, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F185CF1-B1A3-44DD-BD34-391B69A73148
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\TwinBlades.dll
-
+using System;
+using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Resanctified.Game.FSM;
-using Resanctified.Game.FSM.GameState;
-using Resanctified.Game.FSM.GameState.InGame;
-using Resanctified.Game.FSM.GameState.MainMenu;
-using Resanctified.Game.UI;
-using Resanctified.Game.World;
-using Resanctified.Game.World.Entities;
-using Resanctified.Engine;
-using Resanctified.Engine.FSM;
 using Resanctified.Engine.Input;
 using Resanctified.Engine.IO;
 using Resanctified.Engine.Resources;
 using Resanctified.Engine.Sounds;
-using Resanctified.Engine.UI;
 using Resanctified.Engine.World;
-using System;
-using System.Globalization;
+using Resanctified.Game.FSM;
+using Resanctified.Game.FSM.GameState;
+using Resanctified.Game.FSM.GameState.InGame;
+using Resanctified.Game.UI;
+using Resanctified.Game.World;
+using Resanctified.Game.World.Entities;
 using Application = Resanctified.Engine.Application;
 
 namespace Resanctified.Game
@@ -70,8 +60,8 @@ namespace Resanctified.Game
         private int[] m_highscoresStory = new int[5];
         private Sound[] m_outgameSounds = new Sound[6];
         private string m_assemblyVersionString;
-        private GameApplication.GameMode m_gameMode;
-        private GameApplication.GameDifficulty m_difficulty;
+        private GameMode m_gameMode;
+        private GameDifficulty m_difficulty;
 
         public TextBoxViewController GetTextBoxViewController() => this.m_textBoxViewController;
 
@@ -110,11 +100,11 @@ namespace Resanctified.Game
         public GameApplication()
         {
             this.ExitRequest = false;
-            this.m_gameMode = GameApplication.GameMode.Survival;
-            this.m_difficulty = GameApplication.GameDifficulty.Normal;
+            this.m_gameMode = GameMode.Survival;
+            this.m_difficulty = GameDifficulty.Normal;
             // Window size and fullscreen are chosen by each platform head; the game itself always
             // renders at the fixed virtual resolution (see Resanctified.Engine.Graphics.VirtualScreen).
-            this.m_graphics = new GraphicsDeviceManager((Microsoft.Xna.Framework.Game)this);
+            this.m_graphics = new GraphicsDeviceManager(this);
             this.m_graphics.PreferredDepthStencilFormat = DepthFormat.None;
             this.m_graphics.SynchronizeWithVerticalRetrace = true;
             this.Content.RootDirectory = "Content";
@@ -155,7 +145,7 @@ namespace Resanctified.Game
         {
             base.Initialize();
             this.ExitRequest = false;
-            FileManager.Instance.Initialize(GameApplication.SAVE_FOLDER_NAME);
+            FileManager.Instance.Initialize(SAVE_FOLDER_NAME);
             Prefs.Instance.Initialize();
             GameWorldManager.Instance.Initialize();
             InputManager.GetInstance().SetDeadZones(0.1f, 0.3f);
@@ -192,7 +182,7 @@ namespace Resanctified.Game
             this.m_assemblyVersionString = "1.3.0.0";
             GameFSM.Instance.Initialize();
             this.m_textBoxViewController.Initialize();
-            this.AddResponder((Responder)this.m_textBoxViewController);
+            this.AddResponder(this.m_textBoxViewController);
             this.GetInGameMenuView().Initialize();
             this.GetInGameHelpView().Initialize();
             this.GetInGameHelpMapView().Initialize();
@@ -238,7 +228,7 @@ namespace Resanctified.Game
                 try
                 {
 #endif
-                    base.Update(gameTime);
+                base.Update(gameTime);
 #if !DEBUG
                 }
                 catch (Exception ex)
@@ -248,7 +238,7 @@ namespace Resanctified.Game
 #endif
                 GameFSM.Instance.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                 this.m_textBoxViewController.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-                if (this.m_gameMode != GameApplication.GameMode.Story)
+                if (this.m_gameMode != GameMode.Story)
                     return;
                 if (GameFSM.Instance.CurrentState == GameStateInGame.GetInstance() && GameStateInGame.GetInstance().IsMenuInGameActive())
                 {
@@ -292,7 +282,7 @@ namespace Resanctified.Game
             this.GetInGameHighscoresView().Cleanup();
             Scenario.GetInstance().Cleanup();
             FileManager.Instance.Cleanup();
-            Resanctified.Engine.Resources.Resource.SafeRelease<Font>(ref this.m_font);
+            Resource.SafeRelease(ref this.m_font);
             base.Cleanup();
         }
 
@@ -367,7 +357,7 @@ namespace Resanctified.Game
 
         public void ResetMediaPlayerVolume() => AudioManager.GetInstance().SetMusicGain(1f);
 
-        public void PlayOutgameSound(GameApplication.OutgameSound sound) => this.m_outgameSounds[(int)sound].Play();
+        public void PlayOutgameSound(OutgameSound sound) => this.m_outgameSounds[(int)sound].Play();
 
         public int[] GetHighscoresSurvival() => this.m_highscoresSurvival;
 
@@ -375,7 +365,7 @@ namespace Resanctified.Game
 
         public int UpdateHighscores()
         {
-            if (this.GetGameMode() == GameApplication.GameMode.Story)
+            if (this.GetGameMode() == GameMode.Story)
             {
                 for (int index1 = 0; index1 < 5; ++index1)
                 {
@@ -480,7 +470,7 @@ namespace Resanctified.Game
             bool flag = false;
             if (this.AchievementCounter_100ZombiesKilled >= 100)
             {
-                if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story && !cachedAchievements.achievement_Story_100ZombiesKilled)
+                if (GetInstance().GetGameMode() == GameMode.Story && !cachedAchievements.achievement_Story_100ZombiesKilled)
                 {
                     cachedAchievements.achievement_Story_100ZombiesKilled = true;
                     flag = true;
@@ -489,7 +479,7 @@ namespace Resanctified.Game
             }
             if (this.AchievementCounter_500ZombiesKilled >= 500)
             {
-                if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story && !cachedAchievements.achievement_Story_500ZombiesKilled)
+                if (GetInstance().GetGameMode() == GameMode.Story && !cachedAchievements.achievement_Story_500ZombiesKilled)
                 {
                     cachedAchievements.achievement_Story_500ZombiesKilled = true;
                     flag = true;
@@ -498,7 +488,7 @@ namespace Resanctified.Game
             }
             if (this.AchievementCounter_1000ZombiesKilled >= 1000)
             {
-                if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story && !cachedAchievements.achievement_Story_1000ZombiesKilled)
+                if (GetInstance().GetGameMode() == GameMode.Story && !cachedAchievements.achievement_Story_1000ZombiesKilled)
                 {
                     cachedAchievements.achievement_Story_1000ZombiesKilled = true;
                     flag = true;
@@ -507,7 +497,7 @@ namespace Resanctified.Game
             }
             if (this.AchievementCounter_500ZombiesKilledAirSlash >= 500)
             {
-                if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Survival && !cachedAchievements.achievement_Survival_500ZombiesKilledAirSlash)
+                if (GetInstance().GetGameMode() == GameMode.Survival && !cachedAchievements.achievement_Survival_500ZombiesKilledAirSlash)
                 {
                     cachedAchievements.achievement_Survival_500ZombiesKilledAirSlash = true;
                     flag = true;
@@ -516,7 +506,7 @@ namespace Resanctified.Game
             }
             if (this.AchievementCounter_500ZombiesKilledBullet >= 500)
             {
-                if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Survival && !cachedAchievements.achievement_Survival_500ZombiesKilledBullet)
+                if (GetInstance().GetGameMode() == GameMode.Survival && !cachedAchievements.achievement_Survival_500ZombiesKilledBullet)
                 {
                     cachedAchievements.achievement_Survival_500ZombiesKilledBullet = true;
                     flag = true;
@@ -525,7 +515,7 @@ namespace Resanctified.Game
             }
             if (this.AchievementCounter_500ZombiesKilledFlameThrower >= 500)
             {
-                if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Survival && !cachedAchievements.achievement_Survival_500ZombiesKilledFlameThrower)
+                if (GetInstance().GetGameMode() == GameMode.Survival && !cachedAchievements.achievement_Survival_500ZombiesKilledFlameThrower)
                 {
                     cachedAchievements.achievement_Survival_500ZombiesKilledFlameThrower = true;
                     flag = true;
@@ -534,7 +524,7 @@ namespace Resanctified.Game
             }
             if (this.AchievementCounter_500ZombiesKilledIceGun >= 500)
             {
-                if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Survival && !cachedAchievements.achievement_Survival_500ZombiesKilledIceGun)
+                if (GetInstance().GetGameMode() == GameMode.Survival && !cachedAchievements.achievement_Survival_500ZombiesKilledIceGun)
                 {
                     cachedAchievements.achievement_Survival_500ZombiesKilledIceGun = true;
                     flag = true;
@@ -543,7 +533,7 @@ namespace Resanctified.Game
             }
             if (this.AchievementCounter_500ZombiesKilledExplosiveGun >= 500)
             {
-                if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Survival && !cachedAchievements.achievement_Survival_500ZombiesKilledExplosiveGun)
+                if (GetInstance().GetGameMode() == GameMode.Survival && !cachedAchievements.achievement_Survival_500ZombiesKilledExplosiveGun)
                 {
                     cachedAchievements.achievement_Survival_500ZombiesKilledExplosiveGun = true;
                     flag = true;
@@ -552,7 +542,7 @@ namespace Resanctified.Game
             }
             if (this.AchievementCounter_1000ZombiesKilledHolyBeam >= 1000)
             {
-                if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Survival && !cachedAchievements.achievement_Survival_1000ZombiesKilledHolyBeam)
+                if (GetInstance().GetGameMode() == GameMode.Survival && !cachedAchievements.achievement_Survival_1000ZombiesKilledHolyBeam)
                 {
                     cachedAchievements.achievement_Survival_1000ZombiesKilledHolyBeam = true;
                     flag = true;
@@ -561,7 +551,7 @@ namespace Resanctified.Game
             }
             if (this.AchievementCounter_100Ungrab >= 100)
             {
-                if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Survival && !cachedAchievements.achievement_Survival_100Ungrab)
+                if (GetInstance().GetGameMode() == GameMode.Survival && !cachedAchievements.achievement_Survival_100Ungrab)
                 {
                     cachedAchievements.achievement_Survival_100Ungrab = true;
                     flag = true;
@@ -575,7 +565,7 @@ namespace Resanctified.Game
 
         public void CheckUpgradesAchievements()
         {
-            if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
+            if (GetInstance().GetGameMode() == GameMode.Story)
             {
                 if (!this.CheckGunUpgradesAchievements() || !this.CheckAbilitiesUpgradesAchievements())
                     return;
@@ -605,7 +595,7 @@ namespace Resanctified.Game
             }
             if (num >= 6)
             {
-                if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
+                if (GetInstance().GetGameMode() == GameMode.Story)
                     return true;
                 if (!cachedAchievements.achievement_Survival_AllWeaponsUpgraded)
                 {
@@ -620,7 +610,7 @@ namespace Resanctified.Game
         {
             Prefs.Achievements cachedAchievements = Prefs.Instance.CachedAchievements;
             int num = 0;
-            GameWorld currentWorld = (GameWorld) WorldManager.GetInstance().GetCurrentWorld();
+            GameWorld currentWorld = (GameWorld)WorldManager.GetInstance().GetCurrentWorld();
             if (currentWorld.GetHero().SlashDamageLevel == 5)
                 ++num;
             if (currentWorld.GetHero().SlashManaDrainLevel == 5)
@@ -633,7 +623,7 @@ namespace Resanctified.Game
                 ++num;
             if (num >= 5)
             {
-                if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
+                if (GetInstance().GetGameMode() == GameMode.Story)
                     return true;
                 if (!cachedAchievements.achievement_Survival_AllAbilitiesUpgraded)
                 {
@@ -648,9 +638,9 @@ namespace Resanctified.Game
         {
             Prefs.Achievements cachedAchievements = Prefs.Instance.CachedAchievements;
             bool flag = false;
-            if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
+            if (GetInstance().GetGameMode() == GameMode.Story)
             {
-                if (GameApplication.GetInstance().GetDifficulty() == GameApplication.GameDifficulty.Hard)
+                if (GetInstance().GetDifficulty() == GameDifficulty.Hard)
                 {
                     if (!cachedAchievements.achievement_Story_GameFinishedHard)
                     {
@@ -664,7 +654,7 @@ namespace Resanctified.Game
                     flag = true;
                 }
             }
-            else if (GameApplication.GetInstance().GetDifficulty() == GameApplication.GameDifficulty.Hard)
+            else if (GetInstance().GetDifficulty() == GameDifficulty.Hard)
             {
                 if (!cachedAchievements.achievement_Survival_GameFinishedHard)
                 {
@@ -684,13 +674,13 @@ namespace Resanctified.Game
 
         public string GetAssemblyVersionString() => this.m_assemblyVersionString;
 
-        public GameApplication.GameMode GetGameMode() => this.m_gameMode;
+        public GameMode GetGameMode() => this.m_gameMode;
 
-        public void SetGameMode(GameApplication.GameMode mode) => this.m_gameMode = mode;
+        public void SetGameMode(GameMode mode) => this.m_gameMode = mode;
 
-        public GameApplication.GameDifficulty GetDifficulty() => this.m_difficulty;
+        public GameDifficulty GetDifficulty() => this.m_difficulty;
 
-        public void SetDifficulty(GameApplication.GameDifficulty d) => this.m_difficulty = d;
+        public void SetDifficulty(GameDifficulty d) => this.m_difficulty = d;
 
         public enum OutgameSound
         {

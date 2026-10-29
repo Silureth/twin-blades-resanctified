@@ -1,19 +1,13 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Game.UI.TextBoxViewController
-// Assembly: TwinBlades, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F185CF1-B1A3-44DD-BD34-391B69A73148
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\TwinBlades.dll
-
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Resanctified.Game.FSM.GameState;
 using Resanctified.Engine.Graphics;
 using Resanctified.Engine.Input;
 using Resanctified.Engine.Maths;
 using Resanctified.Engine.Resources;
 using Resanctified.Engine.Tools;
 using Resanctified.Engine.UI;
-using System.Collections.Generic;
+using Resanctified.Game.FSM.GameState;
 
 namespace Resanctified.Game.UI
 {
@@ -116,9 +110,9 @@ namespace Resanctified.Game.UI
         private VertexPositionTexture[] m_quadFacePriest = new VertexPositionTexture[4];
         private VertexPositionTexture[] m_quadLive = new VertexPositionTexture[4];
         private VertexPositionTexture[] m_quadDie = new VertexPositionTexture[4];
-        private Resanctified.Engine.Resources.Texture m_textureFaces;
+        private Engine.Resources.Texture m_textureFaces;
         private Transform m_t = new Transform();
-        private TextBoxViewController.FaceId m_face;
+        private FaceId m_face;
         private string m_text;
         private string m_textChoiceLive;
         private string m_textChoiceDie;
@@ -132,7 +126,7 @@ namespace Resanctified.Game.UI
 
         public TextBoxViewController()
         {
-            this.m_face = TextBoxViewController.FaceId.Nun1;
+            this.m_face = FaceId.Nun1;
             this.m_text = string.Empty;
             this.m_textChoiceLive = string.Empty;
             this.m_textChoiceDie = string.Empty;
@@ -149,7 +143,7 @@ namespace Resanctified.Game.UI
         {
             base.Initialize();
             this.m_textPairs.Clear();
-            Resanctified.Engine.Resources.Resource.SafeRelease<Resanctified.Engine.Resources.Texture>(ref this.m_textureFaces);
+            Resource.SafeRelease(ref this.m_textureFaces);
             this.m_textureFaces = ResourceManager.GetInstance().LoadTexture("Textures\\texture_faces");
             QuadFactory.CreateAnchoredQuad(this.m_quadTextzone, 2f, 0.0f, 422f, 102f, 512f, 512f, Anchor.Left);
             QuadFactory.CreateAnchoredQuad(this.m_quadFaceNun1, 0.0f, 102f, 94f, 120f, 512f, 512f, Anchor.Left);
@@ -160,13 +154,13 @@ namespace Resanctified.Game.UI
             QuadFactory.CreateAnchoredQuad(this.m_quadFacePriest, 190f, 102f, 172f, 154f, 512f, 512f, Anchor.Left);
             QuadFactory.CreateAnchoredQuad(this.m_quadLive, 470f, 5f, 36f, 36f, 512f, 512f, Anchor.HCenter | Anchor.VCenter);
             QuadFactory.CreateAnchoredQuad(this.m_quadDie, 470f, 45f, 36f, 36f, 512f, 512f, Anchor.HCenter | Anchor.VCenter);
-            this.m_buttonTextzone.Initialize((ViewController)this, 422f, 102f);
+            this.m_buttonTextzone.Initialize(this, 422f, 102f);
             this.m_buttonTextzone.GetTransform().SetPosition(240f, 51f);
-            this.m_face = TextBoxViewController.FaceId.Nun1;
+            this.m_face = FaceId.Nun1;
             this.m_text = string.Empty;
             this.SetActive(false);
-            this.m_buttonLive.Initialize((ViewController)this, 20f, 20f);
-            this.m_buttonDie.Initialize((ViewController)this, 20f, 20f);
+            this.m_buttonLive.Initialize(this, 20f, 20f);
+            this.m_buttonDie.Initialize(this, 20f, 20f);
             this.DisableChoiceMode();
         }
 
@@ -175,7 +169,7 @@ namespace Resanctified.Game.UI
             this.m_buttonTextzone.Cleanup();
             this.m_buttonLive.Cleanup();
             this.m_buttonDie.Cleanup();
-            Resanctified.Engine.Resources.Resource.SafeRelease<Resanctified.Engine.Resources.Texture>(ref this.m_textureFaces);
+            Resource.SafeRelease(ref this.m_textureFaces);
             this.m_textPairs.Clear();
             base.Cleanup();
         }
@@ -191,43 +185,43 @@ namespace Resanctified.Game.UI
         {
             if (!this.m_visible || !this.m_active)
                 return;
-            Resanctified.Engine.Graphics.Renderer.Renderer instance = Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance();
+            Engine.Graphics.Renderer.Renderer instance = Engine.Graphics.Renderer.Renderer.GetInstance();
             instance.Begin2DMode(false);
             Font font = GameApplication.GetInstance().GetFont();
             this.m_t.SetScale(1f);
             int anchor;
-            if (TextBoxViewController.TEXTBOX_FACE_ORIENTATION[(int)this.m_face] < 0)
+            if (TEXTBOX_FACE_ORIENTATION[(int)this.m_face] < 0)
             {
                 this.m_t.SetPosition(-5f, 0.0f);
                 anchor = 2;
             }
             else
             {
-                this.m_t.SetPosition(TextBoxViewController.TEXTBOX_FACE_POS_X[(int)this.m_face], 0.0f);
+                this.m_t.SetPosition(TEXTBOX_FACE_POS_X[(int)this.m_face], 0.0f);
                 anchor = 3;
             }
             switch (this.m_face)
             {
-                case TextBoxViewController.FaceId.Nun1:
-                    instance.DrawQuad<VertexPositionTexture>(this.m_quadFaceNun1, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces, Color.White, anchor);
+                case FaceId.Nun1:
+                    instance.DrawQuad(this.m_quadFaceNun1, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces, Color.White, anchor);
                     break;
-                case TextBoxViewController.FaceId.Nun2:
-                    instance.DrawQuad<VertexPositionTexture>(this.m_quadFaceNun2, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces, Color.White, anchor);
+                case FaceId.Nun2:
+                    instance.DrawQuad(this.m_quadFaceNun2, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces, Color.White, anchor);
                     break;
-                case TextBoxViewController.FaceId.Priest:
-                    instance.DrawQuad<VertexPositionTexture>(this.m_quadFacePriest, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces, Color.White, anchor);
+                case FaceId.Priest:
+                    instance.DrawQuad(this.m_quadFacePriest, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces, Color.White, anchor);
                     break;
-                case TextBoxViewController.FaceId.Butcher:
-                    instance.DrawQuad<VertexPositionTexture>(this.m_quadFaceButcher, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces, Color.White, anchor);
+                case FaceId.Butcher:
+                    instance.DrawQuad(this.m_quadFaceButcher, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces, Color.White, anchor);
                     break;
-                case TextBoxViewController.FaceId.Necro1:
-                    instance.DrawQuad<VertexPositionTexture>(this.m_quadFaceNecro1, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces, Color.White, anchor);
+                case FaceId.Necro1:
+                    instance.DrawQuad(this.m_quadFaceNecro1, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces, Color.White, anchor);
                     break;
-                case TextBoxViewController.FaceId.Necro2:
-                    instance.DrawQuad<VertexPositionTexture>(this.m_quadFaceNecro2, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces, Color.White, anchor);
+                case FaceId.Necro2:
+                    instance.DrawQuad(this.m_quadFaceNecro2, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces, Color.White, anchor);
                     break;
             }
-            if (TextBoxViewController.TEXTBOX_FACE_ORIENTATION[(int)this.m_face] < 0)
+            if (TEXTBOX_FACE_ORIENTATION[(int)this.m_face] < 0)
             {
                 this.m_t.SetScale(-1f, 1f);
                 this.m_t.SetPosition(480f, 102f);
@@ -237,37 +231,37 @@ namespace Resanctified.Game.UI
                 this.m_t.SetScale(1f);
                 this.m_t.SetPosition(0.0f, 102f);
             }
-            instance.DrawQuad<VertexPositionTexture>(this.m_quadTextzone, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces);
+            instance.DrawQuad(this.m_quadTextzone, VertexFormat.Position3Texture, this.m_t, this.m_textureFaces);
             this.m_t.SetScale(0.8f, 0.8f);
             string empty = string.Empty;
             switch (this.m_face)
             {
-                case TextBoxViewController.FaceId.Nun1:
+                case FaceId.Nun1:
                     empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Dialog_Name_Nun1);
                     break;
-                case TextBoxViewController.FaceId.Nun2:
+                case FaceId.Nun2:
                     empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Dialog_Name_Nun2);
                     break;
-                case TextBoxViewController.FaceId.Priest:
+                case FaceId.Priest:
                     empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Dialog_Name_Priest);
                     break;
-                case TextBoxViewController.FaceId.Butcher:
+                case FaceId.Butcher:
                     empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Dialog_Name_Butcher);
                     break;
-                case TextBoxViewController.FaceId.Necro1:
+                case FaceId.Necro1:
                     empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Dialog_Name_Necro1);
                     break;
-                case TextBoxViewController.FaceId.Necro2:
+                case FaceId.Necro2:
                     empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Dialog_Name_Necro2);
                     break;
             }
-            if (TextBoxViewController.TEXTBOX_FACE_ORIENTATION[(int)this.m_face] < 0)
+            if (TEXTBOX_FACE_ORIENTATION[(int)this.m_face] < 0)
                 this.m_t.SetPosition(100f, 94f);
             else
                 this.m_t.SetPosition(20f, 94f);
-            instance.DrawString(font, this.m_t, 0, TextBoxViewController.TEXTBOX_NAME_COLOR[(int)this.m_face], empty, true);
+            instance.DrawString(font, this.m_t, 0, TEXTBOX_NAME_COLOR[(int)this.m_face], empty, true);
             this.m_t.SetScale(0.75f, 0.75f);
-            if (TextBoxViewController.TEXTBOX_FACE_ORIENTATION[(int)this.m_face] < 0)
+            if (TEXTBOX_FACE_ORIENTATION[(int)this.m_face] < 0)
                 this.m_t.SetPosition(100f, 77f);
             else
                 this.m_t.SetPosition(20f, 77f);
@@ -284,13 +278,13 @@ namespace Resanctified.Game.UI
                 position.Y -= (float)((double)font.GetLineHeight() * 0.75 * 2.0);
                 this.m_t.SetPosition(position);
                 instance.DrawString(font, this.m_t, 0, GameConstant.TEXTBOX_TEXT_COLOR, this.m_textChoiceDie, true);
-                instance.DrawQuad<VertexPositionTexture>(this.m_quadLive, VertexFormat.Position3Texture, this.m_buttonLive.GetTransform(), this.m_textureFaces);
-                instance.DrawQuad<VertexPositionTexture>(this.m_quadDie, VertexFormat.Position3Texture, this.m_buttonDie.GetTransform(), this.m_textureFaces);
+                instance.DrawQuad(this.m_quadLive, VertexFormat.Position3Texture, this.m_buttonLive.GetTransform(), this.m_textureFaces);
+                instance.DrawQuad(this.m_quadDie, VertexFormat.Position3Texture, this.m_buttonDie.GetTransform(), this.m_textureFaces);
             }
             instance.End2DMode();
         }
 
-        public void SetText(TextBoxViewController.FaceId face, string text)
+        public void SetText(FaceId face, string text)
         {
             this.m_face = face;
             this.m_text = text;
@@ -326,7 +320,7 @@ namespace Resanctified.Game.UI
             this.m_buttonDie.SetActive(true);
             this.m_textChoiceLive = textChoice1;
             this.m_textChoiceDie = textChoice2;
-            if (TextBoxViewController.TEXTBOX_FACE_ORIENTATION[(int)this.m_face] < 0)
+            if (TEXTBOX_FACE_ORIENTATION[(int)this.m_face] < 0)
             {
                 this.m_buttonLive.GetTransform().SetPosition(450f, 77f);
                 this.m_buttonDie.GetTransform().SetPosition(450f, 27f);

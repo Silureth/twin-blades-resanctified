@@ -1,19 +1,12 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Engine.Application
-// Assembly: GameEngine, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 094D4C29-E313-46E6-B898-5E30B122B0C6
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\Resanctified.Engine.dll
-
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using Resanctified.Engine.Graphics;
 using Resanctified.Engine.Input;
 using Resanctified.Engine.Resources;
 using Resanctified.Engine.Sounds;
 using Resanctified.Engine.UI;
-using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework.Input;
-using Resanctified.Engine.Graphics;
 
 namespace Resanctified.Engine
 {
@@ -26,24 +19,24 @@ namespace Resanctified.Engine
         private static Application s_instance;
         private InterfaceOrientation m_interfaceOrientation;
         private List<Responder> m_responders;
-        private Resanctified.Engine.UI.Touch[] m_touchArray;
-        private Resanctified.Engine.UI.Touch[] m_dispatchedTouchArray;
+        private Touch[] m_touchArray;
+        private Touch[] m_dispatchedTouchArray;
         private float m_elapsedTimeSinceLastFrame;
         private bool m_pointerDown;
         private Queue<Vector2> m_pendingTaps;
         private bool m_injectedTapDown;
         private bool m_shakeInputDown;
 
-        public static Application Instance => Application.s_instance;
+        public static Application Instance => s_instance;
 
-        public static Application GetInstance() => Application.s_instance;
+        public static Application GetInstance() => s_instance;
 
         public Application()
         {
-            Application.s_instance = this;
+            s_instance = this;
             this.m_responders = new List<Responder>(64);
-            this.m_touchArray = new Resanctified.Engine.UI.Touch[5];
-            this.m_dispatchedTouchArray = new Resanctified.Engine.UI.Touch[5];
+            this.m_touchArray = new Touch[5];
+            this.m_dispatchedTouchArray = new Touch[5];
             this.m_elapsedTimeSinceLastFrame = 0.0f;
             this.m_pendingTaps = new Queue<Vector2>();
         }
@@ -53,9 +46,9 @@ namespace Resanctified.Engine
             this.m_responders.Clear();
             for (int index = 0; index < 5; ++index)
             {
-                this.m_touchArray[index] = new Resanctified.Engine.UI.Touch();
+                this.m_touchArray[index] = new Touch();
                 this.m_touchArray[index].nativeTouchId = -1;
-                this.m_dispatchedTouchArray[index] = (Resanctified.Engine.UI.Touch)null;
+                this.m_dispatchedTouchArray[index] = null;
             }
             this.SetInterfaceOrientation(InterfaceOrientation.LandscapeLeft);
             this.m_pointerDown = false;
@@ -65,7 +58,7 @@ namespace Resanctified.Engine
             VirtualScreen.Instance.Initialize(this.GraphicsDevice);
             ResourceManager.Instance.Initialize();
             InputManager.Instance.Initialize();
-            Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().Initialize();
+            Graphics.Renderer.Renderer.GetInstance().Initialize();
             AudioManager.Instance.Initialize();
             base.Initialize();
         }
@@ -77,7 +70,7 @@ namespace Resanctified.Engine
             AudioManager.Instance.Cleanup();
             ResourceManager.Instance.Cleanup();
             InputManager.Instance.Cleanup();
-            Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().Cleanup();
+            Graphics.Renderer.Renderer.GetInstance().Cleanup();
             VirtualScreen.Instance.Cleanup();
         }
 
@@ -210,7 +203,7 @@ namespace Resanctified.Engine
             {
                 MouseState mouse = Mouse.GetState();
                 down = this.IsActive && mouse.LeftButton == ButtonState.Pressed;
-                windowPos = new Vector2((float)mouse.X, (float)mouse.Y);
+                windowPos = new Vector2(mouse.X, mouse.Y);
             }
 
             if (down && !this.m_pointerDown)
@@ -234,7 +227,7 @@ namespace Resanctified.Engine
 
         private void BeginTouch(int touchIndex, int nativeTouchId, Vector2 windowPos)
         {
-            Resanctified.Engine.UI.Touch touch = this.m_touchArray[touchIndex];
+            Touch touch = this.m_touchArray[touchIndex];
             touch.touchId = (TouchId)touchIndex;
             touch.touchPhase = TouchPhase.Began;
             touch.prevPos = VirtualScreen.Instance.WindowToVirtual(windowPos);
@@ -250,7 +243,7 @@ namespace Resanctified.Engine
 
         private void MoveTouch(int touchIndex, Vector2 windowPos)
         {
-            Resanctified.Engine.UI.Touch touch = this.m_touchArray[touchIndex];
+            Touch touch = this.m_touchArray[touchIndex];
             this.UpdateTouchPosition(touch, windowPos);
             touch.touchPhase = touch.curNativePos != touch.prevNativePos ? TouchPhase.Moved : TouchPhase.Stationary;
             this.m_dispatchedTouchArray[0] = touch;
@@ -259,7 +252,7 @@ namespace Resanctified.Engine
 
         private void EndTouch(int touchIndex, Vector2 windowPos, bool released)
         {
-            Resanctified.Engine.UI.Touch touch = this.m_touchArray[touchIndex];
+            Touch touch = this.m_touchArray[touchIndex];
             this.UpdateTouchPosition(touch, windowPos);
             this.m_dispatchedTouchArray[0] = touch;
             if (released)
@@ -275,7 +268,7 @@ namespace Resanctified.Engine
             touch.nativeTouchId = NATIVE_TOUCH_ID_NULL;
         }
 
-        private void UpdateTouchPosition(Resanctified.Engine.UI.Touch touch, Vector2 windowPos)
+        private void UpdateTouchPosition(Touch touch, Vector2 windowPos)
         {
             touch.prevPos = touch.curPos;
             // A finger dragged into the letterbox bars stays on the screen edge so it can still end normally.
@@ -290,25 +283,25 @@ namespace Resanctified.Engine
 
         public void RemoveResponder(Responder responder) => this.m_responders.Remove(responder);
 
-        public void TouchesBegan(Resanctified.Engine.UI.Touch[] touchArray, int touchCount)
+        public void TouchesBegan(Touch[] touchArray, int touchCount)
         {
             for (int index = 0; index < this.m_responders.Count; ++index)
                 this.m_responders[index].TouchesBegan(touchArray, touchCount);
         }
 
-        public void TouchesMoved(Resanctified.Engine.UI.Touch[] touchArray, int touchCount)
+        public void TouchesMoved(Touch[] touchArray, int touchCount)
         {
             for (int index = 0; index < this.m_responders.Count; ++index)
                 this.m_responders[index].TouchesMoved(touchArray, touchCount);
         }
 
-        public void TouchesEnded(Resanctified.Engine.UI.Touch[] touchArray, int touchCount)
+        public void TouchesEnded(Touch[] touchArray, int touchCount)
         {
             for (int index = 0; index < this.m_responders.Count; ++index)
                 this.m_responders[index].TouchesEnded(touchArray, touchCount);
         }
 
-        public void TouchesCancelled(Resanctified.Engine.UI.Touch[] touchArray, int touchCount)
+        public void TouchesCancelled(Touch[] touchArray, int touchCount)
         {
             for (int index = 0; index < this.m_responders.Count; ++index)
                 this.m_responders[index].TouchesCancelled(touchArray, touchCount);

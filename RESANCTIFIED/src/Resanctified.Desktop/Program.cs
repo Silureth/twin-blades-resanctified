@@ -1,6 +1,6 @@
+using System;
 using Resanctified.Desktop;
 using Resanctified.Game;
-using System;
 
 DesktopDebugOptions debugOptions;
 try

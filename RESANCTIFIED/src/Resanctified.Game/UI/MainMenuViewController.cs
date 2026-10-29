@@ -1,18 +1,11 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Game.UI.MainMenuViewController
-// Assembly: TwinBlades, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F185CF1-B1A3-44DD-BD34-391B69A73148
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\TwinBlades.dll
-
-using Microsoft.Xna.Framework;
+using System.Text;
 using Microsoft.Xna.Framework.Graphics;
-using Resanctified.Game.FSM.GameState.MainMenu;
 using Resanctified.Engine.Graphics;
 using Resanctified.Engine.Input;
 using Resanctified.Engine.Maths;
 using Resanctified.Engine.Resources;
 using Resanctified.Engine.UI;
-using System.Text;
+using Resanctified.Game.FSM.GameState.MainMenu;
 
 namespace Resanctified.Game.UI
 {
@@ -87,7 +80,7 @@ namespace Resanctified.Game.UI
         private VertexPositionTexture[] m_quadBackground = new VertexPositionTexture[4];
         private VertexPositionColor[] m_quadBackgroundBlack = new VertexPositionColor[4];
         private VertexPositionTexture[] m_quadTitle = new VertexPositionTexture[4];
-        private Resanctified.Engine.Resources.Texture m_splashTexture;
+        private Engine.Resources.Texture m_splashTexture;
         private Button m_buttonStory;
         private Button m_buttonSurvival;
         private Button m_buttonOptions;
@@ -100,7 +93,7 @@ namespace Resanctified.Game.UI
 
         public MainMenuViewController()
         {
-            this.m_splashTexture = (Resanctified.Engine.Resources.Texture)null;
+            this.m_splashTexture = null;
             this.m_buttonStory = new Button();
             this.m_buttonSurvival = new Button();
             this.m_buttonOptions = new Button();
@@ -113,24 +106,24 @@ namespace Resanctified.Game.UI
         public override void Initialize()
         {
             base.Initialize();
-            Resanctified.Engine.Resources.Resource.SafeRelease<Resanctified.Engine.Resources.Texture>(ref this.m_splashTexture);
+            Resource.SafeRelease(ref this.m_splashTexture);
             this.m_splashTexture = ResourceManager.GetInstance().LoadTexture("Textures\\texture_splash");
 
             QuadFactory.CreateAnchoredQuad(this.m_quadBackground, 0.0f, 192f, 480f, 320f, 512f, 512f, Anchor.Bottom);
             QuadFactory.CreateAnchoredQuad(this.m_quadTitle, 0.0f, 0.0f, 170f, 160f, 512f, 512f, Anchor.HCenter);
             QuadFactory.CreateQuad(this.m_quadBackgroundBlack, 0.0f, 320f, 480f, 320f, GameConstant.OUTGAME_BLACKBACKGROUND_COLOR);
 
-            this.m_buttonStory.Initialize((ViewController)this, 200f, 30f);
+            this.m_buttonStory.Initialize(this, 200f, 30f);
             this.m_buttonStory.GetTransform().SetPosition(150f, 270f);
-            this.m_buttonSurvival.Initialize((ViewController)this, 200f, 30f);
+            this.m_buttonSurvival.Initialize(this, 200f, 30f);
             this.m_buttonSurvival.GetTransform().SetPosition(150f, 230f);
-            this.m_buttonOptions.Initialize((ViewController)this, 200f, 30f);
+            this.m_buttonOptions.Initialize(this, 200f, 30f);
             this.m_buttonOptions.GetTransform().SetPosition(150f, 110f);
-            this.m_buttonHighscores.Initialize((ViewController)this, 200f, 30f);
+            this.m_buttonHighscores.Initialize(this, 200f, 30f);
             this.m_buttonHighscores.GetTransform().SetPosition(150f, 150f);
-            this.m_buttonAchievements.Initialize((ViewController)this, 200f, 30f);
+            this.m_buttonAchievements.Initialize(this, 200f, 30f);
             this.m_buttonAchievements.GetTransform().SetPosition(150f, 190f);
-            this.m_buttonExit.Initialize((ViewController)this, 200f, 30f);
+            this.m_buttonExit.Initialize(this, 200f, 30f);
             this.m_buttonExit.GetTransform().SetPosition(150f, 70f);
         }
 
@@ -142,7 +135,7 @@ namespace Resanctified.Game.UI
             this.m_buttonHighscores.Cleanup();
             this.m_buttonAchievements.Cleanup();
             this.m_buttonExit.Cleanup();
-            Resanctified.Engine.Resources.Resource.SafeRelease<Resanctified.Engine.Resources.Texture>(ref this.m_splashTexture);
+            Resource.SafeRelease(ref this.m_splashTexture);
             base.Cleanup();
         }
 
@@ -150,13 +143,13 @@ namespace Resanctified.Game.UI
         {
             if (!this.m_visible)
                 return;
-            Resanctified.Engine.Graphics.Renderer.Renderer instance = Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance();
+            Engine.Graphics.Renderer.Renderer instance = Engine.Graphics.Renderer.Renderer.GetInstance();
             instance.Begin2DMode(false);
-            instance.DrawQuad<VertexPositionTexture>(this.m_quadBackground, VertexFormat.Position3Texture, (Transform)null, this.m_splashTexture);
-            instance.DrawQuad<VertexPositionColor>(this.m_quadBackgroundBlack, VertexFormat.Position3Color, (Transform)null, (Resanctified.Engine.Resources.Texture)null, GameConstant.OUTGAME_BLACKBACKGROUND_COLOR);
+            instance.DrawQuad(this.m_quadBackground, VertexFormat.Position3Texture, null, this.m_splashTexture);
+            instance.DrawQuad(this.m_quadBackgroundBlack, VertexFormat.Position3Color, null, null, GameConstant.OUTGAME_BLACKBACKGROUND_COLOR);
             this.m_t.SetPosition(395f, 320f, 0.0f);
             this.m_t.SetScale(1f);
-            instance.DrawQuad<VertexPositionTexture>(this.m_quadTitle, VertexFormat.Position3Texture, this.m_t, this.m_splashTexture);
+            instance.DrawQuad(this.m_quadTitle, VertexFormat.Position3Texture, this.m_t, this.m_splashTexture);
             Font font = GameApplication.GetInstance().GetFont();
             this.m_t.SetPosition(150f, 280f, 0.0f);
             instance.DrawString(font, this.m_t, 4, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.StoryMode));

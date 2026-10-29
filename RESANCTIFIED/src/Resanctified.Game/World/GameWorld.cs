@@ -1,36 +1,29 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Game.World.GameWorld
-// Assembly: TwinBlades, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F185CF1-B1A3-44DD-BD34-391B69A73148
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\TwinBlades.dll
-
 using Microsoft.Xna.Framework;
-using Resanctified.Game.FSM.NPC.Zombie.State;
-using Resanctified.Game.UI;
-using Resanctified.Game.World.Entities;
 using Resanctified.Engine.FSM;
 using Resanctified.Engine.Graphics;
 using Resanctified.Engine.Maths;
 using Resanctified.Engine.Resources;
-using Resanctified.Engine.UI;
 using Resanctified.Engine.World.Entities;
+using Resanctified.Game.FSM.NPC.Zombie.State;
+using Resanctified.Game.UI;
+using Resanctified.Game.World.Entities;
 
 namespace Resanctified.Game.World
 {
-    public class GameWorld : Resanctified.Engine.World.World
+    public class GameWorld : Engine.World.World
     {
         private Level[] m_levelArray;
         public Vector3 WorldMin;
         public Vector3 WorldMax;
         public float EndOfLevelPosX;
         public int DayIndex;
-        public GameWorld.LevelId LevelIndex;
+        public LevelId LevelIndex;
         public int ZombiesAliveNb;
         public int ZombiesKilledNb;
         public int ZombiesLeftToKillInit;
         public int ZombiesLeftToKill;
         public int ZombiesLeftToKillForPotion;
-        private GameWorld.DayPart m_dayPart;
+        private DayPart m_dayPart;
         private PlayableCharacter m_hero;
         private NPCZombie[] m_zombieArray;
         private Entity m_cameraTarget;
@@ -97,14 +90,14 @@ namespace Resanctified.Game.World
         {
             switch (this.LevelIndex)
             {
-                case GameWorld.LevelId.Level_Town_Boss:
-                    return (NPCBoss)this.m_bossButcher;
-                case GameWorld.LevelId.Level_Forest_Boss:
-                    return Scenario.GetInstance().GetCurrentMissionIndex() >= 9 && Scenario.GetInstance().GetCurrentMissionIndex() < 99 ? (NPCBoss)this.m_bossButcher : (NPCBoss)this.m_bossNecro;
-                case GameWorld.LevelId.Level_Chapel_Boss:
-                    return (NPCBoss)this.m_bossNecro;
+                case LevelId.Level_Town_Boss:
+                    return this.m_bossButcher;
+                case LevelId.Level_Forest_Boss:
+                    return Scenario.GetInstance().GetCurrentMissionIndex() >= 9 && Scenario.GetInstance().GetCurrentMissionIndex() < 99 ? this.m_bossButcher : this.m_bossNecro;
+                case LevelId.Level_Chapel_Boss:
+                    return this.m_bossNecro;
                 default:
-                    return (NPCBoss)null;
+                    return null;
             }
         }
 
@@ -112,20 +105,20 @@ namespace Resanctified.Game.World
 
         public MagicOrb GetMagicOrb() => this.m_orb;
 
-        public GameWorld.DayPart GetDayPart() => this.m_dayPart;
+        public DayPart GetDayPart() => this.m_dayPart;
 
-        public void SetDayPart(GameWorld.DayPart part) => this.m_dayPart = part;
+        public void SetDayPart(DayPart part) => this.m_dayPart = part;
 
         public void NextDayPart()
         {
-            if (this.m_dayPart == GameWorld.DayPart.Night)
+            if (this.m_dayPart == DayPart.Night)
             {
                 for (int index = 0; index < 14; ++index)
                 {
                     if (this.m_levelArray[index].GetInfestationLevel() > 0)
                         this.m_levelArray[index].IncreaseInfestationLevel();
                 }
-                this.m_dayPart = GameWorld.DayPart.Morning;
+                this.m_dayPart = DayPart.Morning;
                 ++this.DayIndex;
             }
             else
@@ -136,9 +129,9 @@ namespace Resanctified.Game.World
         {
             if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Survival)
             {
-                if (this.LevelIndex == GameWorld.LevelId.Level_Survival_3)
+                if (this.LevelIndex == LevelId.Level_Survival_3)
                 {
-                    this.LevelIndex = GameWorld.LevelId.Level_Survival_1;
+                    this.LevelIndex = LevelId.Level_Survival_1;
                     return true;
                 }
                 ++this.LevelIndex;
@@ -146,67 +139,67 @@ namespace Resanctified.Game.World
             return false;
         }
 
-        public Level GetLevel(GameWorld.LevelId id) => this.m_levelArray[(int)id];
+        public Level GetLevel(LevelId id) => this.m_levelArray[(int)id];
 
         public Level GetLevel(int index) => this.m_levelArray[index];
 
         public Level GetCurrentLevel() => this.m_levelArray[(int)this.LevelIndex];
 
-        public string GetLevelName(GameWorld.LevelId id)
+        public string GetLevelName(LevelId id)
         {
             switch (id)
             {
-                case GameWorld.LevelId.Level_Survival_1:
+                case LevelId.Level_Survival_1:
                     return "Survival 1";
-                case GameWorld.LevelId.Level_Survival_2:
+                case LevelId.Level_Survival_2:
                     return "Survival 2";
-                case GameWorld.LevelId.Level_Survival_3:
+                case LevelId.Level_Survival_3:
                     return "Survival 3";
-                case GameWorld.LevelId.Level_Shop:
+                case LevelId.Level_Shop:
                     return "Shop";
-                case GameWorld.LevelId.Level_Town_1:
+                case LevelId.Level_Town_1:
                     return "Town 1";
-                case GameWorld.LevelId.Level_Town_2:
+                case LevelId.Level_Town_2:
                     return "Town 2";
-                case GameWorld.LevelId.Level_Town_Boss:
+                case LevelId.Level_Town_Boss:
                     return "Town Boss";
-                case GameWorld.LevelId.Level_Forest_1:
+                case LevelId.Level_Forest_1:
                     return "Forest 1";
-                case GameWorld.LevelId.Level_Forest_2:
+                case LevelId.Level_Forest_2:
                     return "Forest 2";
-                case GameWorld.LevelId.Level_Forest_Boss:
+                case LevelId.Level_Forest_Boss:
                     return "Forest Boss";
-                case GameWorld.LevelId.Level_Graveyard_1:
+                case LevelId.Level_Graveyard_1:
                     return "Graveyard";
-                case GameWorld.LevelId.Level_Chapel_1:
+                case LevelId.Level_Chapel_1:
                     return "Chapel";
-                case GameWorld.LevelId.Level_Chapel_Boss:
+                case LevelId.Level_Chapel_Boss:
                     return "Crypt Boss";
-                case GameWorld.LevelId.Level_Ending:
+                case LevelId.Level_Ending:
                     return "Ending";
                 default:
                     return string.Empty;
             }
         }
 
-        public string GetDayPartName(GameWorld.DayPart part)
+        public string GetDayPartName(DayPart part)
         {
             switch (part)
             {
-                case GameWorld.DayPart.Morning:
+                case DayPart.Morning:
                     return "Morning";
-                case GameWorld.DayPart.Day:
+                case DayPart.Day:
                     return "Afternoon";
-                case GameWorld.DayPart.Evening:
+                case DayPart.Evening:
                     return "Evening";
-                case GameWorld.DayPart.Night:
+                case DayPart.Night:
                     return "Night";
                 default:
                     return string.Empty;
             }
         }
 
-        public Animation2D GetMiscAnimation(GameWorld.MiscAnimId animId) => this.m_miscAnimArray[(int)animId];
+        public Animation2D GetMiscAnimation(MiscAnimId animId) => this.m_miscAnimArray[(int)animId];
 
         public int GetKillPoints(NPCZombie zombie)
         {
@@ -279,8 +272,8 @@ namespace Resanctified.Game.World
             this.IsShopExitEnabled = true;
             this.EndOfLevelPosX = 40f;
             this.DayIndex = 1;
-            this.LevelIndex = GameWorld.LevelId.Level_Survival_1;
-            this.m_dayPart = GameWorld.DayPart.Morning;
+            this.LevelIndex = LevelId.Level_Survival_1;
+            this.m_dayPart = DayPart.Morning;
             this.ZombiesAliveNb = 0;
             this.m_zombiesToSpawnNb = 1;
             this.m_zombiesAliveNbMax = 1;
@@ -294,9 +287,9 @@ namespace Resanctified.Game.World
             this.m_impactIndex = 0;
             this.m_spikeIndex = 0;
             this.m_levelSectorIndex = 1;
-            this.m_zombieNormalTexture = (Texture)null;
-            this.m_zombieNormalTextureAlt1 = (Texture)null;
-            this.m_zombieGrabberTextureAlt1 = (Texture)null;
+            this.m_zombieNormalTexture = null;
+            this.m_zombieNormalTextureAlt1 = null;
+            this.m_zombieGrabberTextureAlt1 = null;
             this.m_hero = new PlayableCharacter();
             this.m_camera = new CameraEntity();
             this.m_cameraTarget = new Entity();
@@ -323,9 +316,9 @@ namespace Resanctified.Game.World
 
         private void InitLevelArray()
         {
-            this.m_levelArray[0] = new Level("Levels\\lvl01\\lvl01", (string)null, (string)null, (string)null, (string)null, (string)null, (string)null, Level.LevelType.Normal);
-            this.m_levelArray[1] = new Level("Levels\\lvl02\\lvl02", (string)null, (string)null, (string)null, (string)null, (string)null, (string)null, Level.LevelType.Normal);
-            this.m_levelArray[2] = new Level("Levels\\lvl03\\lvl03", (string)null, (string)null, (string)null, (string)null, (string)null, (string)null, Level.LevelType.Normal);
+            this.m_levelArray[0] = new Level("Levels\\lvl01\\lvl01", null, null, null, null, null, null, Level.LevelType.Normal);
+            this.m_levelArray[1] = new Level("Levels\\lvl02\\lvl02", null, null, null, null, null, null, Level.LevelType.Normal);
+            this.m_levelArray[2] = new Level("Levels\\lvl03\\lvl03", null, null, null, null, null, null, Level.LevelType.Normal);
             this.m_levelArray[3] = new Level("Levels\\lvl13\\lvl13", "Textures\\texture_shop", "Textures\\texture_shop_night", "Textures\\sky_day", "Textures\\sky_day", "Textures\\sky_night", "Textures\\sky_night", Level.LevelType.Shop);
             this.m_levelArray[4] = new Level("Levels\\lvl07\\lvl07", "Textures\\texture_day_story", "Textures\\texture_day_night_story", "Textures\\sky_cemetary_story", "Textures\\sky_cliff", "Textures\\sky_sunburn", "Textures\\sky_cliff_night", Level.LevelType.Normal);
             this.m_levelArray[5] = new Level("Levels\\lvl09\\lvl09", "Textures\\texture_day2_story", "Textures\\texture_day2_night_story", "Textures\\sky_cemetary_story", "Textures\\sky_cliff", "Textures\\sky_cemetary2", "Textures\\sky_cliff_night", Level.LevelType.Normal);
@@ -393,35 +386,35 @@ namespace Resanctified.Game.World
                 this.InitLevelParametersSurvival();
             }
             this.LoadMiscAnimations();
-            NPCBoss boss = (NPCBoss)null;
+            NPCBoss boss = null;
             if (this.GetCurrentLevel().GetLevelType() == Level.LevelType.Boss)
             {
                 switch (this.LevelIndex)
                 {
-                    case GameWorld.LevelId.Level_Town_Boss:
+                    case LevelId.Level_Town_Boss:
                         this.m_bossButcher.Initialize(NPCBoss.BossType.ButcherForm1);
-                        boss = (NPCBoss)this.m_bossButcher;
+                        boss = this.m_bossButcher;
                         break;
-                    case GameWorld.LevelId.Level_Forest_Boss:
+                    case LevelId.Level_Forest_Boss:
                         if (Scenario.GetInstance().GetCurrentMissionIndex() >= 9 && Scenario.GetInstance().GetCurrentMissionIndex() < 99)
                         {
                             this.m_bossButcher.Initialize(NPCBoss.BossType.ButcherForm1);
-                            boss = (NPCBoss)this.m_bossButcher;
+                            boss = this.m_bossButcher;
                             break;
                         }
                         this.m_bossNecro.Initialize(NPCBoss.BossType.NecromancerForm1);
-                        boss = (NPCBoss)this.m_bossNecro;
+                        boss = this.m_bossNecro;
                         break;
-                    case GameWorld.LevelId.Level_Chapel_Boss:
+                    case LevelId.Level_Chapel_Boss:
                         this.m_bossNecro.Initialize(NPCBoss.BossType.NecromancerForm2);
                         this.m_orb.Initialize();
-                        boss = (NPCBoss)this.m_bossNecro;
+                        boss = this.m_bossNecro;
                         break;
                 }
             }
-            Resanctified.Engine.Resources.Resource.SafeRelease<Texture>(ref this.m_zombieNormalTexture);
-            Resanctified.Engine.Resources.Resource.SafeRelease<Texture>(ref this.m_zombieNormalTextureAlt1);
-            Resanctified.Engine.Resources.Resource.SafeRelease<Texture>(ref this.m_zombieGrabberTextureAlt1);
+            Resource.SafeRelease(ref this.m_zombieNormalTexture);
+            Resource.SafeRelease(ref this.m_zombieNormalTextureAlt1);
+            Resource.SafeRelease(ref this.m_zombieGrabberTextureAlt1);
             if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
                 this.InitZombieSkinStory();
             else
@@ -439,7 +432,7 @@ namespace Resanctified.Game.World
             for (int index = 0; index < 8; ++index)
                 this.m_impactArray[index].Initialize();
             this.m_impactIndex = 0;
-            if (this.LevelIndex == GameWorld.LevelId.Level_Forest_Boss || this.LevelIndex == GameWorld.LevelId.Level_Chapel_Boss)
+            if (this.LevelIndex == LevelId.Level_Forest_Boss || this.LevelIndex == LevelId.Level_Chapel_Boss)
             {
                 for (int index = 0; index < 8; ++index)
                     this.m_spikeArray[index].Initialize();
@@ -447,7 +440,7 @@ namespace Resanctified.Game.World
             this.m_spikeIndex = 0;
             this.m_spikeTrapTimer = 0.0f;
             this.m_spikeTrapStartPos = 0.0f;
-            if (this.LevelIndex == GameWorld.LevelId.Level_Chapel_Boss)
+            if (this.LevelIndex == LevelId.Level_Chapel_Boss)
             {
                 for (int index = 0; index < 4; ++index)
                     this.m_rockArray[index].Initialize();
@@ -462,7 +455,7 @@ namespace Resanctified.Game.World
             this.ZombiesAliveNb = 0;
             this.ZombiesKilledNb = 0;
             this.ZombiesLeftToKillForPotion = 30;
-            if (this.m_hero.HitPoints < (int)((double)this.m_hero.GetHitPointsMax() * 0.5))
+            if (this.m_hero.HitPoints < (int)(this.m_hero.GetHitPointsMax() * 0.5))
                 this.ZombiesLeftToKillForPotion = 20;
             this.m_camera.Initialize();
             if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
@@ -489,10 +482,10 @@ namespace Resanctified.Game.World
                 this.m_camera.FollowEntity(this.m_cameraTarget, 1.5f, 2f, 20f, 0.95f, 30f, 1f, false, false);
             }
             else if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
-                this.m_camera.FollowEntity((Entity)this.m_hero, 2.5f, 2f, 30f, 0.95f, 30f, 1f, false, false);
+                this.m_camera.FollowEntity(this.m_hero, 2.5f, 2f, 30f, 0.95f, 30f, 1f, false, false);
             else
-                this.m_camera.FollowEntity((Entity)this.m_hero, 2.5f, 2.5f, 30f, 0.95f, 30f, 1f, false, false);
-            Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().SetProjectionMatrix(this.m_camera.GetProjectionMatrix());
+                this.m_camera.FollowEntity(this.m_hero, 2.5f, 2.5f, 30f, 0.95f, 30f, 1f, false, false);
+            Engine.Graphics.Renderer.Renderer.GetInstance().SetProjectionMatrix(this.m_camera.GetProjectionMatrix());
             this.m_hud.Initialize(this.m_hero, boss);
             if (this.GetCurrentLevel().GetLevelType() != Level.LevelType.Shop && this.GetCurrentLevel().GetLevelType() != Level.LevelType.Script)
                 return;
@@ -503,14 +496,14 @@ namespace Resanctified.Game.World
         {
             this.m_zombieNormalTexture = ResourceManager.GetInstance().LoadTexture("Textures\\zombie");
             if (this.DayIndex < 3)
-                this.m_zombieNormalTextureAlt1 = this.DayIndex != 1 || this.LevelIndex >= GameWorld.LevelId.Level_Town_2 ? ResourceManager.GetInstance().LoadTexture("Textures\\zombie2") : ResourceManager.GetInstance().LoadTexture("Textures\\zombie");
+                this.m_zombieNormalTextureAlt1 = this.DayIndex != 1 || this.LevelIndex >= LevelId.Level_Town_2 ? ResourceManager.GetInstance().LoadTexture("Textures\\zombie2") : ResourceManager.GetInstance().LoadTexture("Textures\\zombie");
             else if (this.DayIndex == 3)
-                this.m_zombieNormalTextureAlt1 = this.LevelIndex < GameWorld.LevelId.Level_Graveyard_1 ? ResourceManager.GetInstance().LoadTexture("Textures\\zombie2") : ResourceManager.GetInstance().LoadTexture("Textures\\sk_zombie");
+                this.m_zombieNormalTextureAlt1 = this.LevelIndex < LevelId.Level_Graveyard_1 ? ResourceManager.GetInstance().LoadTexture("Textures\\zombie2") : ResourceManager.GetInstance().LoadTexture("Textures\\sk_zombie");
             else if (this.DayIndex < 7)
                 this.m_zombieNormalTextureAlt1 = ResourceManager.GetInstance().LoadTexture("Textures\\sk_zombie");
             else if (this.DayIndex == 7)
             {
-                this.m_zombieNormalTextureAlt1 = this.LevelIndex != GameWorld.LevelId.Level_Graveyard_1 ? ResourceManager.GetInstance().LoadTexture("Textures\\sk_zombie") : ResourceManager.GetInstance().LoadTexture("Textures\\skeleton");
+                this.m_zombieNormalTextureAlt1 = this.LevelIndex != LevelId.Level_Graveyard_1 ? ResourceManager.GetInstance().LoadTexture("Textures\\sk_zombie") : ResourceManager.GetInstance().LoadTexture("Textures\\skeleton");
             }
             else
             {
@@ -550,11 +543,11 @@ namespace Resanctified.Game.World
             {
                 switch (this.LevelIndex)
                 {
-                    case GameWorld.LevelId.Level_Shop:
-                    case GameWorld.LevelId.Level_Town_1:
-                    case GameWorld.LevelId.Level_Town_2:
-                    case GameWorld.LevelId.Level_Town_Boss:
-                        if (this.GetDayPart() == GameWorld.DayPart.Day)
+                    case LevelId.Level_Shop:
+                    case LevelId.Level_Town_1:
+                    case LevelId.Level_Town_2:
+                    case LevelId.Level_Town_Boss:
+                        if (this.GetDayPart() == DayPart.Day)
                         {
                             this.m_zombieNormalTextureAlt1 = ResourceManager.GetInstance().LoadTexture("Textures\\zombie2");
                             this.m_zombieGrabberTextureAlt1 = ResourceManager.GetInstance().LoadTexture("Textures\\zombie_grab");
@@ -563,13 +556,13 @@ namespace Resanctified.Game.World
                         this.m_zombieNormalTextureAlt1 = ResourceManager.GetInstance().LoadTexture("Textures\\zombie");
                         this.m_zombieGrabberTextureAlt1 = ResourceManager.GetInstance().LoadTexture("Textures\\zombie_grab");
                         break;
-                    case GameWorld.LevelId.Level_Forest_1:
-                    case GameWorld.LevelId.Level_Forest_Boss:
+                    case LevelId.Level_Forest_1:
+                    case LevelId.Level_Forest_Boss:
                         this.m_zombieNormalTextureAlt1 = ResourceManager.GetInstance().LoadTexture("Textures\\sk_zombie");
                         this.m_zombieGrabberTextureAlt1 = ResourceManager.GetInstance().LoadTexture("Textures\\zombie2_grab");
                         break;
-                    case GameWorld.LevelId.Level_Forest_2:
-                        if (this.GetDayPart() == GameWorld.DayPart.Morning || this.GetDayPart() == GameWorld.DayPart.Day)
+                    case LevelId.Level_Forest_2:
+                        if (this.GetDayPart() == DayPart.Morning || this.GetDayPart() == DayPart.Day)
                         {
                             this.m_zombieNormalTextureAlt1 = ResourceManager.GetInstance().LoadTexture("Textures\\zombie2");
                             this.m_zombieGrabberTextureAlt1 = ResourceManager.GetInstance().LoadTexture("Textures\\zombie2_grab");
@@ -578,9 +571,9 @@ namespace Resanctified.Game.World
                         this.m_zombieNormalTextureAlt1 = ResourceManager.GetInstance().LoadTexture("Textures\\sk_zombie");
                         this.m_zombieGrabberTextureAlt1 = ResourceManager.GetInstance().LoadTexture("Textures\\zombie2_grab");
                         break;
-                    case GameWorld.LevelId.Level_Graveyard_1:
-                    case GameWorld.LevelId.Level_Chapel_1:
-                    case GameWorld.LevelId.Level_Chapel_Boss:
+                    case LevelId.Level_Graveyard_1:
+                    case LevelId.Level_Chapel_1:
+                    case LevelId.Level_Chapel_Boss:
                         this.m_zombieNormalTextureAlt1 = ResourceManager.GetInstance().LoadTexture("Textures\\skeleton");
                         this.m_zombieGrabberTextureAlt1 = ResourceManager.GetInstance().LoadTexture("Textures\\sk_zombie_grab");
                         break;
@@ -615,10 +608,10 @@ namespace Resanctified.Game.World
             this.m_zombiesAliveNbMax = GameConstant.ZOMBIE_ALIVE_NB_ARRAY[this.DayIndex - 1];
             if (GameApplication.GetInstance().GetDifficulty() == GameApplication.GameDifficulty.Hard && this.m_zombiesAliveNbMax < 10)
                 this.m_zombiesAliveNbMax = 10;
-            this.m_spawnTime = (float)(4.0 - (double)num * 0.0700000002980232);
-            if ((double)this.m_spawnTime < 3.0)
+            this.m_spawnTime = (float)(4.0 - num * 0.0700000002980232);
+            if (this.m_spawnTime < 3.0)
                 this.m_spawnTime = 3f;
-            if (this.DayIndex != 1 || this.LevelIndex != GameWorld.LevelId.Level_Survival_1)
+            if (this.DayIndex != 1 || this.LevelIndex != LevelId.Level_Survival_1)
                 return;
             this.IsGrabberZombieSpawnEnabled = false;
         }
@@ -630,25 +623,25 @@ namespace Resanctified.Game.World
                 num1 = 1;
             switch (this.LevelIndex)
             {
-                case GameWorld.LevelId.Level_Town_1:
-                case GameWorld.LevelId.Level_Town_2:
+                case LevelId.Level_Town_1:
+                case LevelId.Level_Town_2:
                     this.ZombiesLeftToKill = 10 + 8 * (num1 - 1);
                     break;
-                case GameWorld.LevelId.Level_Forest_1:
-                case GameWorld.LevelId.Level_Forest_2:
+                case LevelId.Level_Forest_1:
+                case LevelId.Level_Forest_2:
                     this.ZombiesLeftToKill = 12 + 8 * (num1 - 1);
                     break;
-                case GameWorld.LevelId.Level_Graveyard_1:
-                case GameWorld.LevelId.Level_Chapel_1:
+                case LevelId.Level_Graveyard_1:
+                case LevelId.Level_Chapel_1:
                     this.ZombiesLeftToKill = 15 + 8 * (num1 - 1);
                     break;
                 default:
                     this.ZombiesLeftToKill = 0;
                     break;
             }
-            if (this.GetDayPart() == GameWorld.DayPart.Evening)
+            if (this.GetDayPart() == DayPart.Evening)
                 this.ZombiesLeftToKill += 2;
-            if (this.GetDayPart() == GameWorld.DayPart.Night)
+            if (this.GetDayPart() == DayPart.Night)
                 this.ZombiesLeftToKill += 4;
             this.ZombiesLeftToKill += MathHelperEx.GetRandomInt(0, this.DayIndex);
             this.ZombiesLeftToKillInit = this.ZombiesLeftToKill;
@@ -667,10 +660,10 @@ namespace Resanctified.Game.World
                 this.ZombiesLeftToKillInit = 0;
                 switch (this.LevelIndex)
                 {
-                    case GameWorld.LevelId.Level_Town_Boss:
+                    case LevelId.Level_Town_Boss:
                         this.m_spawnTime = 4f;
                         break;
-                    case GameWorld.LevelId.Level_Forest_Boss:
+                    case LevelId.Level_Forest_Boss:
                         if (Scenario.GetInstance().GetCurrentMissionIndex() >= 9 && Scenario.GetInstance().GetCurrentMissionIndex() < 99)
                         {
                             this.m_spawnTime = 4f;
@@ -678,7 +671,7 @@ namespace Resanctified.Game.World
                         }
                         this.IsZombieSpawnEnabled = false;
                         break;
-                    case GameWorld.LevelId.Level_Chapel_Boss:
+                    case LevelId.Level_Chapel_Boss:
                         this.IsZombieSpawnEnabled = false;
                         break;
                 }
@@ -716,16 +709,16 @@ namespace Resanctified.Game.World
                     this.m_spawnArmoredRatio = 50;
                 switch (this.LevelIndex)
                 {
-                    case GameWorld.LevelId.Level_Town_1:
-                    case GameWorld.LevelId.Level_Town_2:
+                    case LevelId.Level_Town_1:
+                    case LevelId.Level_Town_2:
                         this.m_zombiesAliveNbMax = GameConstant.ZOMBIE_ALIVE_NB_STORY_TOWN;
                         break;
-                    case GameWorld.LevelId.Level_Forest_1:
-                    case GameWorld.LevelId.Level_Forest_2:
+                    case LevelId.Level_Forest_1:
+                    case LevelId.Level_Forest_2:
                         this.m_zombiesAliveNbMax = GameConstant.ZOMBIE_ALIVE_NB_STORY_FOREST;
                         break;
-                    case GameWorld.LevelId.Level_Graveyard_1:
-                    case GameWorld.LevelId.Level_Chapel_1:
+                    case LevelId.Level_Graveyard_1:
+                    case LevelId.Level_Chapel_1:
                         this.m_zombiesAliveNbMax = GameConstant.ZOMBIE_ALIVE_NB_STORY_GRAVEYARD;
                         break;
                     default:
@@ -734,13 +727,13 @@ namespace Resanctified.Game.World
                 }
                 this.m_zombiesAliveNbMax += GameConstant.ZOMBIE_ALIVE_NB_STORY_INFESTATION_ADD * (num1 - 1);
                 this.m_spawnTime = 4f;
-                this.m_spawnTime -= (float)(num1 - 1) * 0.2f;
-                this.m_spawnTime -= (float)(this.DayIndex - 1 + 10) * 0.07f;
-                if (this.GetDayPart() == GameWorld.DayPart.Evening)
+                this.m_spawnTime -= (num1 - 1) * 0.2f;
+                this.m_spawnTime -= (this.DayIndex - 1 + 10) * 0.07f;
+                if (this.GetDayPart() == DayPart.Evening)
                     this.m_spawnTime -= 0.2f;
-                if (this.GetDayPart() == GameWorld.DayPart.Night)
+                if (this.GetDayPart() == DayPart.Night)
                     this.m_spawnTime -= 0.4f;
-                if ((double)this.m_spawnTime >= 3.0)
+                if (this.m_spawnTime >= 3.0)
                     return;
                 this.m_spawnTime = 3f;
             }
@@ -757,23 +750,23 @@ namespace Resanctified.Game.World
             {
                 switch (this.LevelIndex)
                 {
-                    case GameWorld.LevelId.Level_Town_Boss:
+                    case LevelId.Level_Town_Boss:
                         this.m_bossButcher.Update(gameTime);
                         this.m_spawnSwarmTimer -= gameTime;
-                        if ((double)this.m_spawnSwarmTimer <= 0.0)
+                        if (this.m_spawnSwarmTimer <= 0.0)
                         {
                             this.SpawnZombieSwarm();
                             this.m_spawnSwarmTimer = this.m_spawnTime;
                             break;
                         }
                         break;
-                    case GameWorld.LevelId.Level_Forest_Boss:
-                    case GameWorld.LevelId.Level_Chapel_Boss:
-                        if (this.LevelIndex == GameWorld.LevelId.Level_Forest_Boss && Scenario.GetInstance().GetCurrentMissionIndex() >= 9 && Scenario.GetInstance().GetCurrentMissionIndex() < 99)
+                    case LevelId.Level_Forest_Boss:
+                    case LevelId.Level_Chapel_Boss:
+                        if (this.LevelIndex == LevelId.Level_Forest_Boss && Scenario.GetInstance().GetCurrentMissionIndex() >= 9 && Scenario.GetInstance().GetCurrentMissionIndex() < 99)
                         {
                             this.m_bossButcher.Update(gameTime);
                             this.m_spawnSwarmTimer -= gameTime;
-                            if ((double)this.m_spawnSwarmTimer <= 0.0)
+                            if (this.m_spawnSwarmTimer <= 0.0)
                             {
                                 this.SpawnZombieSwarm();
                                 this.m_spawnSwarmTimer = this.m_spawnTime;
@@ -781,7 +774,7 @@ namespace Resanctified.Game.World
                             }
                             break;
                         }
-                        if (this.LevelIndex == GameWorld.LevelId.Level_Chapel_Boss)
+                        if (this.LevelIndex == LevelId.Level_Chapel_Boss)
                             this.m_orb.Update(gameTime);
                         this.m_bossNecro.Update(gameTime);
                         if (this.m_bossNecro.IsInvoquing())
@@ -802,7 +795,7 @@ namespace Resanctified.Game.World
             else
             {
                 this.m_spawnSwarmTimer -= gameTime;
-                if ((double)this.m_spawnSwarmTimer <= 0.0)
+                if (this.m_spawnSwarmTimer <= 0.0)
                 {
                     this.SpawnZombieSwarm();
                     this.m_spawnSwarmTimer = this.m_spawnTime;
@@ -811,7 +804,7 @@ namespace Resanctified.Game.World
             if (this.IsZombieSpawnEnabled && this.m_zombiesToSpawnNb > 0)
             {
                 this.m_spawnTimer -= gameTime;
-                if ((double)this.m_spawnTimer <= 0.0)
+                if (this.m_spawnTimer <= 0.0)
                 {
                     this.SpawnZombie();
                     this.m_spawnTimer = 0.2f;
@@ -821,10 +814,10 @@ namespace Resanctified.Game.World
             this.m_hero.Update(gameTime);
             if (this.GetCurrentLevel().GetLevelType() == Level.LevelType.Boss)
             {
-                float x = (float)(((double)this.m_hero.GetTransform().GetPosition().X + (double)this.GetBoss().GetTransform().GetPosition().X) * 0.5);
-                if ((double)x > (double)this.m_hero.GetTransform().GetPosition().X + 0.800000011920929)
+                float x = (float)((this.m_hero.GetTransform().GetPosition().X + (double)this.GetBoss().GetTransform().GetPosition().X) * 0.5);
+                if ((double)x > this.m_hero.GetTransform().GetPosition().X + 0.800000011920929)
                     x = this.m_hero.GetTransform().GetPosition().X + 0.8f;
-                if ((double)x < (double)this.m_hero.GetTransform().GetPosition().X - 0.800000011920929)
+                if ((double)x < this.m_hero.GetTransform().GetPosition().X - 0.800000011920929)
                     x = this.m_hero.GetTransform().GetPosition().X - 0.8f;
                 this.m_cameraTarget.GetTransform().SetPosition(x, this.m_hero.GetTransform().GetPosition().Y);
                 this.m_cameraTarget.GetTransform().SetScale(this.m_hero.GetTransform().GetScale());
@@ -839,17 +832,17 @@ namespace Resanctified.Game.World
             base.Update(gameTime);
             this.m_hero.UpdateCollisions();
             NPCZombie[] buffer = new NPCZombie[55];
-            int entitiesByType = this.GetEntityManager().GetEntitiesByType(3, (Entity[])buffer, 55);
+            int entitiesByType = this.GetEntityManager().GetEntitiesByType(3, buffer, 55);
             for (int index = 0; index < entitiesByType; ++index)
                 buffer[index].UpdateCollisions();
             if (this.GetCurrentLevel().GetLevelType() == Level.LevelType.Boss)
             {
                 switch (this.LevelIndex)
                 {
-                    case GameWorld.LevelId.Level_Town_Boss:
+                    case LevelId.Level_Town_Boss:
                         this.m_bossButcher.UpdateCollisions();
                         break;
-                    case GameWorld.LevelId.Level_Forest_Boss:
+                    case LevelId.Level_Forest_Boss:
                         if (Scenario.GetInstance().GetCurrentMissionIndex() >= 9 && Scenario.GetInstance().GetCurrentMissionIndex() < 99)
                         {
                             this.m_bossButcher.UpdateCollisions();
@@ -859,7 +852,7 @@ namespace Resanctified.Game.World
                         for (int index = 0; index < 8; ++index)
                             this.m_spikeArray[index].UpdateCollisions();
                         break;
-                    case GameWorld.LevelId.Level_Chapel_Boss:
+                    case LevelId.Level_Chapel_Boss:
                         this.m_bossNecro.UpdateCollisions();
                         this.m_orb.UpdateCollisions();
                         for (int index = 0; index < 8; ++index)
@@ -873,7 +866,7 @@ namespace Resanctified.Game.World
             if (GameApplication.GetInstance().GetGameMode() != GameApplication.GameMode.Story || this.GetCurrentLevel().GetLevelType() != Level.LevelType.Normal || this.m_levelSectorIndex >= 4)
                 return;
             float num = this.EndOfLevelPosX * 0.25f;
-            if ((double)this.m_hero.GetTransform().GetPosition().X <= (double)this.m_levelSectorIndex * (double)num)
+            if (this.m_hero.GetTransform().GetPosition().X <= this.m_levelSectorIndex * (double)num)
                 return;
             this.ZombiesLeftToKill += this.ZombiesLeftToKillInit;
             ++this.m_levelSectorIndex;
@@ -894,9 +887,9 @@ namespace Resanctified.Game.World
                 this.m_explosionArray[index].Cleanup();
             for (int index = 0; index < 8; ++index)
                 this.m_impactArray[index].Cleanup();
-            Resanctified.Engine.Resources.Resource.SafeRelease<Texture>(ref this.m_zombieNormalTexture);
-            Resanctified.Engine.Resources.Resource.SafeRelease<Texture>(ref this.m_zombieNormalTextureAlt1);
-            Resanctified.Engine.Resources.Resource.SafeRelease<Texture>(ref this.m_zombieGrabberTextureAlt1);
+            Resource.SafeRelease(ref this.m_zombieNormalTexture);
+            Resource.SafeRelease(ref this.m_zombieNormalTextureAlt1);
+            Resource.SafeRelease(ref this.m_zombieGrabberTextureAlt1);
             for (int index = 0; index < 6; ++index)
                 this.m_miscAnimArray[index].Cleanup();
             for (int index = 0; index < 4; ++index)
@@ -938,12 +931,12 @@ namespace Resanctified.Game.World
                     num = 0;
                 int min = GameConstant.ZOMBIE_STORY_SWARM_NB_ARRAY[num * 2];
                 int zombieStorySwarmNb = GameConstant.ZOMBIE_STORY_SWARM_NB_ARRAY[num * 2 + 1];
-                if (this.m_dayPart == GameWorld.DayPart.Evening || this.m_dayPart == GameWorld.DayPart.Night)
+                if (this.m_dayPart == DayPart.Evening || this.m_dayPart == DayPart.Night)
                 {
                     ++min;
                     ++zombieStorySwarmNb;
                 }
-                if (this.LevelIndex == GameWorld.LevelId.Level_Town_Boss)
+                if (this.LevelIndex == LevelId.Level_Town_Boss)
                 {
                     min = 3;
                     if (GameApplication.GetInstance().GetDifficulty() == GameApplication.GameDifficulty.Hard)
@@ -978,11 +971,11 @@ namespace Resanctified.Game.World
                             if (MathHelperEx.GetRandomInt(0, 100) > 50)
                                 this.m_zombieArray[index].GetView().RemapTexture(this.m_zombieNormalTexture, this.m_zombieNormalTextureAlt1);
                             else
-                                this.m_zombieArray[index].GetView().RemapTexture((Texture)null, (Texture)null);
+                                this.m_zombieArray[index].GetView().RemapTexture(null, null);
                         }
-                        this.GetEntityManager().AddEntity((Entity)this.m_zombieArray[index]);
+                        this.GetEntityManager().AddEntity(this.m_zombieArray[index]);
                         ++this.ZombiesAliveNb;
-                        this.m_zombieArray[index].GetStateMachine().SetState((IState)NPCZombieStateSpawn.GetInstance());
+                        this.m_zombieArray[index].GetStateMachine().SetState(NPCZombieStateSpawn.GetInstance());
                         return;
                     }
                 }
@@ -999,16 +992,16 @@ namespace Resanctified.Game.World
                     else
                     {
                         this.m_zombieArray[index].SetZombieType(ZombieType.Normal);
-                        if (this.LevelIndex == GameWorld.LevelId.Level_Chapel_Boss)
+                        if (this.LevelIndex == LevelId.Level_Chapel_Boss)
                             this.m_zombieArray[index].GetView().RemapTexture(this.m_zombieNormalTexture, this.m_zombieNormalTextureAlt1);
                         else if (MathHelperEx.GetRandomInt(0, 100) > 50)
                             this.m_zombieArray[index].GetView().RemapTexture(this.m_zombieNormalTexture, this.m_zombieNormalTextureAlt1);
                         else
-                            this.m_zombieArray[index].GetView().RemapTexture((Texture)null, (Texture)null);
+                            this.m_zombieArray[index].GetView().RemapTexture(null, null);
                     }
-                    this.GetEntityManager().AddEntity((Entity)this.m_zombieArray[index]);
+                    this.GetEntityManager().AddEntity(this.m_zombieArray[index]);
                     ++this.ZombiesAliveNb;
-                    this.m_zombieArray[index].GetStateMachine().SetState((IState)NPCZombieStateSpawn.GetInstance());
+                    this.m_zombieArray[index].GetStateMachine().SetState(NPCZombieStateSpawn.GetInstance());
                     break;
                 }
             }
@@ -1020,7 +1013,7 @@ namespace Resanctified.Game.World
             {
                 if (!this.m_zombieArray[index].IsActive)
                 {
-                    this.GetEntityManager().RemoveEntity((Entity)this.m_zombieArray[index]);
+                    this.GetEntityManager().RemoveEntity(this.m_zombieArray[index]);
                     this.m_zombieArray[index].IsActive = true;
                 }
             }
@@ -1039,7 +1032,7 @@ namespace Resanctified.Game.World
             {
                 this.m_explosionArray[this.m_explosionIndex].GetSound().Play();
                 this.m_explosionArray[this.m_explosionIndex].IsActive = true;
-                Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().AddTopLevelView((View)this.m_explosionArray[this.m_explosionIndex].GetView(), this.m_explosionArray[this.m_explosionIndex].GetTransform());
+                Engine.Graphics.Renderer.Renderer.GetInstance().AddTopLevelView(this.m_explosionArray[this.m_explosionIndex].GetView(), this.m_explosionArray[this.m_explosionIndex].GetTransform());
             }
             ++this.m_explosionIndex;
             if (this.m_explosionIndex < 8)
@@ -1057,7 +1050,7 @@ namespace Resanctified.Game.World
                     if (this.m_explosionArray[index].GetView().GetAnimation2D().IsEndOfAnimationReached())
                     {
                         this.m_explosionArray[index].IsActive = false;
-                        Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().RemoveTopLevelView((View)this.m_explosionArray[index].GetView());
+                        Engine.Graphics.Renderer.Renderer.GetInstance().RemoveTopLevelView(this.m_explosionArray[index].GetView());
                     }
                 }
             }
@@ -1094,10 +1087,10 @@ namespace Resanctified.Game.World
 
         private void UpdateSpikes(float gameTime)
         {
-            if ((double)this.m_spikeTrapTimer > 0.0)
+            if (this.m_spikeTrapTimer > 0.0)
             {
                 this.m_spikeTrapTimer -= gameTime;
-                if ((double)this.m_spikeTrapTimer <= 0.0)
+                if (this.m_spikeTrapTimer <= 0.0)
                 {
                     float x = this.m_spikeArray[this.m_spikeIndex - 1].GetTransform().GetPosition().X + 0.7f;
                     if ((double)x > 5.5)
@@ -1132,7 +1125,7 @@ namespace Resanctified.Game.World
             if (this.m_earthquakeEnabled)
             {
                 this.m_earthquakeTimer += gameTime;
-                if ((double)this.m_earthquakeTimer >= 2.0)
+                if (this.m_earthquakeTimer >= 2.0)
                 {
                     this.m_earthquakeTimer = 0.0f;
                     ++this.m_rockIndex;
@@ -1168,7 +1161,7 @@ namespace Resanctified.Game.World
                 if (this.m_impactArray[this.m_impactIndex].GetSound() != null && soundEnabled)
                     this.m_impactArray[this.m_impactIndex].GetSound().Play();
                 this.m_impactArray[this.m_impactIndex].IsActive = true;
-                Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().AddTopLevelView((View)this.m_impactArray[this.m_impactIndex].GetView(), this.m_impactArray[this.m_impactIndex].GetTransform());
+                Engine.Graphics.Renderer.Renderer.GetInstance().AddTopLevelView(this.m_impactArray[this.m_impactIndex].GetView(), this.m_impactArray[this.m_impactIndex].GetTransform());
             }
             ++this.m_impactIndex;
             if (this.m_impactIndex < 8)
@@ -1186,7 +1179,7 @@ namespace Resanctified.Game.World
                     if (this.m_impactArray[index].GetView().GetAnimation2D().IsEndOfAnimationReached())
                     {
                         this.m_impactArray[index].IsActive = false;
-                        Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().RemoveTopLevelView((View)this.m_impactArray[index].GetView());
+                        Engine.Graphics.Renderer.Renderer.GetInstance().RemoveTopLevelView(this.m_impactArray[index].GetView());
                     }
                 }
             }
@@ -1241,20 +1234,20 @@ namespace Resanctified.Game.World
             Vector3 position1 = this.m_hero.GetTransform().GetPosition();
             if (this.GetCurrentLevel().GetLevelType() == Level.LevelType.Boss)
             {
-                if (this.LevelIndex == GameWorld.LevelId.Level_Chapel_Boss)
+                if (this.LevelIndex == LevelId.Level_Chapel_Boss)
                 {
-                    if ((double)position1.X < 0.199999988079071)
+                    if (position1.X < 0.199999988079071)
                     {
                         position1.X = 0.2f;
                         this.m_hero.GetTransform().SetPosition(position1);
                     }
                 }
-                else if ((double)position1.X < -0.5)
+                else if (position1.X < -0.5)
                 {
                     position1.X = -0.5f;
                     this.m_hero.GetTransform().SetPosition(position1);
                 }
-                if ((double)position1.X > 7.5)
+                if (position1.X > 7.5)
                 {
                     position1.X = 7.5f;
                     this.m_hero.GetTransform().SetPosition(position1);
@@ -1262,12 +1255,12 @@ namespace Resanctified.Game.World
             }
             else if (this.GetCurrentLevel().GetLevelType() == Level.LevelType.Shop)
             {
-                if ((double)position1.X < -1.0)
+                if (position1.X < -1.0)
                 {
                     position1.X = -1f;
                     this.m_hero.GetTransform().SetPosition(position1);
                 }
-                if ((double)position1.X > 8.0)
+                if (position1.X > 8.0)
                 {
                     position1.X = 8f;
                     this.m_hero.GetTransform().SetPosition(position1);
@@ -1275,12 +1268,12 @@ namespace Resanctified.Game.World
             }
             else
             {
-                if ((double)position1.X < -1.0)
+                if (position1.X < -1.0)
                 {
                     position1.X = -1f;
                     this.m_hero.GetTransform().SetPosition(position1);
                 }
-                if ((double)position1.X > (double)this.EndOfLevelPosX)
+                if (position1.X > (double)this.EndOfLevelPosX)
                 {
                     position1.X = this.EndOfLevelPosX;
                     this.m_hero.GetTransform().SetPosition(position1);
@@ -1289,12 +1282,12 @@ namespace Resanctified.Game.World
             Vector3 position2 = this.m_camera.GetTransform().GetPosition();
             if (this.GetCurrentLevel().GetLevelType() == Level.LevelType.Boss)
             {
-                if ((double)position2.X < 1.40000009536743)
+                if (position2.X < 1.40000009536743)
                 {
                     position2.X = 1.4f;
                     this.m_camera.GetTransform().SetPosition(position2);
                 }
-                if ((double)position2.X > 5.5)
+                if (position2.X > 5.5)
                 {
                     position2.X = 5.5f;
                     this.m_camera.GetTransform().SetPosition(position2);
@@ -1302,12 +1295,12 @@ namespace Resanctified.Game.World
             }
             else if (this.GetCurrentLevel().GetLevelType() == Level.LevelType.Shop)
             {
-                if ((double)position2.X < 0.700000047683716)
+                if (position2.X < 0.700000047683716)
                 {
                     position2.X = 0.7f;
                     this.m_camera.GetTransform().SetPosition(position2);
                 }
-                if ((double)position2.X > 6.30000019073486)
+                if (position2.X > 6.30000019073486)
                 {
                     position2.X = 6.3f;
                     this.m_camera.GetTransform().SetPosition(position2);
@@ -1315,7 +1308,7 @@ namespace Resanctified.Game.World
             }
             else
             {
-                if ((double)position2.X < 0.600000023841858)
+                if (position2.X < 0.600000023841858)
                 {
                     position2.X = 0.6f;
                     this.m_camera.GetTransform().SetPosition(position2);
@@ -1323,7 +1316,7 @@ namespace Resanctified.Game.World
                 float num = this.EndOfLevelPosX - 1f;
                 if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
                     num = this.EndOfLevelPosX - 1.4f;
-                if ((double)position2.X > (double)num)
+                if (position2.X > (double)num)
                 {
                     position2.X = num;
                     this.m_camera.GetTransform().SetPosition(position2);
@@ -1332,9 +1325,9 @@ namespace Resanctified.Game.World
             if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Survival || this.m_camera.IsLockedY())
                 return;
             AABB boundingBox = this.m_camera.GetBoundingBox();
-            if ((double)boundingBox.boundMin.Y < (double)this.WorldMin.Y)
+            if (boundingBox.boundMin.Y < (double)this.WorldMin.Y)
                 position2.Y = this.WorldMin.Y + boundingBox.extents.Y;
-            else if ((double)boundingBox.boundMax.Y > (double)this.WorldMax.Y)
+            else if (boundingBox.boundMax.Y > (double)this.WorldMax.Y)
                 position2.Y = this.WorldMax.Y - boundingBox.extents.Y;
             this.m_camera.GetTransform().SetPosition(position2);
         }
@@ -1365,7 +1358,7 @@ namespace Resanctified.Game.World
                 Prefs.GameData cachedGameData = Prefs.Instance.CachedGameData;
                 instance.Score = cachedGameData.score;
                 this.DayIndex = cachedGameData.nightIndex;
-                this.LevelIndex = (GameWorld.LevelId)cachedGameData.levelIndex;
+                this.LevelIndex = (LevelId)cachedGameData.levelIndex;
                 this.m_hero.Hearts = cachedGameData.hearts;
                 this.m_hero.SetCurrentGunIndex(cachedGameData.currentGunIndex);
                 this.m_hero.ManaPoints = cachedGameData.manaPoints;
@@ -1398,7 +1391,7 @@ namespace Resanctified.Game.World
                     this.m_levelArray[index].SetInfestationLevel(cachedGameData.m_storyLevelsInfestation[index]);
                     this.m_levelArray[index].Locked = cachedGameData.m_storyLevelsLocked[index];
                 }
-                this.m_dayPart = (GameWorld.DayPart)cachedGameData.m_dayPart;
+                this.m_dayPart = (DayPart)cachedGameData.m_dayPart;
                 Scenario.GetInstance().SetCurrentMissionIndex(cachedGameData.m_missionIndex);
                 if (!this.LoadMissionPartDisabled)
                 {
@@ -1460,7 +1453,7 @@ namespace Resanctified.Game.World
             GameApplication instance = GameApplication.GetInstance();
             instance.Score = 0;
             this.DayIndex = 1;
-            this.LevelIndex = GameApplication.GetInstance().GetGameMode() != GameApplication.GameMode.Story ? GameWorld.LevelId.Level_Survival_1 : GameWorld.LevelId.Level_Shop;
+            this.LevelIndex = GameApplication.GetInstance().GetGameMode() != GameApplication.GameMode.Story ? LevelId.Level_Survival_1 : LevelId.Level_Shop;
             this.m_hero.Hearts = 0;
             this.m_hero.SetCurrentGunIndex(0);
             this.m_hero.ManaPoints = 100;
@@ -1495,7 +1488,7 @@ namespace Resanctified.Game.World
                 this.m_levelArray[index].SetInfestationLevel(0);
                 this.m_levelArray[index].Locked = index > 3;
             }
-            this.m_dayPart = GameWorld.DayPart.Morning;
+            this.m_dayPart = DayPart.Morning;
             Scenario.GetInstance().SetCurrentMissionIndex(0);
             Scenario.GetInstance().SetCurrentMissionPart(0);
         }

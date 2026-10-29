@@ -1,11 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Engine.UI.Button
-// Assembly: GameEngine, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 094D4C29-E313-46E6-B898-5E30B122B0C6
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\Resanctified.Engine.dll
-
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Resanctified.Engine.Input;
 using Resanctified.Engine.Maths;
 
@@ -17,20 +10,20 @@ namespace Resanctified.Engine.UI
         protected float m_width;
         protected float m_height;
 
-        public Button() => this.m_touch = (Touch)null;
+        public Button() => this.m_touch = null;
 
         public virtual void Initialize(ViewController vc, float width, float height)
         {
             this.Initialize(vc);
             this.m_width = width;
             this.m_height = height;
-            this.m_touch = (Touch)null;
+            this.m_touch = null;
 
         }
 
         public override void Cleanup()
         {
-            this.m_touch = (Touch)null;
+            this.m_touch = null;
             base.Cleanup();
         }
 
@@ -65,7 +58,7 @@ namespace Resanctified.Engine.UI
                 if (this.HitTest(touch))
                 {
                     if (this.m_viewController != null)
-                        this.m_viewController.Action((View)this, (ActionEvent)new ButtonActionEvent()
+                        this.m_viewController.Action(this, new ButtonActionEvent()
                         {
                             buttonState = PSSButtonState.ButtonStatePressed
                         });
@@ -85,11 +78,11 @@ namespace Resanctified.Engine.UI
                 if (this.m_touch == touchArray[index])
                 {
                     if (this.m_viewController != null)
-                        this.m_viewController.Action((View)this, (ActionEvent)new ButtonActionEvent()
+                        this.m_viewController.Action(this, new ButtonActionEvent()
                         {
                             buttonState = PSSButtonState.ButtonStateReleased
                         });
-                    this.m_touch = (Touch)null;
+                    this.m_touch = null;
                     break;
                 }
             }
@@ -105,11 +98,11 @@ namespace Resanctified.Engine.UI
                 if (this.m_touch == touchArray[index])
                 {
                     if (this.m_viewController != null)
-                        this.m_viewController.Action((View)this, (ActionEvent)new ButtonActionEvent()
+                        this.m_viewController.Action(this, new ButtonActionEvent()
                         {
                             buttonState = PSSButtonState.ButtonStateReleased
                         });
-                    this.m_touch = (Touch)null;
+                    this.m_touch = null;
                     break;
                 }
             }
@@ -126,11 +119,11 @@ namespace Resanctified.Engine.UI
                 if (this.m_touch == touch && !this.HitTest(touch))
                 {
                     if (this.m_viewController != null)
-                        this.m_viewController.Action((View)this, (ActionEvent)new ButtonActionEvent()
+                        this.m_viewController.Action(this, new ButtonActionEvent()
                         {
                             buttonState = PSSButtonState.ButtonStateReleased
                         });
-                    this.m_touch = (Touch)null;
+                    this.m_touch = null;
                     break;
                 }
             }

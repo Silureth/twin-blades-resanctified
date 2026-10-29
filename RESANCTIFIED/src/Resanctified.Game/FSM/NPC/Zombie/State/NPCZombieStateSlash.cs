@@ -1,61 +1,55 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Game.FSM.NPC.Zombie.State.NPCZombieStateSlash
-// Assembly: TwinBlades, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F185CF1-B1A3-44DD-BD34-391B69A73148
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\TwinBlades.dll
-
+using System;
 using Microsoft.Xna.Framework;
-using Resanctified.Game.World;
-using Resanctified.Game.World.Entities;
 using Resanctified.Engine.FSM;
 using Resanctified.Engine.Maths;
 using Resanctified.Engine.World;
-using System;
+using Resanctified.Game.World;
+using Resanctified.Game.World.Entities;
 
 namespace Resanctified.Game.FSM.NPC.Zombie.State
 {
-  public class NPCZombieStateSlash : IState
-  {
-    private static NPCZombieStateSlash m_instance = new NPCZombieStateSlash();
-
-    public static NPCZombieStateSlash Instance => NPCZombieStateSlash.m_instance;
-
-    public static NPCZombieStateSlash GetInstance() => NPCZombieStateSlash.m_instance;
-
-    public void Enter(IFiniteStateMachine stateMachine)
+    public class NPCZombieStateSlash : IState
     {
-      NPCZombieFSM npcZombieFsm = (NPCZombieFSM) stateMachine;
-      NPCZombie entity = (NPCZombie) npcZombieFsm.GetEntity();
-      entity.GetView().SetAnimation2D(npcZombieFsm.AnimationArray[4]);
-      entity.GetView().GetAnimation2D().SetTime(0.0f);
-      entity.GetView().GetAnimation2D().SetSpeed(1f);
-      PlayableCharacter hero = ((GameWorld) WorldManager.GetInstance().GetCurrentWorld()).GetHero();
-      Vector2 scale = entity.GetTransform().GetScale();
-      scale.X = (double) hero.GetTransform().GetPosition().X - (double) entity.GetTransform().GetPosition().X > 0.0 ? Math.Abs(scale.X) : -Math.Abs(scale.X);
-      entity.GetTransform().SetScale(scale);
-      if (MathHelperEx.GetRandomInt(0, 100) < 50)
-        entity.GetSound(NPCZombie.SoundFxId.SoundFx_Attack_1).Play();
-      else
-        entity.GetSound(NPCZombie.SoundFxId.SoundFx_Attack_2).Play();
-    }
+        private static NPCZombieStateSlash m_instance = new NPCZombieStateSlash();
 
-    public void Update(IFiniteStateMachine stateMachine, float gameTime)
-    {
-      NPCZombie entity = (NPCZombie) ((EntityFiniteStateMachine) stateMachine).GetEntity();
-      if (entity.IsHit)
-      {
-        stateMachine.SetState((IState) NPCZombieStateHit.GetInstance());
-      }
-      else
-      {
-        if (!entity.GetView().GetAnimation2D().IsEndOfAnimationReached())
-          return;
-        stateMachine.SetState((IState) NPCZombieStateStand.GetInstance());
-      }
-    }
+        public static NPCZombieStateSlash Instance => m_instance;
 
-    public void Exit(IFiniteStateMachine stateMachine)
-    {
+        public static NPCZombieStateSlash GetInstance() => m_instance;
+
+        public void Enter(IFiniteStateMachine stateMachine)
+        {
+            NPCZombieFSM npcZombieFsm = (NPCZombieFSM)stateMachine;
+            NPCZombie entity = (NPCZombie)npcZombieFsm.GetEntity();
+            entity.GetView().SetAnimation2D(npcZombieFsm.AnimationArray[4]);
+            entity.GetView().GetAnimation2D().SetTime(0.0f);
+            entity.GetView().GetAnimation2D().SetSpeed(1f);
+            PlayableCharacter hero = ((GameWorld)WorldManager.GetInstance().GetCurrentWorld()).GetHero();
+            Vector2 scale = entity.GetTransform().GetScale();
+            scale.X = hero.GetTransform().GetPosition().X - (double)entity.GetTransform().GetPosition().X > 0.0 ? Math.Abs(scale.X) : -Math.Abs(scale.X);
+            entity.GetTransform().SetScale(scale);
+            if (MathHelperEx.GetRandomInt(0, 100) < 50)
+                entity.GetSound(NPCZombie.SoundFxId.SoundFx_Attack_1).Play();
+            else
+                entity.GetSound(NPCZombie.SoundFxId.SoundFx_Attack_2).Play();
+        }
+
+        public void Update(IFiniteStateMachine stateMachine, float gameTime)
+        {
+            NPCZombie entity = (NPCZombie)((EntityFiniteStateMachine)stateMachine).GetEntity();
+            if (entity.IsHit)
+            {
+                stateMachine.SetState(NPCZombieStateHit.GetInstance());
+            }
+            else
+            {
+                if (!entity.GetView().GetAnimation2D().IsEndOfAnimationReached())
+                    return;
+                stateMachine.SetState(NPCZombieStateStand.GetInstance());
+            }
+        }
+
+        public void Exit(IFiniteStateMachine stateMachine)
+        {
+        }
     }
-  }
 }

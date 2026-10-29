@@ -1,21 +1,15 @@
-﻿// Decompiled with JetBrains decompiler
-// Type: Resanctified.Game.UI.OptionsMenuViewController
-// Assembly: TwinBlades, Version=1.3.0.0, Culture=neutral, PublicKeyToken=null
-// MVID: 5F185CF1-B1A3-44DD-BD34-391B69A73148
-// Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\TwinBlades.dll
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Resanctified.Game.FSM;
-using Resanctified.Game.FSM.GameState;
-using Resanctified.Game.FSM.GameState.InGame;
-using Resanctified.Game.FSM.GameState.MainMenu;
 using Resanctified.Engine;
 using Resanctified.Engine.Graphics;
 using Resanctified.Engine.Input;
 using Resanctified.Engine.Maths;
 using Resanctified.Engine.Resources;
 using Resanctified.Engine.UI;
+using Resanctified.Game.FSM;
+using Resanctified.Game.FSM.GameState;
+using Resanctified.Game.FSM.GameState.InGame;
+using Resanctified.Game.FSM.GameState.MainMenu;
 
 namespace Resanctified.Game.UI
 {
@@ -49,7 +43,7 @@ namespace Resanctified.Game.UI
         private VertexPositionColor[] m_quadBackgroundBlack = new VertexPositionColor[4];
         private VertexPositionTexture[] m_quadBackground = new VertexPositionTexture[4];
         private VertexPositionTexture[] m_quadBack = new VertexPositionTexture[4];
-        private Resanctified.Engine.Resources.Texture m_menuTexture;
+        private Engine.Resources.Texture m_menuTexture;
         private bool m_texturedBackground;
         private bool m_disableMusicButton;
         private Transform m_t = new Transform();
@@ -62,7 +56,7 @@ namespace Resanctified.Game.UI
 
         public OptionsMenuViewController()
         {
-            this.m_menuTexture = (Resanctified.Engine.Resources.Texture)null;
+            this.m_menuTexture = null;
             this.m_texturedBackground = false;
             this.m_disableMusicButton = false;
             this.m_buttonLanguage = new Button();
@@ -79,8 +73,8 @@ namespace Resanctified.Game.UI
             float num = 0.0f;
             this.m_texturedBackground = texturedBackground;
             base.Initialize();
-            Resanctified.Engine.Resources.Resource.SafeRelease<Resanctified.Engine.Resources.Texture>(ref this.m_menuTexture);
-            Resanctified.Engine.Resources.Resource.SafeRelease<Font>(ref this.m_font);
+            Resource.SafeRelease(ref this.m_menuTexture);
+            Resource.SafeRelease(ref this.m_font);
             if (this.m_texturedBackground)
             {
                 this.m_menuTexture = ResourceManager.GetInstance().LoadTexture("Textures\\texture_menu_1");
@@ -91,23 +85,23 @@ namespace Resanctified.Game.UI
             else
                 num = 0.0f;
             QuadFactory.CreateQuad(this.m_quadBackgroundBlack, 0.0f, 320f, 480f, 320f, GameConstant.INGAME_BLACKBACKGROUND_COLOR);
-            this.m_sliderSfx.Initialize((ViewController)this, 150f, 15f, SliderOrientation.Horizontal);
+            this.m_sliderSfx.Initialize(this, 150f, 15f, SliderOrientation.Horizontal);
             this.m_sliderSfx.GetTransform().SetPosition(300f, 165f + num);
-            this.m_sliderMusic.Initialize((ViewController)this, 150f, 15f, SliderOrientation.Horizontal);
+            this.m_sliderMusic.Initialize(this, 150f, 15f, SliderOrientation.Horizontal);
             this.m_sliderMusic.GetTransform().SetPosition(300f, 208f + num);
             this.m_sliderMusic.SetActive(!this.m_disableMusicButton);
-            this.m_sliderHUD.Initialize((ViewController)this, 150f, 15f, SliderOrientation.Horizontal);
+            this.m_sliderHUD.Initialize(this, 150f, 15f, SliderOrientation.Horizontal);
             this.m_sliderHUD.GetTransform().SetPosition(300f, 122f + num);
-            this.m_buttonLanguage.Initialize((ViewController)this, 100f, 30f);
+            this.m_buttonLanguage.Initialize(this, 100f, 30f);
             this.m_buttonLanguage.GetTransform().SetPosition(280f, 81f + num);
             if (this.m_texturedBackground)
             {
-                this.m_buttonBack.Initialize((ViewController)this, 56f, 56f);
+                this.m_buttonBack.Initialize(this, 56f, 56f);
                 this.m_buttonBack.GetTransform().SetPosition(36f, 40f);
             }
             else
             {
-                this.m_buttonBack.Initialize((ViewController)this, 100f, 56f);
+                this.m_buttonBack.Initialize(this, 100f, 56f);
                 this.m_buttonBack.GetTransform().SetPosition(30f, 40f);
             }
         }
@@ -119,9 +113,9 @@ namespace Resanctified.Game.UI
             this.m_sliderHUD.Cleanup();
             this.m_buttonLanguage.Cleanup();
             this.m_buttonBack.Cleanup();
-            Resanctified.Engine.Resources.Resource.SafeRelease<Resanctified.Engine.Resources.Texture>(ref this.m_menuTexture);
-            Resanctified.Engine.Resources.Resource.SafeRelease<Font>(ref this.m_font);
-            Application.GetInstance().RemoveResponder((Responder)this);
+            Resource.SafeRelease(ref this.m_menuTexture);
+            Resource.SafeRelease(ref this.m_font);
+            Application.GetInstance().RemoveResponder(this);
             base.Cleanup();
         }
 
@@ -136,7 +130,7 @@ namespace Resanctified.Game.UI
         {
             if (!this.m_visible)
                 return;
-            Resanctified.Engine.Graphics.Renderer.Renderer instance = Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance();
+            Engine.Graphics.Renderer.Renderer instance = Engine.Graphics.Renderer.Renderer.GetInstance();
             instance.Begin2DMode(false);
             Font font = GameApplication.GetInstance().GetFont();
             Color menuTextColor = GameConstant.MENU_TEXT_COLOR;
@@ -145,43 +139,43 @@ namespace Resanctified.Game.UI
             float num = 0.0f;
             if (this.m_texturedBackground)
             {
-                instance.DrawQuad<VertexPositionTexture>(this.m_quadBackground, VertexFormat.Position3Texture, (Transform)null, this.m_menuTexture);
-                this.m_t.SetPosition(240f, (float)byte.MaxValue, 0.0f);
+                instance.DrawQuad(this.m_quadBackground, VertexFormat.Position3Texture, null, this.m_menuTexture);
+                this.m_t.SetPosition(240f, byte.MaxValue, 0.0f);
                 instance.DrawString(this.m_font, this.m_t, 12, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.SettingsBig));
                 this.m_t.SetPosition(36f, 40f, 0.0f);
-                instance.DrawQuad<VertexPositionTexture>(this.m_quadBack, VertexFormat.Position3Texture, this.m_t, this.m_menuTexture);
+                instance.DrawQuad(this.m_quadBack, VertexFormat.Position3Texture, this.m_t, this.m_menuTexture);
             }
             else
             {
-                instance.DrawQuad<VertexPositionColor>(this.m_quadBackgroundBlack, VertexFormat.Position3Color, (Transform)null, (Resanctified.Engine.Resources.Texture)null, GameConstant.INGAME_BLACKBACKGROUND_COLOR);
+                instance.DrawQuad(this.m_quadBackgroundBlack, VertexFormat.Position3Color, null, null, GameConstant.INGAME_BLACKBACKGROUND_COLOR);
                 this.m_t.SetPosition(30f, 40f, 0.0f);
-                Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 8, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Back));
+                Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 8, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Back));
                 num = 0.0f;
             }
             if (this.m_disableMusicButton)
             {
                 this.m_t.SetPosition(210f, 220f + num, 0.0f);
-                Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 1, GameConstant.MENU_TEXT_NOTAVAILABLE_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Music));
+                Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 1, GameConstant.MENU_TEXT_NOTAVAILABLE_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Music));
             }
             else
             {
                 this.m_t.SetPosition(210f, 220f + num, 0.0f);
-                Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 1, menuTextColor, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Music));
+                Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 1, menuTextColor, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Music));
             }
             this.m_sliderMusic.SetNormalizedPosition(GameApplication.GetInstance().MusicGain);
             this.m_sliderMusic.Draw();
             this.m_t.SetPosition(210f, 177f + num, 0.0f);
-            Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 1, menuTextColor, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Sound));
+            Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 1, menuTextColor, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Sound));
             this.m_sliderSfx.SetNormalizedPosition(GameApplication.GetInstance().SfxGain);
             this.m_sliderSfx.Draw();
             this.m_t.SetPosition(210f, 134f + num, 0.0f);
-            Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 1, menuTextColor, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.HUD));
+            Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 1, menuTextColor, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.HUD));
             this.m_sliderHUD.SetNormalizedPosition(GameApplication.GetInstance().HudAlpha);
             this.m_sliderHUD.Draw();
             this.m_t.SetPosition(210f, 91f + num, 0.0f);
-            Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 1, menuTextColor, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Language));
+            Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 1, menuTextColor, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Language));
             this.m_t.SetPosition(290f, 91f + num, 0.0f);
-            Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 4, textSelectedColor, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Language_Name));
+            Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 4, textSelectedColor, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Language_Name));
             instance.End2DMode();
         }
 
