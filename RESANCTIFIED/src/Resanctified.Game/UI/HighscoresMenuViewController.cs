@@ -35,19 +35,12 @@ namespace Resanctified.Game.UI
     private const float HIGHSCORES_TEXT_5_Y = 85f;
     private const float HIGHSCORES_TEXT_6_Y = 60f;
     private const float SCORE_BLINK_TIME = 0.1f;
-    private const float HIGHSCORES_BUTTON_PREVIOUS_X = 36f;
-    private const float HIGHSCORES_BUTTON_PREVIOUS_Y = 205f;
-    private const float HIGHSCORES_BUTTON_NEXT_X = 436f;
-    private const float HIGHSCORES_BUTTON_NEXT_Y = 205f;
     private VertexPositionColor[] m_quadBackgroundBlack = new VertexPositionColor[4];
     private VertexPositionTexture[] m_quadBackground = new VertexPositionTexture[4];
     private VertexPositionTexture[] m_quadOk = new VertexPositionTexture[4];
     private VertexPositionTexture[] m_quadBack = new VertexPositionTexture[4];
-    private VertexPositionTexture[] m_quadNext = new VertexPositionTexture[4];
     private Button m_buttonOk;
     private Button m_buttonBack;
-    private Button m_buttonNext;
-    private Button m_buttonPrevious;
     private int m_indexToBlink;
     private float m_timer;
     private bool m_scoreIsVisible;
@@ -70,8 +63,6 @@ namespace Resanctified.Game.UI
       this.m_scoreIsVisible = true;
       this.m_buttonOk = new Button();
       this.m_buttonBack = new Button();
-      this.m_buttonNext = new Button();
-      this.m_buttonPrevious = new Button();
     }
 
     public override void Initialize() => this.Initialize(0, false);
@@ -92,7 +83,6 @@ namespace Resanctified.Game.UI
         QuadFactory.CreateAnchoredQuad(this.m_quadBackground, 0.0f, 0.0f, 480f, 320f, 512f, 512f, Anchor.Bottom);
         QuadFactory.CreateAnchoredQuad(this.m_quadOk, 5f, 452f, 56f, 56f, 512f, 512f, Anchor.HCenter | Anchor.VCenter);
         QuadFactory.CreateAnchoredQuad(this.m_quadBack, 89f, 452f, 56f, 56f, 512f, 512f, Anchor.HCenter | Anchor.VCenter);
-        QuadFactory.CreateAnchoredQuad(this.m_quadNext, 8f, 331f, 56f, 56f, 512f, 512f, Anchor.HCenter | Anchor.VCenter);
       }
       QuadFactory.CreateQuad(this.m_quadBackgroundBlack, 0.0f, 320f, 480f, 320f, GameConstant.INGAME_BLACKBACKGROUND_COLOR);
       if (this.m_texturedBackground)
@@ -105,10 +95,6 @@ namespace Resanctified.Game.UI
         this.m_buttonBack.Initialize((ViewController) this, 100f, 56f);
         this.m_buttonBack.GetTransform().SetPosition(30f, 40f);
       }
-      this.m_buttonNext.Initialize((ViewController) this, 56f, 56f);
-      this.m_buttonNext.GetTransform().SetPosition(436f, 205f);
-      this.m_buttonPrevious.Initialize((ViewController) this, 56f, 56f);
-      this.m_buttonPrevious.GetTransform().SetPosition(36f, 205f);
       this.m_buttonOk.Initialize((ViewController) this, 56f, 56f);
       this.m_buttonOk.GetTransform().SetPosition(440f, 40f);
     }
@@ -117,8 +103,6 @@ namespace Resanctified.Game.UI
     {
       this.m_buttonOk.Cleanup();
       this.m_buttonBack.Cleanup();
-      this.m_buttonNext.Cleanup();
-      this.m_buttonPrevious.Cleanup();
       Resanctified.Engine.Resources.Resource.SafeRelease<Resanctified.Engine.Resources.Texture>(ref this.m_menuTexture);
       Resanctified.Engine.Resources.Resource.SafeRelease<Font>(ref this.m_font);
       Application.GetInstance().RemoveResponder((Responder) this);
@@ -170,28 +154,18 @@ namespace Resanctified.Game.UI
         this.m_t.SetPosition(30f, 40f, 0.0f);
         Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 8, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Back));
       }
-      this.m_t.SetPosition(436f, 205f, 0.0f);
-      if (GuideManager.Instance.IsSignedInToLive())
-        instance.DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_COLOR, ">>");
-      else
-        instance.DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_NOTAVAILABLE_COLOR, ">>");
-      this.m_t.SetPosition(36f, 205f, 0.0f);
-      if (GuideManager.Instance.IsSignedInToLive())
-        instance.DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_COLOR, "<<");
-      else
-        instance.DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_NOTAVAILABLE_COLOR, "<<");
       this.m_t.SetScale(1f);
       this.m_t.SetPosition(240f, 205f, 0.0f);
       int[] numArray;
       if (this.StoryMode)
       {
         numArray = GameApplication.GetInstance().GetHighscoresStory();
-        instance.DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_SELECTED_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.StoryModeBig) + " - Local");
+        instance.DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_SELECTED_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.StoryModeBig));
       }
       else
       {
         numArray = GameApplication.GetInstance().GetHighscoresSurvival();
-        instance.DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_SELECTED_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.SurvivalModeBig) + " - Local");
+        instance.DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_SELECTED_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.SurvivalModeBig));
       }
       if (this.m_indexToBlink == 1)
       {
@@ -325,48 +299,6 @@ namespace Resanctified.Game.UI
             InGameMenuStateHighscoresSurvival.GetInstance().BackRequest = true;
           }
         }
-      }
-      if (!GuideManager.Instance.IsSignedInToLive())
-        return;
-      if (sender == this.m_buttonNext)
-      {
-        if (((ButtonActionEvent) evt).buttonState != PSSButtonState.ButtonStatePressed)
-          return;
-        if (GameFSM.GetInstance().GetCurrentState() == GameStateMainMenu.GetInstance())
-        {
-          MainMenuStateHighscoresStory.GetInstance().LeaderboardRequest = true;
-          MainMenuStateHighscoresSurvival.GetInstance().LeaderboardRequest = true;
-          MainMenuStateHighscoresStory.GetInstance().WeekLeaderboardRequest = false;
-          MainMenuStateHighscoresSurvival.GetInstance().WeekLeaderboardRequest = false;
-        }
-        else
-        {
-          InGameMenuStateHighscoresStory.GetInstance().LeaderboardRequest = true;
-          InGameMenuStateHighscoresSurvival.GetInstance().LeaderboardRequest = true;
-          InGameMenuStateHighscoresStory.GetInstance().WeekLeaderboardRequest = false;
-          InGameMenuStateHighscoresSurvival.GetInstance().WeekLeaderboardRequest = false;
-        }
-        GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Next);
-      }
-      else
-      {
-        if (sender != this.m_buttonPrevious || ((ButtonActionEvent) evt).buttonState != PSSButtonState.ButtonStatePressed)
-          return;
-        if (GameFSM.GetInstance().GetCurrentState() == GameStateMainMenu.GetInstance())
-        {
-          MainMenuStateHighscoresStory.GetInstance().LeaderboardRequest = true;
-          MainMenuStateHighscoresSurvival.GetInstance().LeaderboardRequest = true;
-          MainMenuStateHighscoresStory.GetInstance().WeekLeaderboardRequest = true;
-          MainMenuStateHighscoresSurvival.GetInstance().WeekLeaderboardRequest = true;
-        }
-        else
-        {
-          InGameMenuStateHighscoresStory.GetInstance().LeaderboardRequest = true;
-          InGameMenuStateHighscoresSurvival.GetInstance().LeaderboardRequest = true;
-          InGameMenuStateHighscoresStory.GetInstance().WeekLeaderboardRequest = true;
-          InGameMenuStateHighscoresSurvival.GetInstance().WeekLeaderboardRequest = true;
-        }
-        GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Next);
       }
     }
   }

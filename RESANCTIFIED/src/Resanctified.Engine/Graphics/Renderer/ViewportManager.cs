@@ -30,7 +30,8 @@ namespace Resanctified.Engine.Graphics.Renderer
 
     public void Initialize()
     {
-      Viewport viewport1 = Application.Instance.GraphicsDevice.Viewport;
+      // Split screens are carved out of the virtual screen, never the window (see VirtualScreen).
+      Viewport viewport1 = new Viewport(0, 0, VirtualScreen.WIDTH, VirtualScreen.HEIGHT);
       this.m_viewports[0] = viewport1;
       Viewport viewport2 = viewport1;
       viewport2.Height /= 2;

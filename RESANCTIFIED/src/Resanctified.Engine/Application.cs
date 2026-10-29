@@ -4,8 +4,6 @@
 // MVID: 094D4C29-E313-46E6-B898-5E30B122B0C6
 // Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\Resanctified.Engine.dll
 
-
-
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input.Touch;
 using Resanctified.Engine.Input;
@@ -14,54 +12,40 @@ using Resanctified.Engine.Sounds;
 using Resanctified.Engine.UI;
 using System;
 using System.Collections.Generic;
-using System.Windows;
-using System;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Resanctified.Engine.Graphics.Renderer;
+using Resanctified.Engine.Graphics;
 
 namespace Resanctified.Engine
 {
     public class Application : Game, Responder
     {
         private const int NATIVE_TOUCH_ID_NULL = -1;
-        private const float ACCELEROMETER_FILTERING_FACTOR = 0.1f;
-        private const float ACCELEROMETER_MIN_SHAKE_INTERVAL = 0.3f;
-        private const float ACCELEROMETER_SHAKE_ACCELERATION_THRESHOLD = 1.5f;
-        private const float ACCELEROMETER_SHAKE_ACCELERATION_THRESHOLD_SQUARED = 2.25f;
+        // Marks the touch slot driven by the mouse (or an injected tap) so native touches never reuse it.
+        private const int NATIVE_TOUCH_ID_POINTER = -2;
+        private const int POINTER_TOUCH_INDEX = 0;
         private static Application s_instance;
         private InterfaceOrientation m_interfaceOrientation;
         private List<Responder> m_responders;
         private Resanctified.Engine.UI.Touch[] m_touchArray;
         private Resanctified.Engine.UI.Touch[] m_dispatchedTouchArray;
-        private float m_deviceScreenWidth;
-        private float m_deviceScreenHeight;
         private float m_elapsedTimeSinceLastFrame;
-        
-
-        private Vector3 m_accelerometerValue;
-        private float m_accelerometerTimer;
-        //private GamerServicesComponent m_gamerServiceInstance;
+        private bool m_pointerDown;
+        private Queue<Vector2> m_pendingTaps;
+        private bool m_injectedTapDown;
+        private bool m_shakeInputDown;
 
         public static Application Instance => Application.s_instance;
 
         public static Application GetInstance() => Application.s_instance;
 
-        //public GamerServicesComponent GetGamerServiceInstance() => this.m_gamerServiceInstance;
-
         public Application()
         {
             Application.s_instance = this;
-            // this.m_gamerServiceInstance = (GamerServicesComponent) null;
-            //if (Environment.DeviceType != null)
-            //  ;
             this.m_responders = new List<Responder>(64);
             this.m_touchArray = new Resanctified.Engine.UI.Touch[5];
             this.m_dispatchedTouchArray = new Resanctified.Engine.UI.Touch[5];
             this.m_elapsedTimeSinceLastFrame = 0.0f;
-            
-            this.m_accelerometerValue = Vector3.Zero;
-            this.m_accelerometerTimer = 0.0f;
+            this.m_pendingTaps = new Queue<Vector2>();
         }
 
         protected override void Initialize()
@@ -73,10 +57,12 @@ namespace Resanctified.Engine
                 this.m_touchArray[index].nativeTouchId = -1;
                 this.m_dispatchedTouchArray[index] = (Resanctified.Engine.UI.Touch)null;
             }
-            this.m_accelerometerTimer = 0.0f;
             this.SetInterfaceOrientation(InterfaceOrientation.LandscapeLeft);
-            this.m_deviceScreenWidth = (float)this.GraphicsDevice.Viewport.Width;
-            this.m_deviceScreenHeight = (float)this.GraphicsDevice.Viewport.Height;
+            this.m_pointerDown = false;
+            this.m_injectedTapDown = false;
+            this.m_shakeInputDown = false;
+            this.m_pendingTaps.Clear();
+            VirtualScreen.Instance.Initialize(this.GraphicsDevice);
             ResourceManager.Instance.Initialize();
             InputManager.Instance.Initialize();
             Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().Initialize();
@@ -88,21 +74,13 @@ namespace Resanctified.Engine
         protected virtual void Cleanup()
         {
             this.m_responders.Clear();
-            try
-            {
-                
-            }
-            catch (Exception)
-            {
-            }
             AudioManager.Instance.Cleanup();
             ResourceManager.Instance.Cleanup();
             InputManager.Instance.Cleanup();
             Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().Cleanup();
+            VirtualScreen.Instance.Cleanup();
         }
 
-                //
-        
         protected override void OnExiting(object sender, ExitingEventArgs args)
         {
             this.Cleanup();
@@ -112,11 +90,26 @@ namespace Resanctified.Engine
         protected override void Update(GameTime gameTime)
         {
             this.m_elapsedTimeSinceLastFrame = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            // Before InputManager.Update, so a shake is seen by the game actions in this same frame.
+            this.UpdateShakeEvents();
             InputManager.Instance.Update(this.m_elapsedTimeSinceLastFrame);
             AudioManager.Instance.Update();
             this.UpdateTouchEvents();
-            this.m_accelerometerTimer += this.m_elapsedTimeSinceLastFrame;
             base.Update(gameTime);
+        }
+
+        protected override bool BeginDraw()
+        {
+            if (!base.BeginDraw())
+                return false;
+            VirtualScreen.Instance.BeginFrame();
+            return true;
+        }
+
+        protected override void EndDraw()
+        {
+            VirtualScreen.Instance.Present();
+            base.EndDraw();
         }
 
         public float GetElapsedTimeSinceLastFrame() => this.m_elapsedTimeSinceLastFrame;
@@ -125,125 +118,172 @@ namespace Resanctified.Engine
 
         public InterfaceOrientation GetInterfaceOrientation() => this.m_interfaceOrientation;
 
+        /// <summary>
+        /// Queues a tap (Began, then Ended on the next frame) at a virtual screen position, Y up.
+        /// It goes through the same path as the mouse, so it behaves exactly like a click.
+        /// </summary>
+        public void InjectTap(Vector2 virtualPos) => this.m_pendingTaps.Enqueue(virtualPos);
+
         private int GetTouchIndexFromNativeTouchId(int nativeTouchId)
         {
-            for (int fromNativeTouchId = 0; fromNativeTouchId < 5; ++fromNativeTouchId)
+            for (int index = 0; index < 5; ++index)
             {
-                if (this.m_touchArray[fromNativeTouchId].nativeTouchId == nativeTouchId)
-                    return fromNativeTouchId;
-            }
-            for (int fromNativeTouchId = 0; fromNativeTouchId < 5; ++fromNativeTouchId)
-            {
-                if (this.m_touchArray[fromNativeTouchId].nativeTouchId == -1)
-                    return fromNativeTouchId;
+                if (this.m_touchArray[index].nativeTouchId == nativeTouchId)
+                    return index;
             }
             return -1;
         }
 
-        private void LogNativeTouch(TouchLocation nativeTouch)
-        {
-        }
-
-        private void LogTouch(Resanctified.Engine.UI.Touch touch)
-        {
-        }
-
-        private Vector2 ConvertNativeTouchPositionToVirtualScreenPosition(Vector2 nativeTouchPos)
-        {
-            nativeTouchPos.X *= 480f / this.m_deviceScreenWidth;
-            //nativeTouchPos.Y = 320f - nativeTouchPos.Y;//Fixed: for pixel5 original:  400f 
-
-            nativeTouchPos.Y = Math.Abs(nativeTouchPos.Y - this.m_deviceScreenHeight) / (this.m_deviceScreenHeight / 320f);//320f - nativeTouchPos.Y;
-            return nativeTouchPos;
-        }
-
-        public float ConvertPositionX(float x)
-        {
-            float oldXPercent = Renderer.OLD_SCREEN_WIDTH / x;
-
-            float newXPercent = this.m_deviceScreenWidth / oldXPercent;
-
-            return newXPercent;
-        }
-        public float ConvertPositionY(float y)
-        {
-            float oldYPercent = Renderer.OLD_SCREEN_HEIGHT / y;
-
-            float newYPercent = this.m_deviceScreenHeight / oldYPercent;
-
-            return newYPercent;
-        }
-
         private void UpdateTouchEvents()
         {
-            if (!TouchPanel.GetCapabilities().IsConnected)
-                return;
+            if (TouchPanel.GetCapabilities().IsConnected)
+                this.UpdateNativeTouchEvents();
+            else
+                this.UpdatePointerTouchEvents();
+        }
+
+        /// <summary>
+        /// The phone game used an accelerometer shake (e.g. to break free when grabbed). On desktop the right
+        /// mouse button or Space raises the same one-shot shake the accelerometer callback did.
+        /// </summary>
+        private void UpdateShakeEvents()
+        {
+            bool down = this.IsActive && (Mouse.GetState().RightButton == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space));
+            if (down && !this.m_shakeInputDown)
+            {
+                this.ShakeBegin();
+                this.ShakeEnded();
+            }
+            this.m_shakeInputDown = down;
+        }
+
+        private void UpdateNativeTouchEvents()
+        {
             TouchCollection state = TouchPanel.GetState();
-            if (state.Count == 0)
-                return;
             for (int index = 0; index < state.Count; ++index)
             {
-                int fromNativeTouchId = this.GetTouchIndexFromNativeTouchId(state[index].Id);
-                if (fromNativeTouchId >= 0)
+                TouchLocation nativeTouch = state[index];
+                if (nativeTouch.State == TouchLocationState.Pressed)
                 {
-                    switch (state[index].State)
-                    {
-                        case TouchLocationState.Invalid:
-                        case TouchLocationState.Released:
-                            this.m_touchArray[fromNativeTouchId].touchId = (TouchId)fromNativeTouchId;
-                            this.m_touchArray[fromNativeTouchId].prevPos = this.m_touchArray[fromNativeTouchId].curPos;
-                            this.m_touchArray[fromNativeTouchId].curPos = this.ConvertNativeTouchPositionToVirtualScreenPosition(state[index].Position);
-                            this.m_touchArray[fromNativeTouchId].tapCount = 1;
-                            this.m_touchArray[fromNativeTouchId].timestamp = 0.0;
-                            this.m_touchArray[fromNativeTouchId].prevNativePos = this.m_touchArray[fromNativeTouchId].curNativePos;
-                            this.m_touchArray[fromNativeTouchId].curNativePos = state[index].Position;
-                            this.m_dispatchedTouchArray[0] = this.m_touchArray[fromNativeTouchId];
-                            if (state[index].State == TouchLocationState.Released)
-                            {
-                                this.m_touchArray[fromNativeTouchId].touchPhase = TouchPhase.Ended;
-                                this.TouchesEnded(this.m_dispatchedTouchArray, 1);
-                            }
-                            else
-                            {
-                                this.m_touchArray[fromNativeTouchId].touchPhase = TouchPhase.Cancelled;
-                                this.TouchesCancelled(this.m_dispatchedTouchArray, 1);
-                            }
-                            this.m_touchArray[fromNativeTouchId].nativeTouchId = -1;
-                            continue;
-                        case TouchLocationState.Pressed:
-                            this.m_touchArray[fromNativeTouchId].touchId = (TouchId)fromNativeTouchId;
-                            this.m_touchArray[fromNativeTouchId].touchPhase = TouchPhase.Began;
-                            this.m_touchArray[fromNativeTouchId].prevPos = this.ConvertNativeTouchPositionToVirtualScreenPosition(state[index].Position);
-                            this.m_touchArray[fromNativeTouchId].curPos = this.m_touchArray[fromNativeTouchId].prevPos;
-                            this.m_touchArray[fromNativeTouchId].tapCount = 1;
-                            this.m_touchArray[fromNativeTouchId].timestamp = 0.0;
-                            this.m_touchArray[fromNativeTouchId].prevNativePos = state[index].Position;
-                            this.m_touchArray[fromNativeTouchId].curNativePos = this.m_touchArray[fromNativeTouchId].prevNativePos;
-                            this.m_touchArray[fromNativeTouchId].nativeTouchId = state[index].Id;
-                            this.m_dispatchedTouchArray[0] = this.m_touchArray[fromNativeTouchId];
-                            this.TouchesBegan(this.m_dispatchedTouchArray, 1);
-                            continue;
-                        case TouchLocationState.Moved:
-                            this.m_touchArray[fromNativeTouchId].touchId = (TouchId)fromNativeTouchId;
-                            this.m_touchArray[fromNativeTouchId].prevPos = this.m_touchArray[fromNativeTouchId].curPos;
-                            this.m_touchArray[fromNativeTouchId].curPos = this.ConvertNativeTouchPositionToVirtualScreenPosition(state[index].Position);
-                            this.m_touchArray[fromNativeTouchId].tapCount = 1;
-                            this.m_touchArray[fromNativeTouchId].timestamp = 0.0;
-                            this.m_touchArray[fromNativeTouchId].prevNativePos = this.m_touchArray[fromNativeTouchId].curNativePos;
-                            this.m_touchArray[fromNativeTouchId].curNativePos = state[index].Position;
-                            this.m_touchArray[fromNativeTouchId].touchPhase = !(this.m_touchArray[fromNativeTouchId].curNativePos == this.m_touchArray[fromNativeTouchId].prevNativePos) ? TouchPhase.Moved : TouchPhase.Stationary;
-                            this.m_dispatchedTouchArray[0] = this.m_touchArray[fromNativeTouchId];
-                            this.TouchesMoved(this.m_dispatchedTouchArray, 1);
-                            continue;
-                        default:
-                            continue;
-                    }
+                    // A touch that starts in a letterbox bar is not a touch on the game.
+                    if (!VirtualScreen.Instance.IsInside(nativeTouch.Position))
+                        continue;
+                    int freeIndex = this.GetTouchIndexFromNativeTouchId(NATIVE_TOUCH_ID_NULL);
+                    if (freeIndex >= 0)
+                        this.BeginTouch(freeIndex, nativeTouch.Id, nativeTouch.Position);
+                }
+                else
+                {
+                    // Only touches that began on the game screen are tracked.
+                    int touchIndex = this.GetTouchIndexFromNativeTouchId(nativeTouch.Id);
+                    if (touchIndex < 0)
+                        continue;
+                    if (nativeTouch.State == TouchLocationState.Moved)
+                        this.MoveTouch(touchIndex, nativeTouch.Position);
+                    else
+                        this.EndTouch(touchIndex, nativeTouch.Position, nativeTouch.State == TouchLocationState.Released);
                 }
             }
         }
 
-        private void UpdateAccelerometerEvents()
+        /// <summary>Desktop: the left mouse button (or an injected tap) acts as a single finger.</summary>
+        private void UpdatePointerTouchEvents()
         {
+            bool down;
+            bool injected = false;
+            Vector2 windowPos;
+            if (this.m_injectedTapDown)
+            {
+                down = false;
+                injected = true;
+                windowPos = this.m_touchArray[POINTER_TOUCH_INDEX].curNativePos;
+                this.m_injectedTapDown = false;
+            }
+            else if (!this.m_pointerDown && this.m_pendingTaps.Count > 0)
+            {
+                down = true;
+                injected = true;
+                windowPos = VirtualScreen.Instance.VirtualToWindow(this.m_pendingTaps.Dequeue());
+                this.m_injectedTapDown = true;
+            }
+            else
+            {
+                MouseState mouse = Mouse.GetState();
+                down = this.IsActive && mouse.LeftButton == ButtonState.Pressed;
+                windowPos = new Vector2((float)mouse.X, (float)mouse.Y);
+            }
+
+            if (down && !this.m_pointerDown)
+            {
+                // Clicks in the letterbox bars are ignored: a touch has to start on the game screen.
+                if (injected || VirtualScreen.Instance.IsInside(windowPos))
+                {
+                    this.BeginTouch(POINTER_TOUCH_INDEX, NATIVE_TOUCH_ID_POINTER, windowPos);
+                    this.m_pointerDown = true;
+                }
+            }
+            else if (down)
+                this.MoveTouch(POINTER_TOUCH_INDEX, windowPos);
+            else if (this.m_pointerDown)
+            {
+                // Losing focus while the button is held cancels the touch instead of completing it.
+                this.EndTouch(POINTER_TOUCH_INDEX, windowPos, injected || this.IsActive);
+                this.m_pointerDown = false;
+            }
+        }
+
+        private void BeginTouch(int touchIndex, int nativeTouchId, Vector2 windowPos)
+        {
+            Resanctified.Engine.UI.Touch touch = this.m_touchArray[touchIndex];
+            touch.touchId = (TouchId)touchIndex;
+            touch.touchPhase = TouchPhase.Began;
+            touch.prevPos = VirtualScreen.Instance.WindowToVirtual(windowPos);
+            touch.curPos = touch.prevPos;
+            touch.tapCount = 1;
+            touch.timestamp = 0.0;
+            touch.prevNativePos = windowPos;
+            touch.curNativePos = windowPos;
+            touch.nativeTouchId = nativeTouchId;
+            this.m_dispatchedTouchArray[0] = touch;
+            this.TouchesBegan(this.m_dispatchedTouchArray, 1);
+        }
+
+        private void MoveTouch(int touchIndex, Vector2 windowPos)
+        {
+            Resanctified.Engine.UI.Touch touch = this.m_touchArray[touchIndex];
+            this.UpdateTouchPosition(touch, windowPos);
+            touch.touchPhase = touch.curNativePos != touch.prevNativePos ? TouchPhase.Moved : TouchPhase.Stationary;
+            this.m_dispatchedTouchArray[0] = touch;
+            this.TouchesMoved(this.m_dispatchedTouchArray, 1);
+        }
+
+        private void EndTouch(int touchIndex, Vector2 windowPos, bool released)
+        {
+            Resanctified.Engine.UI.Touch touch = this.m_touchArray[touchIndex];
+            this.UpdateTouchPosition(touch, windowPos);
+            this.m_dispatchedTouchArray[0] = touch;
+            if (released)
+            {
+                touch.touchPhase = TouchPhase.Ended;
+                this.TouchesEnded(this.m_dispatchedTouchArray, 1);
+            }
+            else
+            {
+                touch.touchPhase = TouchPhase.Cancelled;
+                this.TouchesCancelled(this.m_dispatchedTouchArray, 1);
+            }
+            touch.nativeTouchId = NATIVE_TOUCH_ID_NULL;
+        }
+
+        private void UpdateTouchPosition(Resanctified.Engine.UI.Touch touch, Vector2 windowPos)
+        {
+            touch.prevPos = touch.curPos;
+            // A finger dragged into the letterbox bars stays on the screen edge so it can still end normally.
+            touch.curPos = VirtualScreen.ClampToScreen(VirtualScreen.Instance.WindowToVirtual(windowPos));
+            touch.tapCount = 1;
+            touch.timestamp = 0.0;
+            touch.prevNativePos = touch.curNativePos;
+            touch.curNativePos = windowPos;
         }
 
         public void AddResponder(Responder responder) => this.m_responders.Add(responder);

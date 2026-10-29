@@ -34,6 +34,14 @@ namespace Resanctified.Engine.Resources
 
     public static ResourceManager GetInstance() => ResourceManager.s_instance;
 
+    /// <summary>
+    /// Turns an asset name from the original game ("Textures\Sky_Day") into the form the
+    /// content folder uses on every platform ("textures/sky_day"): forward slashes and lowercase,
+    /// because Linux and Android file systems are case-sensitive and do not treat '\' as a separator.
+    /// Every content load should go through this.
+    /// </summary>
+    public static string NormalizeContentPath(string assetName) => assetName.Replace('\\', '/').ToLowerInvariant();
+
     public void Initialize()
     {
       PSSFileReader.RegisterLegacyReaderName();
@@ -56,7 +64,7 @@ namespace Resanctified.Engine.Resources
 
     public Texture LoadTexture(string filename)
     {
-      filename = filename.ToLower();
+      filename = ResourceManager.NormalizeContentPath(filename);
       Resource resource = (Resource) null;
       if (!this.m_textureNameIndex.TryGetValue(filename, out resource))
       {
@@ -73,7 +81,7 @@ namespace Resanctified.Engine.Resources
 
     public SoundModel LoadSoundModel(string filename)
     {
-      filename = filename.ToLower();
+      filename = ResourceManager.NormalizeContentPath(filename);
       Resource resource = (Resource) null;
       if (!this.m_soundModelNameIndex.TryGetValue(filename, out resource))
       {
@@ -90,7 +98,7 @@ namespace Resanctified.Engine.Resources
 
     public Font LoadFont(string filename)
     {
-      filename = filename.ToLower();
+      filename = ResourceManager.NormalizeContentPath(filename);
       Resource resource = (Resource) null;
       if (!this.m_fontNameIndex.TryGetValue(filename, out resource))
       {
@@ -107,7 +115,7 @@ namespace Resanctified.Engine.Resources
 
     public Animation2DModel LoadAnimation2DModel(string filename)
     {
-      filename = filename.ToLower();
+      filename = ResourceManager.NormalizeContentPath(filename);
       Resource resource = (Resource) null;
       if (!this.m_animModelNameIndex.TryGetValue(filename, out resource))
       {

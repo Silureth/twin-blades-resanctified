@@ -53,13 +53,10 @@ namespace Resanctified.Game.FSM.GameState
       this.NextRequest = false;
       GameFSM.GetInstance().SetState((IState) GameStateMainMenu.GetInstance());
       GameApplication instance = GameApplication.GetInstance();
-      instance.SendScore(instance.Score);
       GameStateMainMenu.GetInstance().GetSubStateMachine().SetState((IState) MainMenuStateHighscoresStory.GetInstance());
       GameStateMainMenu.GetInstance().GetHighscoresView().StoryMode = true;
-      GameStateMainMenu.GetInstance().GetLeaderboardView().StoryMode = true;
       int num = instance.UpdateHighscores();
       GameStateMainMenu.GetInstance().GetHighscoresView().BlinkScore(num + 1);
-      GameStateMainMenu.GetInstance().GetLeaderboardView().BlinkScore(true);
       if (num >= 5)
         return;
       GameApplication.Instance.SaveHighscores();

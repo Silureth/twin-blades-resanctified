@@ -4,9 +4,7 @@
 // MVID: 5F185CF1-B1A3-44DD-BD34-391B69A73148
 // Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\TwinBlades.dll
 
-//using Microsoft.Phone.Shell;
 using Microsoft.Xna.Framework;
-//using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Resanctified.Game.FSM;
 using Resanctified.Game.FSM.GameState;
@@ -31,9 +29,8 @@ namespace Resanctified.Game
 {
     public class GameApplication : Application
     {
-        public const int LEADERBOARDID_STORY = 0;
-        public const int LEADERBOARDID_SURVIVAL = 1;
-        private static readonly string STATE_KEY = "TwinBladesState";
+        // Per-user save folder name, e.g. ~/.local/share/Resanctified or %LOCALAPPDATA%\Resanctified.
+        private const string SAVE_FOLDER_NAME = "Resanctified";
         private GraphicsDeviceManager m_graphics;
         private TextBoxViewController m_textBoxViewController = new TextBoxViewController();
         private InGameMenuViewController m_inGameMenuViewController = new InGameMenuViewController();
@@ -49,9 +46,7 @@ namespace Resanctified.Game
         private AchievementsMenuViewController m_inGameAchievementsViewController = new AchievementsMenuViewController();
         private HighscoresChooseMenuViewController m_inGameHighscoresChooseViewController = new HighscoresChooseMenuViewController();
         private HighscoresMenuViewController m_inGameHighscoresViewController = new HighscoresMenuViewController();
-        private LeaderboardMenuViewController m_inGameLeaderboardViewController = new LeaderboardMenuViewController();
         public bool ExitRequest;
-        private int[] m_savedState;
         public int Score;
         public float MusicGain;
         public float SfxGain;
@@ -106,10 +101,6 @@ namespace Resanctified.Game
 
         public HighscoresMenuViewController GetInGameHighscoresView() => this.m_inGameHighscoresViewController;
 
-        public LeaderboardMenuViewController GetInGameLeaderboardView() => this.m_inGameLeaderboardViewController;
-
-        public bool HasSavedState() => this.m_savedState != null;
-
         public static GameApplication Instance => (GameApplication)Application.Instance;
 
         public static GameApplication GetInstance() => (GameApplication)Application.Instance;
@@ -121,12 +112,10 @@ namespace Resanctified.Game
             this.ExitRequest = false;
             this.m_gameMode = GameApplication.GameMode.Survival;
             this.m_difficulty = GameApplication.GameDifficulty.Normal;
+            // Window size and fullscreen are chosen by each platform head; the game itself always
+            // renders at the fixed virtual resolution (see Resanctified.Engine.Graphics.VirtualScreen).
             this.m_graphics = new GraphicsDeviceManager((Microsoft.Xna.Framework.Game)this);
-            this.m_graphics.PreferredBackBufferWidth = 520;
-            this.m_graphics.PreferredBackBufferHeight = 320;
             this.m_graphics.PreferredDepthStencilFormat = DepthFormat.None;
-            this.m_graphics.IsFullScreen = true;
-            this.m_graphics.SupportedOrientations = DisplayOrientation.LandscapeLeft | DisplayOrientation.LandscapeRight;
             this.m_graphics.SynchronizeWithVerticalRetrace = true;
             this.Content.RootDirectory = "Content";
             this.TargetElapsedTime = TimeSpan.FromSeconds(1.0 / 30.0);
@@ -153,35 +142,7 @@ namespace Resanctified.Game
 
         protected override void OnDeactivated(object sender, EventArgs args)
         {
-            this.m_savedState = new int[5];
-            this.m_savedState[0] = 0;
-            this.m_savedState[1] = (int)this.m_gameMode;
-            this.m_savedState[2] = (int)this.m_difficulty;
-            this.m_savedState[3] = this.Score;
-            this.m_savedState[4] = !GuideManager.Instance.IsTrialMode() ? 0 : 1;
-            if (GameFSM.GetInstance().GetCurrentState() == GameStateInGame.GetInstance() || GameFSM.GetInstance().GetCurrentState() == GameStateLoadLevel.GetInstance())
-                this.m_savedState[0] = 1;
-            if (GameFSM.GetInstance().GetCurrentState() == GameStateInGame.GetInstance() && ((GameWorld)GameWorldManager.GetInstance().GetCurrentWorld()).GetHero().HitPoints <= 0)
-                this.m_savedState[0] = 4;
-            if (GameFSM.GetInstance().GetCurrentState() == GameStateMap.GetInstance())
-                this.m_savedState[0] = 2;
-            if (GameFSM.GetInstance().GetCurrentState() == GameStateEndOfNight.GetInstance())
-                this.m_savedState[0] = GameApplication.GetInstance().GetGameMode() != GameApplication.GameMode.Story || Scenario.GetInstance().GetCurrentMissionIndex() != 0 ? 3 : 1;
-            if (GameFSM.GetInstance().GetCurrentState() == GameStateEnding.GetInstance())
-                this.m_savedState[0] = 5;
-            if (GameFSM.GetInstance().GetCurrentState() == GameStateEndingAnimation.GetInstance())
-                this.m_savedState[0] = 6;
-            if (GameFSM.GetInstance().GetCurrentState() == GameStateEndingStory.GetInstance())
-                this.m_savedState[0] = 7;
-            if (GameFSM.GetInstance().GetCurrentState() == GameStateStoryEpilogOpenMap.GetInstance())
-                this.m_savedState[0] = 8;
-            if (GameFSM.GetInstance().GetCurrentState() == GameStateStoryEpilogSuicide.GetInstance())
-                this.m_savedState[0] = 9;
-            if (GameFSM.GetInstance().GetCurrentState() == GameStateStoryIntro.GetInstance())
-                this.m_savedState[0] = 10;
-            if (GameFSM.GetInstance().GetCurrentState() == GameStateLogoLive.GetInstance() || GameFSM.GetInstance().GetCurrentState() == GameStateLogoMGS.GetInstance() || GameFSM.GetInstance().GetCurrentState() == GameStateLogo.GetInstance())
-                this.m_savedState[0] = 11;
-            //PhoneApplicationService.Current.State[GameApplication.STATE_KEY] = (object) this.m_savedState;
+            // Pause when the window loses focus.
             if (GameFSM.GetInstance().GetCurrentState() == GameStateInGame.GetInstance())
             {
                 InGameStateStartLevel.GetInstance().InGameMenuRequest = true;
@@ -190,142 +151,11 @@ namespace Resanctified.Game
             base.OnDeactivated(sender, args);
         }
 
-        protected override void OnActivated(object sender, EventArgs args)
-        {
-            if (this.m_savedState != null)
-            {
-                GuideManager.Instance.UpdateIsTrial();
-                if (!GuideManager.Instance.IsTrialMode() && this.m_savedState[4] == 1)
-                {
-                    if (GameFSM.GetInstance().GetCurrentState() == GameStateFeatures.GetInstance())
-                        GameFSM.GetInstance().SetState((IState)GameStateMainMenu.GetInstance());
-                    //AchievementManager.Instance.SynchronizeAchievementsRequest = true;
-                }
-            }
-            base.OnActivated(sender, args);
-        }
-
-        private void Rehydrate()
-        {
-            if (this.m_savedState == null)
-                return;
-            GameApplication.Instance.LoadSettings();
-            GameApplication.Instance.SetSoundVolume();
-            GameLocalisation.GetInstance().Initialize(GameApplication.Instance.CurrentLanguage);
-            GameApplication.Instance.LoadHighscores();
-            GameApplication.Instance.LoadAchievements();
-            //AchievementManager.Instance.ReadAchievements();
-            //AchievementManager.Instance.SynchronizeAchievementsRequest = true;
-            this.m_gameMode = (GameApplication.GameMode)this.m_savedState[1];
-            this.m_difficulty = (GameApplication.GameDifficulty)this.m_savedState[2];
-            this.Score = this.m_savedState[3];
-            switch (this.m_savedState[0])
-            {
-                case 0:
-                    GameFSM.GetInstance().SetState((IState)GameStateMainMenu.GetInstance());
-                    break;
-                case 1:
-                    GameStateMainMenu.Instance.MuteMusic = true;
-                    GameFSM.GetInstance().SetState((IState)GameStateMainMenu.GetInstance());
-                    GameStateMainMenu.Instance.StartGameRequest = true;
-                    GameStateMainMenu.Instance.ContinueGameRequest = true;
-                    GameStateMainMenu.Instance.LevelRequest = true;
-                    break;
-                case 2:
-                    GameStateMainMenu.Instance.MuteMusic = true;
-                    GameFSM.GetInstance().SetState((IState)GameStateMainMenu.GetInstance());
-                    GameStateMainMenu.Instance.StartGameRequest = true;
-                    GameStateMainMenu.Instance.ContinueGameRequest = true;
-                    break;
-                case 3:
-                    GameStateMainMenu.Instance.MuteMusic = true;
-                    GameFSM.GetInstance().SetState((IState)GameStateMainMenu.GetInstance());
-                    GameStateMainMenu.Instance.StartGameRequest = true;
-                    GameStateMainMenu.Instance.ContinueGameRequest = true;
-                    GameStateMainMenu.Instance.EndOfNightRequest = true;
-                    break;
-                case 4:
-                    GameFSM.GetInstance().SetState((IState)GameStateMainMenu.GetInstance());
-                    GameApplication instance = GameApplication.GetInstance();
-                    instance.SendScore(instance.Score);
-                    if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
-                    {
-                        GameStateMainMenu.GetInstance().GetSubStateMachine().SetState((IState)MainMenuStateHighscoresStory.GetInstance());
-                        GameStateMainMenu.GetInstance().GetHighscoresView().StoryMode = true;
-                        GameStateMainMenu.GetInstance().GetLeaderboardView().StoryMode = true;
-                    }
-                    else
-                    {
-                        GameStateMainMenu.GetInstance().GetSubStateMachine().SetState((IState)MainMenuStateHighscoresSurvival.GetInstance());
-                        GameStateMainMenu.GetInstance().GetHighscoresView().StoryMode = false;
-                        GameStateMainMenu.GetInstance().GetLeaderboardView().StoryMode = false;
-                    }
-                    int num = instance.UpdateHighscores();
-                    GameStateMainMenu.GetInstance().GetHighscoresView().BlinkScore(num + 1);
-                    GameStateMainMenu.GetInstance().GetLeaderboardView().BlinkScore(true);
-                    if (num < 5)
-                    {
-                        GameApplication.Instance.SaveHighscores();
-                        break;
-                    }
-                    break;
-                case 5:
-                    GameStateMainMenu.Instance.MuteMusic = true;
-                    GameFSM.GetInstance().SetState((IState)GameStateMainMenu.GetInstance());
-                    GameStateMainMenu.Instance.StartGameRequest = true;
-                    GameStateMainMenu.Instance.ContinueGameRequest = true;
-                    GameStateMainMenu.Instance.EndingRequest = true;
-                    break;
-                case 6:
-                    GameStateMainMenu.Instance.MuteMusic = true;
-                    GameFSM.GetInstance().SetState((IState)GameStateMainMenu.GetInstance());
-                    GameStateMainMenu.Instance.StartGameRequest = true;
-                    GameStateMainMenu.Instance.ContinueGameRequest = true;
-                    GameStateMainMenu.Instance.EndingAnimationRequest = true;
-                    break;
-                case 7:
-                    GameStateMainMenu.Instance.MuteMusic = true;
-                    GameFSM.GetInstance().SetState((IState)GameStateMainMenu.GetInstance());
-                    GameStateMainMenu.Instance.StartGameRequest = true;
-                    GameStateMainMenu.Instance.ContinueGameRequest = true;
-                    GameStateMainMenu.Instance.EndingStoryRequest = true;
-                    break;
-                case 8:
-                    GameStateMainMenu.Instance.MuteMusic = true;
-                    GameFSM.GetInstance().SetState((IState)GameStateMainMenu.GetInstance());
-                    GameStateMainMenu.Instance.StartGameRequest = true;
-                    GameStateMainMenu.Instance.ContinueGameRequest = true;
-                    GameStateMainMenu.Instance.EpilogOpenMapRequest = true;
-                    break;
-                case 9:
-                    GameStateMainMenu.Instance.MuteMusic = true;
-                    GameFSM.GetInstance().SetState((IState)GameStateMainMenu.GetInstance());
-                    GameStateMainMenu.Instance.StartGameRequest = true;
-                    GameStateMainMenu.Instance.ContinueGameRequest = true;
-                    GameStateMainMenu.Instance.EpilogSuicideRequest = true;
-                    break;
-                case 10:
-                    GameFSM.GetInstance().SetState((IState)GameStateMainMenu.GetInstance());
-                    GameStateMainMenu.Instance.StartGameRequest = true;
-                    break;
-            }
-            this.m_savedState = (int[])null;
-        }
-
         protected override void Initialize()
         {
             base.Initialize();
-            //TODO
-           // if (PhoneApplicationService.Current.StartupMode == 1)
-              this.m_savedState = (int[]) null;
-            //else if (PhoneApplicationService.Current.StartupMode == null)
-            //  this.m_savedState = PhoneApplicationService.Current.State[GameApplication.STATE_KEY] as int[];
-            
             this.ExitRequest = false;
-            FileManager.Instance.Initialize();
-            GuideManager.Instance.Initialize();
-            // LeaderboardManager.Instance.Initialize();
-            //AchievementManager.Instance.Initialize();
+            FileManager.Instance.Initialize(GameApplication.SAVE_FOLDER_NAME);
             Prefs.Instance.Initialize();
             GameWorldManager.Instance.Initialize();
             InputManager.GetInstance().SetDeadZones(0.1f, 0.3f);
@@ -376,9 +206,7 @@ namespace Resanctified.Game
             this.GetInGameAchievementsView().Initialize(false);
             this.GetInGameHighscoresChooseView().Initialize(false);
             this.GetInGameHighscoresView().Initialize(0, false);
-            this.GetInGameLeaderboardView().Initialize(false);
             Scenario.GetInstance().Initialize();
-            this.Rehydrate();
         }
 
         protected override void LoadContent()
@@ -402,22 +230,22 @@ namespace Resanctified.Game
             }
             else
             {
+                // The WP7 "Guide.IsVisible => pause" check is covered by OnDeactivated, which requests the
+                // in-game menu when the window loses focus.
+                // base.Update runs input and all UI touch handlers. The shipped game swallowed exceptions
+                // there and kept playing; Release keeps that resilience but logs them, Debug lets them surface.
+#if !DEBUG
                 try
                 {
-                //    //LeaderboardManager.Instance.Update();
-                //    //AchievementManager.Instance.Update();
-                //    GuideManager.Instance.Update();
+#endif
                     base.Update(gameTime);
+#if !DEBUG
                 }
-                //catch (GameUpdateRequiredException ex)
-                //{
-                //    GuideManager.Instance.RequestShowGameUpdateRequired = true;
-                //}
                 catch (Exception ex)
                 {
+                    Console.Error.WriteLine("ERROR in Update (frame skipped): " + ex);
                 }
-                //if (Guide.IsVisible)
-                    InGameStatePlay.Instance.InGameMenuRequest = true;
+#endif
                 GameFSM.Instance.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                 this.m_textBoxViewController.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
                 if (this.m_gameMode != GameApplication.GameMode.Story)
@@ -462,11 +290,7 @@ namespace Resanctified.Game
             this.GetInGameAchievementsView().Cleanup();
             this.GetInGameHighscoresChooseView().Cleanup();
             this.GetInGameHighscoresView().Cleanup();
-            this.GetInGameLeaderboardView().Cleanup();
             Scenario.GetInstance().Cleanup();
-            //LeaderboardManager.Instance.Cleanup();
-            //AchievementManager.Instance.Cleanup();
-            GuideManager.Instance.Cleanup();
             FileManager.Instance.Cleanup();
             Resanctified.Engine.Resources.Resource.SafeRelease<Font>(ref this.m_font);
             base.Cleanup();
@@ -616,14 +440,6 @@ namespace Resanctified.Game
             this.m_highscoresStory[4] = 0;
         }
 
-        public void SendScore(int score)
-        {
-            //if (this.m_gameMode == GameApplication.GameMode.Story)
-            // // LeaderboardManager.Instance.WriteBestScore(score, 0);
-            //else
-            ////  LeaderboardManager.Instance.WriteBestScore(score, 1);
-        }
-
         public void CheckBossKillAchievements(NPCBoss boss)
         {
             Prefs.Achievements cachedAchievements = Prefs.Instance.CachedAchievements;
@@ -633,19 +449,16 @@ namespace Resanctified.Game
             {
                 cachedAchievements.achievement_Story_Boss1Killed = true;
                 flag = true;
-                //AchievementManager.Instance.AwardAchievement("Boss1");
             }
             if (boss.GetBossType() == NPCBoss.BossType.NecromancerForm1 && !cachedAchievements.achievement_Story_Boss2Killed)
             {
                 cachedAchievements.achievement_Story_Boss2Killed = true;
                 flag = true;
-                //AchievementManager.Instance.AwardAchievement("Boss2");
             }
             if (boss.GetBossType() == NPCBoss.BossType.NecromancerForm2 && !cachedAchievements.achievement_Story_Boss3Killed)
             {
                 cachedAchievements.achievement_Story_Boss3Killed = true;
                 flag = true;
-                //AchievementManager.Instance.AwardAchievement("Boss3");
             }
             if (!flag)
                 return;
@@ -658,7 +471,6 @@ namespace Resanctified.Game
             if (cachedAchievements.achievement_Story_Boss3Killed)
                 return;
             cachedAchievements.achievement_Story_Boss3Killed = true;
-            //AchievementManager.Instance.AwardAchievement("Boss3");
             this.SaveAchievements();
         }
 
@@ -672,7 +484,6 @@ namespace Resanctified.Game
                 {
                     cachedAchievements.achievement_Story_100ZombiesKilled = true;
                     flag = true;
-                    //AchievementManager.Instance.AwardAchievement("100KillStory");
                 }
                 this.AchievementCounter_100ZombiesKilled = 0;
             }
@@ -682,7 +493,6 @@ namespace Resanctified.Game
                 {
                     cachedAchievements.achievement_Story_500ZombiesKilled = true;
                     flag = true;
-                    //AchievementManager.Instance.AwardAchievement("500KillStory");
                 }
                 this.AchievementCounter_500ZombiesKilled = 0;
             }
@@ -692,7 +502,6 @@ namespace Resanctified.Game
                 {
                     cachedAchievements.achievement_Story_1000ZombiesKilled = true;
                     flag = true;
-                    //AchievementManager.Instance.AwardAchievement("1000KillStory");
                 }
                 this.AchievementCounter_1000ZombiesKilled = 0;
             }
@@ -702,7 +511,6 @@ namespace Resanctified.Game
                 {
                     cachedAchievements.achievement_Survival_500ZombiesKilledAirSlash = true;
                     flag = true;
-                    //AchievementManager.Instance.AwardAchievement("500KillAirSlashSurvival");
                 }
                 this.AchievementCounter_500ZombiesKilledAirSlash = 0;
             }
@@ -712,7 +520,6 @@ namespace Resanctified.Game
                 {
                     cachedAchievements.achievement_Survival_500ZombiesKilledBullet = true;
                     flag = true;
-                    //AchievementManager.Instance.AwardAchievement("500KillGunSurvival");
                 }
                 this.AchievementCounter_500ZombiesKilledBullet = 0;
             }
@@ -722,7 +529,6 @@ namespace Resanctified.Game
                 {
                     cachedAchievements.achievement_Survival_500ZombiesKilledFlameThrower = true;
                     flag = true;
-                    //AchievementManager.Instance.AwardAchievement("500KillFlameSurvival");
                 }
                 this.AchievementCounter_500ZombiesKilledFlameThrower = 0;
             }
@@ -732,7 +538,6 @@ namespace Resanctified.Game
                 {
                     cachedAchievements.achievement_Survival_500ZombiesKilledIceGun = true;
                     flag = true;
-                    //AchievementManager.Instance.AwardAchievement("500KillIceSurvival");
                 }
                 this.AchievementCounter_500ZombiesKilledIceGun = 0;
             }
@@ -742,7 +547,6 @@ namespace Resanctified.Game
                 {
                     cachedAchievements.achievement_Survival_500ZombiesKilledExplosiveGun = true;
                     flag = true;
-                    //AchievementManager.Instance.AwardAchievement("500KillExplodeSurvival");
                 }
                 this.AchievementCounter_500ZombiesKilledExplosiveGun = 0;
             }
@@ -752,7 +556,6 @@ namespace Resanctified.Game
                 {
                     cachedAchievements.achievement_Survival_1000ZombiesKilledHolyBeam = true;
                     flag = true;
-                    //AchievementManager.Instance.AwardAchievement("1000KillHolySurvival");
                 }
                 this.AchievementCounter_1000ZombiesKilledHolyBeam = 0;
             }
@@ -762,7 +565,6 @@ namespace Resanctified.Game
                 {
                     cachedAchievements.achievement_Survival_100Ungrab = true;
                     flag = true;
-                    //AchievementManager.Instance.AwardAchievement("100ShakeSurvival");
                 }
                 this.AchievementCounter_100Ungrab = 0;
             }
@@ -781,7 +583,6 @@ namespace Resanctified.Game
                 if (cachedAchievements.achievement_Story_AllWeaponsAndAbilitiesUpgraded)
                     return;
                 cachedAchievements.achievement_Story_AllWeaponsAndAbilitiesUpgraded = true;
-                //AchievementManager.Instance.AwardAchievement("AllUpgradeStory");
                 this.SaveAchievements();
             }
             else
@@ -809,7 +610,6 @@ namespace Resanctified.Game
                 if (!cachedAchievements.achievement_Survival_AllWeaponsUpgraded)
                 {
                     cachedAchievements.achievement_Survival_AllWeaponsUpgraded = true;
-                    //AchievementManager.Instance.AwardAchievement("AllWeaponsSurvival");
                     return true;
                 }
             }
@@ -818,72 +618,67 @@ namespace Resanctified.Game
 
         public bool CheckAbilitiesUpgradesAchievements()
         {
-            //Prefs.Achievements cachedAchievements = Prefs.Instance.CachedAchievements;
-            //int num = 0;
-            //GameWorld currentWorld = (GameWorld) WorldManager.GetInstance().GetCurrentWorld();
-            //if (currentWorld.GetHero().SlashDamageLevel == 5)
-            //  ++num;
-            //if (currentWorld.GetHero().SlashManaDrainLevel == 5)
-            //  ++num;
-            //if (currentWorld.GetHero().HitPointsLevel == 5)
-            //  ++num;
-            //if (currentWorld.GetHero().ManaPointsLevel == 5)
-            //  ++num;
-            //if (currentWorld.GetHero().AirSlashDamageLevel == 5)
-            //  ++num;
-            //if (num >= 5)
-            //{
-            //  if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
-            //    return true;
-            //  if (!cachedAchievements.achievement_Survival_AllAbilitiesUpgraded)
-            //  {
-            //    cachedAchievements.achievement_Survival_AllAbilitiesUpgraded = true;
-            //   //AchievementManager.Instance.AwardAchievement("AllAbilitiesSurvival");
-            //    return true;
-            //  }
-            //}
+            Prefs.Achievements cachedAchievements = Prefs.Instance.CachedAchievements;
+            int num = 0;
+            GameWorld currentWorld = (GameWorld) WorldManager.GetInstance().GetCurrentWorld();
+            if (currentWorld.GetHero().SlashDamageLevel == 5)
+                ++num;
+            if (currentWorld.GetHero().SlashManaDrainLevel == 5)
+                ++num;
+            if (currentWorld.GetHero().HitPointsLevel == 5)
+                ++num;
+            if (currentWorld.GetHero().ManaPointsLevel == 5)
+                ++num;
+            if (currentWorld.GetHero().AirSlashDamageLevel == 5)
+                ++num;
+            if (num >= 5)
+            {
+                if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
+                    return true;
+                if (!cachedAchievements.achievement_Survival_AllAbilitiesUpgraded)
+                {
+                    cachedAchievements.achievement_Survival_AllAbilitiesUpgraded = true;
+                    return true;
+                }
+            }
             return false;
         }
 
         public void CheckEndingAchievements()
         {
-            //Prefs.Achievements cachedAchievements = Prefs.Instance.CachedAchievements;
-            //bool flag = false;
-            //if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
-            //{
-            //  if (GameApplication.GetInstance().GetDifficulty() == GameApplication.GameDifficulty.Hard)
-            //  {
-            //    if (!cachedAchievements.achievement_Story_GameFinishedHard)
-            //    {
-            //      cachedAchievements.achievement_Story_GameFinishedHard = true;
-            //      flag = true;
-            //     //AchievementManager.Instance.AwardAchievement("FinishStoryHard");
-            //    }
-            //  }
-            //  else if (!cachedAchievements.achievement_Story_GameFinished)
-            //  {
-            //    cachedAchievements.achievement_Story_GameFinished = true;
-            //    flag = true;
-            //   //AchievementManager.Instance.AwardAchievement("FinishStory");
-            //  }
-            //}
-            //else if (GameApplication.GetInstance().GetDifficulty() == GameApplication.GameDifficulty.Hard)
-            //{
-            //  if (!cachedAchievements.achievement_Survival_GameFinishedHard)
-            //  {
-            //    cachedAchievements.achievement_Survival_GameFinishedHard = true;
-            //    flag = true;
-            //   //AchievementManager.Instance.AwardAchievement("FinishSurvivalHard");
-            //  }
-            //}
-            //else if (!cachedAchievements.achievement_Survival_GameFinished)
-            //{
-            //  cachedAchievements.achievement_Survival_GameFinished = true;
-            //  flag = true;
-            // //AchievementManager.Instance.AwardAchievement("FinishSurvival");
-            //}
-            //if (!flag)
-            //  return;
+            Prefs.Achievements cachedAchievements = Prefs.Instance.CachedAchievements;
+            bool flag = false;
+            if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
+            {
+                if (GameApplication.GetInstance().GetDifficulty() == GameApplication.GameDifficulty.Hard)
+                {
+                    if (!cachedAchievements.achievement_Story_GameFinishedHard)
+                    {
+                        cachedAchievements.achievement_Story_GameFinishedHard = true;
+                        flag = true;
+                    }
+                }
+                else if (!cachedAchievements.achievement_Story_GameFinished)
+                {
+                    cachedAchievements.achievement_Story_GameFinished = true;
+                    flag = true;
+                }
+            }
+            else if (GameApplication.GetInstance().GetDifficulty() == GameApplication.GameDifficulty.Hard)
+            {
+                if (!cachedAchievements.achievement_Survival_GameFinishedHard)
+                {
+                    cachedAchievements.achievement_Survival_GameFinishedHard = true;
+                    flag = true;
+                }
+            }
+            else if (!cachedAchievements.achievement_Survival_GameFinished)
+            {
+                cachedAchievements.achievement_Survival_GameFinished = true;
+                flag = true;
+            }
+            if (!flag)
+                return;
             this.SaveAchievements();
         }
 
@@ -944,33 +739,6 @@ namespace Resanctified.Game
         {
             Normal,
             Hard,
-        }
-
-        private enum SavedStateId
-        {
-            MainMenu,
-            InGame,
-            Map,
-            EndOfNight,
-            InGameGameOver,
-            Ending,
-            EndingAnimation,
-            EndingStory,
-            EpilogOpenMap,
-            EpilogSuicide,
-            StoryIntro,
-            Logo,
-            Number,
-        }
-
-        private enum SavedStateData
-        {
-            StateId,
-            GameMode,
-            Difficulty,
-            Score,
-            DemoMode,
-            Size,
         }
     }
 }

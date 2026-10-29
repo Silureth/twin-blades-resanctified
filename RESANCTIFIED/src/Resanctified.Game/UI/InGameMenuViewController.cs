@@ -43,7 +43,6 @@ namespace Resanctified.Game.UI
     private const float INGAMEMENU_DIFFICULTY_X = 240f;
     private const float INGAMEMENU_DIFFICULTY_Y = 267f;
     private VertexPositionColor[] m_quadBackground = new VertexPositionColor[4];
-    private Button m_buttonUnlock;
     private Button m_buttonResume;
     private Button m_buttonAchievements;
     private Button m_buttonHighscores;
@@ -56,7 +55,6 @@ namespace Resanctified.Game.UI
 
     public InGameMenuViewController()
     {
-      this.m_buttonUnlock = new Button();
       this.m_buttonResume = new Button();
       this.m_buttonAchievements = new Button();
       this.m_buttonHighscores = new Button();
@@ -70,8 +68,6 @@ namespace Resanctified.Game.UI
     {
       base.Initialize();
       QuadFactory.CreateQuad(this.m_quadBackground, 0.0f, 320f, 480f, 320f, GameConstant.INGAME_BLACKBACKGROUND_COLOR);
-      this.m_buttonUnlock.Initialize((ViewController) this, 200f, 26f);
-      this.m_buttonUnlock.GetTransform().SetPosition(240f, 245f);
       this.m_buttonResume.Initialize((ViewController) this, 200f, 26f);
       this.m_buttonResume.GetTransform().SetPosition(240f, 209f);
       this.m_buttonAchievements.Initialize((ViewController) this, 200f, 26f);
@@ -90,7 +86,6 @@ namespace Resanctified.Game.UI
 
     public override void Cleanup()
     {
-      this.m_buttonUnlock.Cleanup();
       this.m_buttonResume.Cleanup();
       this.m_buttonAchievements.Cleanup();
       this.m_buttonHighscores.Cleanup();
@@ -142,15 +137,6 @@ namespace Resanctified.Game.UI
       else
         this.m_stringBuilder.Append(GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.DifficultyNormal));
       Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 6, GameConstant.MENU_TEXT_HELP_SELECTED_COLOR, this.m_stringBuilder);
-      if (GuideManager.Instance.IsTrialMode())
-      {
-        Color color = GameConstant.MENU_TEXT_COLOR;
-        if (!GuideManager.Instance.IsPurchaseAvailable())
-          color = GameConstant.MENU_TEXT_NOTAVAILABLE_COLOR;
-        this.m_t.SetScale(1f);
-        this.m_t.SetPosition(240f, (float) byte.MaxValue, 0.0f);
-        Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 12, color, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.UnlockFullGame));
-      }
       Color menuTextColor2 = GameConstant.MENU_TEXT_COLOR;
       this.m_t.SetScale(1f);
       this.m_t.SetPosition(240f, 219f, 0.0f);
@@ -237,11 +223,6 @@ namespace Resanctified.Game.UI
           InGameStateMenu.GetInstance().OptionsRequest = true;
           GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Next);
         }
-      }
-      else if (sender == this.m_buttonUnlock && ((ButtonActionEvent) evt).buttonState == PSSButtonState.ButtonStatePressed && GuideManager.Instance.IsTrialMode() && GuideManager.Instance.IsPurchaseAvailable())
-      {
-        InGameStateMenu.GetInstance().UnlockRequest = true;
-        GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);
       }
       GameWorld currentWorld = (GameWorld) WorldManager.GetInstance().GetCurrentWorld();
       if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story && GameFSM.GetInstance().GetCurrentState() == GameStateInGame.GetInstance())

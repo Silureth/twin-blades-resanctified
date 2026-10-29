@@ -29,7 +29,6 @@ namespace Resanctified.Game.FSM.GameState
     private HelpViewController m_helpViewController = new HelpViewController();
     private HighscoresChooseMenuViewController m_highscoresChooseViewController = new HighscoresChooseMenuViewController();
     private HighscoresMenuViewController m_highscoresViewController = new HighscoresMenuViewController();
-    private LeaderboardMenuViewController m_leaderboardViewController = new LeaderboardMenuViewController();
     private LanguageMenuViewController m_languageSelectionViewController = new LanguageMenuViewController();
     private CreditsViewController m_creditsViewController = new CreditsViewController();
     private OverwriteSaveMenuViewController m_overwriteViewController = new OverwriteSaveMenuViewController();
@@ -48,7 +47,6 @@ namespace Resanctified.Game.FSM.GameState
     public bool EndingStoryRequest;
     public bool EpilogOpenMapRequest;
     public bool EpilogSuicideRequest;
-    private bool m_isOtherAudioPlayingChecked;
 
     public static GameStateMainMenu Instance => GameStateMainMenu.m_instance;
 
@@ -73,8 +71,6 @@ namespace Resanctified.Game.FSM.GameState
     public HighscoresChooseMenuViewController GetHighscoresChooseView() => this.m_highscoresChooseViewController;
 
     public HighscoresMenuViewController GetHighscoresView() => this.m_highscoresViewController;
-
-    public LeaderboardMenuViewController GetLeaderboardView() => this.m_leaderboardViewController;
 
     public LanguageMenuViewController GetLanguageSelectionView() => this.m_languageSelectionViewController;
 
@@ -105,12 +101,10 @@ namespace Resanctified.Game.FSM.GameState
       this.EndingStoryRequest = false;
       this.EpilogOpenMapRequest = false;
       this.EpilogSuicideRequest = false;
-      this.m_isOtherAudioPlayingChecked = false;
     }
 
     public void Enter(IFiniteStateMachine stateMachine)
     {
-      GuideManager.Instance.UpdateIsTrial();
       ResourceManager.GetInstance().DestroyUnusedResources();
       GameApplication.GetInstance().GetTextBoxViewController().SetActive(false);
       GameApplication.GetInstance().GetTextBoxViewController().DisableChoiceMode();
@@ -135,7 +129,6 @@ namespace Resanctified.Game.FSM.GameState
       this.m_languageSelectionViewController.Initialize(true);
       this.m_highscoresChooseViewController.Initialize(true);
       this.m_highscoresViewController.Initialize(0, true);
-      this.m_leaderboardViewController.Initialize(true);
       this.m_creditsViewController.Initialize();
       this.m_overwriteViewController.Initialize();
       this.m_achievementsViewController.Initialize(true);
@@ -143,12 +136,6 @@ namespace Resanctified.Game.FSM.GameState
       AudioManager.GetInstance().LoadMusic("Sounds\\music_splash");
       ResourceManager.GetInstance().LoadAllResources();
       GameApplication.GetInstance().SetSoundVolume();
-      if (!this.m_isOtherAudioPlayingChecked)
-      {
-        if (AudioManager.GetInstance().IsOtherAudioPlaying())
-          GuideManager.Instance.RequestShowMessageUserMusicPlaying = true;
-        this.m_isOtherAudioPlayingChecked = true;
-      }
       if (!this.MuteMusic)
         AudioManager.GetInstance().PlayMusic();
       this.MuteMusic = false;
@@ -233,10 +220,7 @@ namespace Resanctified.Game.FSM.GameState
       {
         if (!this.ExitRequest)
           return;
-        if (GuideManager.Instance.IsTrialMode())
-          stateMachine.SetState((IState) GameStateFeatures.Instance);
-        else
-          GameApplication.GetInstance().ExitRequest = true;
+        GameApplication.GetInstance().ExitRequest = true;
       }
     }
 
@@ -263,7 +247,6 @@ namespace Resanctified.Game.FSM.GameState
       this.m_languageSelectionViewController.Cleanup();
       this.m_highscoresChooseViewController.Cleanup();
       this.m_highscoresViewController.Cleanup();
-      this.m_leaderboardViewController.Cleanup();
       this.m_creditsViewController.Cleanup();
       this.m_overwriteViewController.Cleanup();
       this.m_achievementsViewController.Cleanup();

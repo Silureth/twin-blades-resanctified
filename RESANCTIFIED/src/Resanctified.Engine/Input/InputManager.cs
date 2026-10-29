@@ -5,6 +5,7 @@
 // Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\Resanctified.Engine.dll
 
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Resanctified.Engine.UI;
 using System.Collections.Generic;
 
@@ -36,11 +37,13 @@ namespace Resanctified.Engine.Input
     public GameAction StdBack;
     protected List<Responder> m_responders;
     private PadHandler m_pad;
+    private KeyboardHandler m_keyboard;
     private bool m_standardNavigationGameActionsEnabled;
 
     private InputManager()
     {
       this.m_pad = new PadHandler(PlayerIndex.One);
+      this.m_keyboard = new KeyboardHandler();
       this.m_gameActionList = new List<GameAction>();
       this.m_thumbstickPositions = new Vector2[2];
       this.m_deadZoneX = 0.0f;
@@ -75,6 +78,7 @@ namespace Resanctified.Engine.Input
     public void Initialize()
     {
       this.m_pad.Initialize();
+      this.m_keyboard.Initialize();
       this.DisableStandardNavigationGameActions();
       this.m_gameActionList.Clear();
       this.ClearPadState();
@@ -89,6 +93,7 @@ namespace Resanctified.Engine.Input
     public void Cleanup()
     {
       this.m_pad.Cleanup();
+      this.m_keyboard.Cleanup();
       this.m_gameActionList.Clear();
       Application.GetInstance().RemoveResponder((Responder) this);
       this.m_responders.Clear();
@@ -99,6 +104,7 @@ namespace Resanctified.Engine.Input
       if (!this.IsActive)
         return;
       this.m_pad.Update(gameTime);
+      this.m_keyboard.Update(gameTime);
       for (int index = 0; index < this.m_gameActionList.Count; ++index)
         this.UpdateGameAction(this.m_gameActionList[index]);
       if (this.m_standardNavigationGameActionsEnabled)
@@ -156,28 +162,28 @@ namespace Resanctified.Engine.Input
         switch (ga.m_buttonState)
         {
           case PSSButtonState.ButtonStatePressed:
-            if (this.m_pad.IsButtonPressed(ga.GetButtonList()[index]))
+            if (this.IsButtonPressed(ga.GetButtonList()[index]))
             {
               ga.m_isActive = true;
               break;
             }
             break;
           case PSSButtonState.ButtonStateDown:
-            if (this.m_pad.IsButtonDown(ga.GetButtonList()[index]))
+            if (this.IsButtonDown(ga.GetButtonList()[index]))
             {
               ga.m_isActive = true;
               break;
             }
             break;
           case PSSButtonState.ButtonStateReleased:
-            if (this.m_pad.IsButtonReleased(ga.GetButtonList()[index]))
+            if (this.IsButtonReleased(ga.GetButtonList()[index]))
             {
               ga.m_isActive = true;
               break;
             }
             break;
           case PSSButtonState.ButtonStateUp:
-            if (this.m_pad.IsButtonUp(ga.GetButtonList()[index]))
+            if (this.IsButtonUp(ga.GetButtonList()[index]))
             {
               ga.m_isActive = true;
               break;
@@ -185,6 +191,33 @@ namespace Resanctified.Engine.Input
             break;
         }
       }
+    }
+
+    // Desktop keyboard stand-ins for the phone's hardware buttons: Escape is the Windows Phone "Back" key.
+    private static Keys GetKeyForButton(Buttons button) => button == Buttons.Back ? Keys.Escape : Keys.None;
+
+    private bool IsButtonPressed(Buttons button)
+    {
+      Keys key = InputManager.GetKeyForButton(button);
+      return this.m_pad.IsButtonPressed(button) || key != Keys.None && this.m_keyboard.IsKeyPressed(key);
+    }
+
+    private bool IsButtonDown(Buttons button)
+    {
+      Keys key = InputManager.GetKeyForButton(button);
+      return this.m_pad.IsButtonDown(button) || key != Keys.None && this.m_keyboard.IsKeyDown(key);
+    }
+
+    private bool IsButtonReleased(Buttons button)
+    {
+      Keys key = InputManager.GetKeyForButton(button);
+      return this.m_pad.IsButtonReleased(button) || key != Keys.None && this.m_keyboard.IsKeyReleased(key);
+    }
+
+    private bool IsButtonUp(Buttons button)
+    {
+      Keys key = InputManager.GetKeyForButton(button);
+      return this.m_pad.IsButtonUp(button) && (key == Keys.None || this.m_keyboard.IsKeyUp(key));
     }
 
     public Vector2 GetThumbstickPosition(PSSThumbstick thumbstick) => this.m_thumbstickPositions[(int) thumbstick];

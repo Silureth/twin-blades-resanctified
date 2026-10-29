@@ -19,11 +19,13 @@ namespace Resanctified.Engine.Input
 
     internal List<Buttons> GetButtonList() => this.m_buttonList;
 
-    public GameAction(PSSButton buttonBits, PSSButtonState state, float m_minShakeTime)
+    /// <param name="minShakeTime">Shake duration that also activates this action; negative means shaking never does.</param>
+    public GameAction(PSSButton buttonBits, PSSButtonState state, float minShakeTime)
     {
       this.m_buttonList = new List<Buttons>(8);
       this.m_buttonBits = buttonBits;
       this.m_buttonState = state;
+      this.m_minShakeTime = minShakeTime;
       this.m_isActive = false;
       this.IsDisabled = false;
       this.IsDisableAllowed = false;

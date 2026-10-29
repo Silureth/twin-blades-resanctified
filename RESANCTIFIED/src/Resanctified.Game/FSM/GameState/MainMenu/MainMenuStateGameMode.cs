@@ -53,14 +53,7 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
       {
         if (!this.DifficultyRequest)
           return;
-        if (GuideManager.Instance.IsTrialMode())
-        {
-          Prefs.Instance.EraseAchievementsFile();
-          GameApplication.Instance.LoadAchievements();
-          Prefs.GetInstance().EraseGameDataFile();
-          stateMachine.SetState((IState) MainMenuStateDifficulty.GetInstance());
-        }
-        else if (this.m_savedGameAvailable)
+        if (this.m_savedGameAvailable)
           stateMachine.SetState((IState) MainMenuStateOverwrite.GetInstance());
         else
           stateMachine.SetState((IState) MainMenuStateDifficulty.GetInstance());

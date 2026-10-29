@@ -1,0 +1,4 @@
+# Game content is binary; keep the repo-wide "text=auto" from ever touching it.
+*.xnb binary
+*.ogg binary
+*.wma binary

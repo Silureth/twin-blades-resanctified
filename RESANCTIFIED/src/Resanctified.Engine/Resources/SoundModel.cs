@@ -5,6 +5,7 @@
 // Assembly location: X:\_homebrew\TwinBlades\XAP\TwinBlades\Resanctified.Engine.dll
 
 using Microsoft.Xna.Framework.Audio;
+using Resanctified.Engine.Sounds;
 
 namespace Resanctified.Engine.Resources
 {
@@ -21,7 +22,9 @@ namespace Resanctified.Engine.Resources
     {
       if (this.m_isLoaded)
         return;
-      this.m_soundEffect = Application.Instance.Content.Load<SoundEffect>(this.m_filename);
+      // Without an audio device the effect stays null and Sound.Play() does nothing.
+      if (AudioManager.Instance.IsAvailable)
+        this.m_soundEffect = Application.Instance.Content.Load<SoundEffect>(this.m_filename);
       this.m_isLoaded = true;
     }
 

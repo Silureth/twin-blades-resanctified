@@ -14,7 +14,6 @@ namespace Resanctified.Game.FSM.GameState.InGame
 {
   public class InGameStateMenu : IDrawableState, IState
   {
-    public bool UnlockRequest;
     public bool ResumeGameRequest;
     public bool AchievementsRequest;
     public bool HighscoresRequest;
@@ -30,7 +29,6 @@ namespace Resanctified.Game.FSM.GameState.InGame
 
     public InGameStateMenu()
     {
-      this.UnlockRequest = false;
       this.ResumeGameRequest = false;
       this.AchievementsRequest = false;
       this.HighscoresRequest = false;
@@ -43,7 +41,6 @@ namespace Resanctified.Game.FSM.GameState.InGame
     public void Enter(IFiniteStateMachine stateMachine)
     {
       InputManager.GetInstance().ClearPadState();
-      this.UnlockRequest = false;
       this.ResumeGameRequest = false;
       this.AchievementsRequest = false;
       this.HighscoresRequest = false;
@@ -99,22 +96,12 @@ namespace Resanctified.Game.FSM.GameState.InGame
       else if (this.BackToMapRequest)
         stateMachine.SetState((IState) InGameMenuStateBackToMapConfirmation.GetInstance());
       else if (this.BackToMainMenuRequest)
-      {
         stateMachine.SetState((IState) InGameMenuStateBackToMainMenuConfirmation.GetInstance());
-      }
-      else
-      {
-        if (!this.UnlockRequest)
-          return;
-        this.UnlockRequest = false;
-        GuideManager.Instance.RequestShowMarketplace = true;
-      }
     }
 
     public void Exit(IFiniteStateMachine stateMachine)
     {
       InputManager.GetInstance().ClearPadState();
-      this.UnlockRequest = false;
       this.ResumeGameRequest = false;
       this.AchievementsRequest = false;
       this.HighscoresRequest = false;

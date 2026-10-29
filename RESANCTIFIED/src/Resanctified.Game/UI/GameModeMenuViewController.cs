@@ -105,7 +105,7 @@ namespace Resanctified.Game.UI
             this.m_stringBuilder.Length = 0;
             this.m_stringBuilder.Append(GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.ContinueGame));
             Color color;
-            if (MainMenuStateGameMode.GetInstance().IsSavedGameAvailable() && !GuideManager.Instance.IsTrialMode())
+            if (MainMenuStateGameMode.GetInstance().IsSavedGameAvailable())
             {
                 this.m_stringBuilder.Append(" (");
                 if (this.SavedDifficulty == GameApplication.GameDifficulty.Normal)
@@ -132,7 +132,7 @@ namespace Resanctified.Game.UI
                 MainMenuStateGameMode.GetInstance().DifficultyRequest = true;
                 GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Next);
             }
-            if (sender != this.m_buttonContinueGame || ((ButtonActionEvent)evt).buttonState != PSSButtonState.ButtonStatePressed || !MainMenuStateGameMode.GetInstance().IsSavedGameAvailable() || GuideManager.Instance.IsTrialMode())
+            if (sender != this.m_buttonContinueGame || ((ButtonActionEvent)evt).buttonState != PSSButtonState.ButtonStatePressed || !MainMenuStateGameMode.GetInstance().IsSavedGameAvailable())
                 return;
             MainMenuStateGameMode.GetInstance().ContinueRequest = true;
             GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);

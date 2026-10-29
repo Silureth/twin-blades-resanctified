@@ -17,15 +17,17 @@ using Resanctified.Engine.World.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Threading;
 
 namespace Resanctified.Game.FSM.GameState
 {
   public sealed class GameStateLoadLevel : IDrawableState, IState
   {
     private const float HINT_TEXT_WIDTH = 440f;
+    // How long the finished loading screen (with its hint) stays up before the level starts.
+    private const float HINT_DISPLAY_TIME = 3f;
     public bool ContinueGameRequest;
     private int m_phase;
+    private float m_hintDisplayTime;
     private int m_numFontsToLoad;
     private int m_numFontsLoaded;
     private int m_numAnimsToLoad;
@@ -51,8 +53,8 @@ namespace Resanctified.Game.FSM.GameState
 
     public void Enter(IFiniteStateMachine stateMachine)
     {
-      GuideManager.Instance.UpdateIsTrial();
       this.m_phase = 0;
+      this.m_hintDisplayTime = 0.0f;
       this.m_numFontsToLoad = 0;
       this.m_numFontsLoaded = 0;
       this.m_numAnimsToLoad = 0;
@@ -90,7 +92,8 @@ namespace Resanctified.Game.FSM.GameState
         {
           for (int index2 = 0; index2 < textures.Length; ++index2)
           {
-            if (textures[index2].GetResourceFilename().StartsWith("textures\\sky"))
+            // Resource names are normalized by ResourceManager.NormalizeContentPath: lowercase, '/' separators.
+            if (textures[index2].GetResourceFilename().StartsWith("textures/sky"))
             {
               Resanctified.Engine.Resources.Resource.SafeRelease<Texture>(ref textures[index2]);
               switch (currentWorld.GetDayPart())
@@ -111,7 +114,7 @@ namespace Resanctified.Game.FSM.GameState
                   continue;
               }
             }
-            else if (textures[index2].GetResourceFilename().StartsWith("textures\\texture"))
+            else if (textures[index2].GetResourceFilename().StartsWith("textures/texture"))
             {
               Resanctified.Engine.Resources.Resource.SafeRelease<Texture>(ref textures[index2]);
               switch (currentWorld.GetDayPart())
@@ -220,17 +223,24 @@ namespace Resanctified.Game.FSM.GameState
         {
           instance.EndLoadingResources();
           this.m_percentageSounds = 100;
+          AudioManager.GetInstance().StopMusic();
+          AudioManager.GetInstance().UnloadMusic();
           ++this.m_phase;
         }
       }
       else if (this.m_phase == 5)
       {
-        AudioManager.GetInstance().StopMusic();
-        AudioManager.GetInstance().UnloadMusic();
-        if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
+        bool isStory = GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story;
+        // The phone build blocked here with Thread.Sleep(3000), which froze the desktop window;
+        // counting frame time keeps the same pause while the window stays responsive.
+        if (!isStory || currentWorld.GetCurrentLevel().GetLevelType() != Level.LevelType.Shop)
         {
-          if (currentWorld.GetCurrentLevel().GetLevelType() != Level.LevelType.Shop)
-            Thread.Sleep(3000);
+          this.m_hintDisplayTime += gameTime;
+          if (this.m_hintDisplayTime < GameStateLoadLevel.HINT_DISPLAY_TIME)
+            return;
+        }
+        if (isStory)
+        {
           switch (currentWorld.GetCurrentLevel().GetLevelType())
           {
             case Level.LevelType.Normal:
@@ -259,7 +269,6 @@ namespace Resanctified.Game.FSM.GameState
         }
         else
         {
-          Thread.Sleep(3000);
           switch (currentWorld.LevelIndex)
           {
             case GameWorld.LevelId.Level_Survival_1:

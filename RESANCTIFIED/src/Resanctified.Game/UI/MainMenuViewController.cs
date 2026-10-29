@@ -93,7 +93,6 @@ namespace Resanctified.Game.UI
         private Button m_buttonOptions;
         private Button m_buttonHighscores;
         private Button m_buttonAchievements;
-        private Button m_buttonUnlock;
         private Button m_buttonExit;
         private Transform m_t = new Transform();
         private string m_version;
@@ -107,7 +106,6 @@ namespace Resanctified.Game.UI
             this.m_buttonOptions = new Button();
             this.m_buttonHighscores = new Button();
             this.m_buttonAchievements = new Button();
-            this.m_buttonUnlock = new Button();
             this.m_buttonExit = new Button();
             this.m_version = "v. " + GameApplication.GetInstance().GetAssemblyVersionString();
         }
@@ -132,10 +130,8 @@ namespace Resanctified.Game.UI
             this.m_buttonHighscores.GetTransform().SetPosition(150f, 150f);
             this.m_buttonAchievements.Initialize((ViewController)this, 200f, 30f);
             this.m_buttonAchievements.GetTransform().SetPosition(150f, 190f);
-            this.m_buttonUnlock.Initialize((ViewController)this, 200f, 30f);
-            this.m_buttonUnlock.GetTransform().SetPosition(150f, 70f);
             this.m_buttonExit.Initialize((ViewController)this, 200f, 30f);
-            this.m_buttonExit.GetTransform().SetPosition(150f, 30f);
+            this.m_buttonExit.GetTransform().SetPosition(150f, 70f);
         }
 
         public override void Cleanup()
@@ -145,7 +141,6 @@ namespace Resanctified.Game.UI
             this.m_buttonOptions.Cleanup();
             this.m_buttonHighscores.Cleanup();
             this.m_buttonAchievements.Cleanup();
-            this.m_buttonUnlock.Cleanup();
             this.m_buttonExit.Cleanup();
             Resanctified.Engine.Resources.Resource.SafeRelease<Resanctified.Engine.Resources.Texture>(ref this.m_splashTexture);
             base.Cleanup();
@@ -173,21 +168,8 @@ namespace Resanctified.Game.UI
             instance.DrawString(font, this.m_t, 4, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Highscores));
             this.m_t.SetPosition(150f, 200f, 0.0f);
             instance.DrawString(font, this.m_t, 4, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievements));
-            if (GuideManager.Instance.IsTrialMode())
-            {
-                Color color = GameConstant.MENU_TEXT_COLOR;
-                if (!GuideManager.Instance.IsPurchaseAvailable())
-                    color = GameConstant.MENU_TEXT_NOTAVAILABLE_COLOR;
-                this.m_t.SetPosition(150f, 80f, 0.0f);
-                instance.DrawString(font, this.m_t, 4, color, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.UnlockFullGame));
-                this.m_t.SetPosition(150f, 40f, 0.0f);
-                instance.DrawString(font, this.m_t, 4, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Exit));
-            }
-            else
-            {
-                this.m_t.SetPosition(150f, 80f, 0.0f);
-                instance.DrawString(font, this.m_t, 4, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Exit));
-            }
+            this.m_t.SetPosition(150f, 80f, 0.0f);
+            instance.DrawString(font, this.m_t, 4, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Exit));
             this.m_t.SetPosition(0.0f, 0.0f, 0.0f);
             this.m_t.SetScale(0.8f);
             instance.DrawString(font, this.m_t, 2, GameConstant.MENU_TEXT_COLOR, this.m_version);
@@ -243,26 +225,9 @@ namespace Resanctified.Game.UI
                 MainMenuStateMenu.GetInstance().OptionsRequest = true;
                 GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Next);
             }
-            else if (sender == this.m_buttonUnlock)
+            else if (sender == this.m_buttonExit)
             {
                 if (((ButtonActionEvent)evt).buttonState != PSSButtonState.ButtonStatePressed)
-                    return;
-                if (GuideManager.Instance.IsTrialMode())
-                {
-                    if (!GuideManager.Instance.IsPurchaseAvailable())
-                        return;
-                    MainMenuStateMenu.GetInstance().UnlockRequest = true;
-                    GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);
-                }
-                else
-                {
-                    MainMenuStateMenu.GetInstance().ExitRequest = true;
-                    GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);
-                }
-            }
-            else
-            {
-                if (sender != this.m_buttonExit || ((ButtonActionEvent)evt).buttonState != PSSButtonState.ButtonStatePressed || !GuideManager.Instance.IsTrialMode())
                     return;
                 MainMenuStateMenu.GetInstance().ExitRequest = true;
                 GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);

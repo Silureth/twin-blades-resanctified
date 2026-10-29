@@ -18,7 +18,6 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
     public bool OptionsRequest;
     public bool HighscoresRequest;
     public bool AchievementsRequest;
-    public bool UnlockRequest;
     public bool ExitRequest;
 
     public static MainMenuStateMenu Instance => MainMenuStateMenu.m_instance;
@@ -31,7 +30,6 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
       this.OptionsRequest = false;
       this.HighscoresRequest = false;
       this.AchievementsRequest = false;
-      this.UnlockRequest = false;
       this.ExitRequest = false;
     }
 
@@ -41,7 +39,6 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
       this.OptionsRequest = false;
       this.HighscoresRequest = false;
       this.AchievementsRequest = false;
-      this.UnlockRequest = false;
       this.ExitRequest = false;
       Application.GetInstance().AddResponder((Responder) GameStateMainMenu.GetInstance().GetMenuView());
     }
@@ -58,11 +55,6 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
         stateMachine.SetState((IState) MainMenuStateHighscoresChoose.GetInstance());
       else if (this.OptionsRequest)
         stateMachine.SetState((IState) MainMenuStateHelpAndOptions.GetInstance());
-      else if (this.UnlockRequest)
-      {
-        this.UnlockRequest = false;
-        GuideManager.Instance.RequestShowMarketplace = true;
-      }
       else
       {
         if (!this.ExitRequest)

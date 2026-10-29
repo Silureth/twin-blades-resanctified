@@ -11,14 +11,11 @@ using Resanctified.Engine.UI;
 
 namespace Resanctified.Game.FSM.GameState.MainMenu
 {
+  // Shows the local highscores only; the Xbox Live leaderboard pages of the phone version are gone.
   public class MainMenuStateHighscoresSurvival : IDrawableState, IState
   {
     private static MainMenuStateHighscoresSurvival m_instance = new MainMenuStateHighscoresSurvival();
     public bool BackRequest;
-    public bool LeaderboardRequest;
-    public bool WeekLeaderboardRequest;
-    public bool HighscoresRequest;
-    private bool m_leaderboardMode;
 
     public static MainMenuStateHighscoresSurvival Instance => MainMenuStateHighscoresSurvival.m_instance;
 
@@ -26,16 +23,8 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
 
     public void Enter(IFiniteStateMachine stateMachine)
     {
-      GameStateMainMenu.GetInstance().GetLeaderboardView().ReadLeaderboard(1, false);
       this.BackRequest = false;
-      this.LeaderboardRequest = false;
-      this.WeekLeaderboardRequest = false;
-      this.HighscoresRequest = false;
-      this.m_leaderboardMode = GuideManager.Instance.IsSignedInToLive();
-      if (this.m_leaderboardMode)
-        Application.GetInstance().AddResponder((Responder) GameStateMainMenu.GetInstance().GetLeaderboardView());
-      else
-        Application.GetInstance().AddResponder((Responder) GameStateMainMenu.GetInstance().GetHighscoresView());
+      Application.GetInstance().AddResponder((Responder) GameStateMainMenu.GetInstance().GetHighscoresView());
     }
 
     public void Update(IFiniteStateMachine stateMachine, float gameTime)
@@ -43,70 +32,27 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
       if (InputManager.GetInstance().IsBackPressed())
         this.BackRequest = true;
       GameStateMainMenu.GetInstance().GetHighscoresView().Update(gameTime);
-      GameStateMainMenu.GetInstance().GetLeaderboardView().Update(gameTime);
-      if (this.BackRequest)
+      if (!this.BackRequest)
+        return;
+      if (GameStateMainMenu.GetInstance().GetHighscoresView().GetBlinkIndex() > 0)
       {
-        if (GameStateMainMenu.GetInstance().GetHighscoresView().GetBlinkIndex() > 0)
-        {
-          stateMachine.SetState((IState) MainMenuStateMenu.GetInstance());
-          GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);
-        }
-        else
-        {
-          stateMachine.SetState((IState) MainMenuStateHighscoresChoose.GetInstance());
-          GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Previous);
-        }
-      }
-      else if (this.HighscoresRequest)
-      {
-        if (this.m_leaderboardMode)
-        {
-          Application.GetInstance().AddResponder((Responder) GameStateMainMenu.GetInstance().GetHighscoresView());
-          Application.GetInstance().RemoveResponder((Responder) GameStateMainMenu.GetInstance().GetLeaderboardView());
-        }
-        this.m_leaderboardMode = false;
-        this.HighscoresRequest = false;
+        stateMachine.SetState((IState) MainMenuStateMenu.GetInstance());
+        GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);
       }
       else
       {
-        if (!this.LeaderboardRequest)
-          return;
-        if (!this.m_leaderboardMode)
-        {
-          Application.GetInstance().AddResponder((Responder) GameStateMainMenu.GetInstance().GetLeaderboardView());
-          Application.GetInstance().RemoveResponder((Responder) GameStateMainMenu.GetInstance().GetHighscoresView());
-        }
-        this.m_leaderboardMode = true;
-        this.LeaderboardRequest = false;
-        if (this.WeekLeaderboardRequest)
-        {
-          GameStateMainMenu.GetInstance().GetLeaderboardView().ReadLeaderboard(1, true);
-          this.WeekLeaderboardRequest = false;
-        }
-        else
-          GameStateMainMenu.GetInstance().GetLeaderboardView().ReadLeaderboard(1, false);
+        stateMachine.SetState((IState) MainMenuStateHighscoresChoose.GetInstance());
+        GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Previous);
       }
     }
 
     public void Exit(IFiniteStateMachine stateMachine)
     {
       this.BackRequest = false;
-      this.LeaderboardRequest = false;
-      this.WeekLeaderboardRequest = false;
-      this.HighscoresRequest = false;
-      this.m_leaderboardMode = false;
       GameStateMainMenu.GetInstance().GetHighscoresView().BlinkScore(0);
-      GameStateMainMenu.GetInstance().GetLeaderboardView().BlinkScore(false);
       Application.GetInstance().RemoveResponder((Responder) GameStateMainMenu.GetInstance().GetHighscoresView());
-      Application.GetInstance().RemoveResponder((Responder) GameStateMainMenu.GetInstance().GetLeaderboardView());
     }
 
-    public void Draw(IFiniteStateMachine stateMachine)
-    {
-      if (this.m_leaderboardMode)
-        GameStateMainMenu.GetInstance().GetLeaderboardView().Draw();
-      else
-        GameStateMainMenu.GetInstance().GetHighscoresView().Draw();
-    }
+    public void Draw(IFiniteStateMachine stateMachine) => GameStateMainMenu.GetInstance().GetHighscoresView().Draw();
   }
 }

@@ -23,7 +23,6 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
     public void Enter(IFiniteStateMachine stateMachine)
     {
       this.BackRequest = false;
-     //AchievementManager.Instance.SynchronizeAchievements(false);
       Application.GetInstance().AddResponder((Responder) GameStateMainMenu.GetInstance().GetAchievementsView());
     }
 

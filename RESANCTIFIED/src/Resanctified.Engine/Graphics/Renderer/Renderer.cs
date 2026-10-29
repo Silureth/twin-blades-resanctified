@@ -20,8 +20,8 @@ namespace Resanctified.Engine.Graphics.Renderer
 {
     public sealed class Renderer
     {
-        public const float OLD_SCREEN_WIDTH = 480f;
-        public const float OLD_SCREEN_HEIGHT = 320f;
+        public const float OLD_SCREEN_WIDTH = VirtualScreen.WIDTH;
+        public const float OLD_SCREEN_HEIGHT = VirtualScreen.HEIGHT;
 
         public const float SCREEN_WIDTH_LANDSCAPE = OLD_SCREEN_WIDTH;
         public const float SCREEN_HEIGHT_LANDSCAPE = OLD_SCREEN_HEIGHT;

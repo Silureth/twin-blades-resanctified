@@ -18,8 +18,8 @@ namespace Resanctified.Engine.Resources
 
     public void LoadLevel(string filename, EntityFactory factory, EntityManager manager)
     {
-      this.m_levelFilename = filename;
-      PSSBinaryReader fileDataReader = Application.Instance.Content.Load<PSSFile>(filename).GetFileDataReader();
+      this.m_levelFilename = ResourceManager.NormalizeContentPath(filename);
+      PSSBinaryReader fileDataReader = Application.Instance.Content.Load<PSSFile>(this.m_levelFilename).GetFileDataReader();
       int length = (int) fileDataReader.ReadUInt16();
       this.m_stringTable = new string[length];
       for (int index = 0; index < length; ++index)

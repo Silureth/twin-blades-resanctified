@@ -51,7 +51,6 @@ namespace Resanctified.Game.FSM.GameState.InGame
         GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);
         stateMachine.SetState((IState) InGameMenuStateHighscoresStory.GetInstance());
         GameApplication.GetInstance().GetInGameHighscoresView().StoryMode = true;
-        GameApplication.GetInstance().GetInGameLeaderboardView().StoryMode = true;
       }
       else
       {
@@ -60,7 +59,6 @@ namespace Resanctified.Game.FSM.GameState.InGame
         GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);
         stateMachine.SetState((IState) InGameMenuStateHighscoresSurvival.GetInstance());
         GameApplication.GetInstance().GetInGameHighscoresView().StoryMode = false;
-        GameApplication.GetInstance().GetInGameLeaderboardView().StoryMode = false;
       }
     }
 

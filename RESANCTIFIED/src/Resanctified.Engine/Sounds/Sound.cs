@@ -56,13 +56,17 @@ namespace Resanctified.Engine.Sounds
 
     public void Play()
     {
+      SoundEffect soundEffect = this.m_model.GetSoundEffect();
+      // Null when audio is unavailable (see AudioManager.IsAvailable).
+      if (soundEffect == null)
+        return;
       if (this.m_instance != null)
       {
         if (!this.m_instance.IsDisposed)
           this.m_instance.Dispose();
         this.m_instance = (SoundEffectInstance) null;
       }
-      this.m_instance = this.m_model.GetSoundEffect().CreateInstance();
+      this.m_instance = soundEffect.CreateInstance();
       this.m_instance.IsLooped = this.m_looping;
       this.m_instance.Volume = this.m_gain;
       this.m_instance.Play();

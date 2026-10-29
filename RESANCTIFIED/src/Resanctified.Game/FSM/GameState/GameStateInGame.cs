@@ -22,7 +22,6 @@ namespace Resanctified.Game.FSM.GameState
     public bool BackToMap;
     public bool ShopRequest;
     public bool BackToMainMenuRequest;
-    public bool PlayerSignedOutRequest;
     public bool HighscoresRequest;
     private bool m_deleteWorld;
     private DrawableFiniteStateMachine m_subStateMachine;
@@ -50,7 +49,6 @@ namespace Resanctified.Game.FSM.GameState
       this.ShopRequest = false;
       this.BackToMainMenuRequest = false;
       this.HighscoresRequest = false;
-      this.PlayerSignedOutRequest = false;
       GameApplication instance = GameApplication.GetInstance();
       instance.SetSoundVolume();
       instance.Achievement_NoGunUpgrades = false;
@@ -73,35 +71,22 @@ namespace Resanctified.Game.FSM.GameState
         if (!this.HighscoresRequest)
           return;
         this.HighscoresRequest = false;
-        if (GuideManager.Instance.IsTrialMode())
-          return;
         GameApplication instance = GameApplication.GetInstance();
-        instance.SendScore(instance.Score);
         if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
         {
           GameStateMainMenu.GetInstance().GetSubStateMachine().SetState((IState) MainMenuStateHighscoresStory.GetInstance());
           GameStateMainMenu.GetInstance().GetHighscoresView().StoryMode = true;
-          GameStateMainMenu.GetInstance().GetLeaderboardView().StoryMode = true;
         }
         else
         {
           GameStateMainMenu.GetInstance().GetSubStateMachine().SetState((IState) MainMenuStateHighscoresSurvival.GetInstance());
           GameStateMainMenu.GetInstance().GetHighscoresView().StoryMode = false;
-          GameStateMainMenu.GetInstance().GetLeaderboardView().StoryMode = false;
         }
         int num = instance.UpdateHighscores();
         GameStateMainMenu.GetInstance().GetHighscoresView().BlinkScore(num + 1);
-        GameStateMainMenu.GetInstance().GetLeaderboardView().BlinkScore(true);
         if (num >= 5)
           return;
         GameApplication.Instance.SaveHighscores();
-      }
-      else if (this.PlayerSignedOutRequest)
-      {
-        this.PlayerSignedOutRequest = false;
-        this.m_deleteWorld = true;
-        GameStateMainMenu.Instance.PressStartRequest = true;
-        GameFSM.GetInstance().SetState((IState) GameStateMainMenu.GetInstance());
       }
       else if (this.ShopRequest)
       {
@@ -129,22 +114,10 @@ namespace Resanctified.Game.FSM.GameState
           currentWorld.GetCurrentLevel().SetInfestationLevel(0);
           currentWorld.NextDayPart();
           currentWorld.SaveGameData();
-          if (GuideManager.Instance.IsTrialMode() && currentWorld.LevelIndex == GameWorld.LevelId.Level_Town_Boss)
-          {
-            this.m_deleteWorld = true;
-            GameFSM.GetInstance().SetState((IState) GameStateFeatures.GetInstance());
-          }
-          else if (currentWorld.LevelIndex == GameWorld.LevelId.Level_Chapel_Boss)
+          if (currentWorld.LevelIndex == GameWorld.LevelId.Level_Chapel_Boss)
             GameFSM.GetInstance().SetState((IState) GameStateEndingAnimation.GetInstance());
           else
             GameFSM.GetInstance().SetState((IState) GameStateMap.GetInstance());
-        }
-        else if (GuideManager.Instance.IsTrialMode() && currentWorld.LevelIndex == GameWorld.LevelId.Level_Survival_1 && currentWorld.DayIndex == 2)
-        {
-          currentWorld.NextLevel();
-          currentWorld.SaveGameData();
-          this.m_deleteWorld = true;
-          GameFSM.GetInstance().SetState((IState) GameStateFeatures.GetInstance());
         }
         else
         {

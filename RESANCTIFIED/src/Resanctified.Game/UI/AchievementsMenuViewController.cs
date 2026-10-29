@@ -64,8 +64,6 @@ namespace Resanctified.Game.UI
     private const float ACHIEVEMENTS_TEXT_DESC_Y = 182f;
     private const float ACHIEVEMENTS_TITLE_X = 240f;
     private const float ACHIEVEMENTS_TITLE_Y = 260f;
-    private const float ACHIEVEMENTS_GAMERSCORE_X = 430f;
-    private const float ACHIEVEMENTS_GAMERSCORE_Y = 230f;
     private const float ACHIEVEMENTS_NBUNLOCKED_X = 30f;
     private const float ACHIEVEMENTS_NBUNLOCKED_Y = 230f;
     private const float ACHIEVEMENTS_TEXT_TITLE_G_X = 430f;
@@ -292,12 +290,7 @@ namespace Resanctified.Game.UI
         Resanctified.Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 8, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Back));
       }
       this.m_stringBuilder.Length = 0;
-     // StringHelper.Append(this.m_stringBuilder,//AchievementManager.Instance.GetEarnGamerScore());
-      this.m_stringBuilder.Append(" / 200G");
-      this.m_t.SetPosition(430f, 230f, 0.0f);
-      instance.DrawString(font, this.m_t, 9, GameConstant.MENU_TEXT_COLOR, this.m_stringBuilder);
-      this.m_stringBuilder.Length = 0;
-      //StringHelper.Append(this.m_stringBuilder,//AchievementManager.Instance.GetNbUnlockedAchievements());
+      StringHelper.Append(this.m_stringBuilder, cachedAchievements.GetUnlockedCount());
       this.m_stringBuilder.Append(" / 20 ");
       this.m_stringBuilder.Append(GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievements));
       this.m_t.SetPosition(30f, 230f, 0.0f);
@@ -320,102 +313,102 @@ namespace Resanctified.Game.UI
         case AchievementsMenuViewController.MenuAwardId.Achievement_Story_100ZombiesKilled:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_100ZombiesKilled_Name);
           s2 = "5G";
-          s1 = !cachedAchievements.achievement_Story_100ZombiesKilled || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_100ZombiesKilled_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_100ZombiesKilled_Desc2);
+          s1 = !cachedAchievements.achievement_Story_100ZombiesKilled ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_100ZombiesKilled_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_100ZombiesKilled_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_Story_500ZombiesKilled:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_500ZombiesKilled_Name);
           s2 = "5G";
-          s1 = !cachedAchievements.achievement_Story_500ZombiesKilled || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_500ZombiesKilled_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_500ZombiesKilled_Desc2);
+          s1 = !cachedAchievements.achievement_Story_500ZombiesKilled ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_500ZombiesKilled_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_500ZombiesKilled_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_Story_1000ZombiesKilled:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_1000ZombiesKilled_Name);
           s2 = "5G";
-          s1 = !cachedAchievements.achievement_Story_1000ZombiesKilled || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_1000ZombiesKilled_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_1000ZombiesKilled_Desc2);
+          s1 = !cachedAchievements.achievement_Story_1000ZombiesKilled ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_1000ZombiesKilled_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_1000ZombiesKilled_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_Story_Boss1Killed:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss1Killed_Name);
           s2 = "10G";
-          s1 = !cachedAchievements.achievement_Story_Boss1Killed || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss1Killed_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss1Killed_Desc2);
+          s1 = !cachedAchievements.achievement_Story_Boss1Killed ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss1Killed_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss1Killed_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_Story_Boss2Killed:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss2Killed_Name);
           s2 = "10G";
-          s1 = !cachedAchievements.achievement_Story_Boss2Killed || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss2Killed_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss2Killed_Desc2);
+          s1 = !cachedAchievements.achievement_Story_Boss2Killed ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss2Killed_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss2Killed_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_Story_Boss3Killed:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss3Killed_Name);
           s2 = "10G";
-          s1 = !cachedAchievements.achievement_Story_Boss3Killed || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss3Killed_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss3Killed_Desc2);
+          s1 = !cachedAchievements.achievement_Story_Boss3Killed ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss3Killed_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss3Killed_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_Story_AllWeaponsAndAbilitiesUpgraded:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_AllWeaponsAndAbilitiesUpgraded_Name);
           s2 = "15G";
-          s1 = !cachedAchievements.achievement_Story_AllWeaponsAndAbilitiesUpgraded || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_AllWeaponsAndAbilitiesUpgraded_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_AllWeaponsAndAbilitiesUpgraded_Desc2);
+          s1 = !cachedAchievements.achievement_Story_AllWeaponsAndAbilitiesUpgraded ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_AllWeaponsAndAbilitiesUpgraded_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_AllWeaponsAndAbilitiesUpgraded_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_Story_GameFinished:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinished_Name);
           s2 = "20G";
-          s1 = !cachedAchievements.achievement_Story_GameFinished || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinished_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinished_Desc2);
+          s1 = !cachedAchievements.achievement_Story_GameFinished ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinished_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinished_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_Story_GameFinishedHard:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinishedHard_Name);
           s2 = "25G";
-          s1 = !cachedAchievements.achievement_Story_GameFinishedHard || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinishedHard_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinishedHard_Desc2);
+          s1 = !cachedAchievements.achievement_Story_GameFinishedHard ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinishedHard_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinishedHard_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_Pistolera:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Pistolera_Name);
           s2 = "5G";
-          s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledBullet || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Pistolera_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Pistolera_Desc2);
+          s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledBullet ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Pistolera_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Pistolera_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_Inquisitor:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Inquisitor_Name);
           s2 = "5G";
-          s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledFlameThrower || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Inquisitor_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Inquisitor_Desc2);
+          s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledFlameThrower ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Inquisitor_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Inquisitor_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_IceColdKiller:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_IceColdKiller_Name);
           s2 = "5G";
-          s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledIceGun || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_IceColdKiller_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_IceColdKiller_Desc2);
+          s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledIceGun ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_IceColdKiller_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_IceColdKiller_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_Fallout:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Fallout_Name);
           s2 = "5G";
-          s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledExplosiveGun || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Fallout_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Fallout_Desc2);
+          s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledExplosiveGun ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Fallout_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Fallout_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_WrathOfGod:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WrathOfGod_Name);
           s2 = "5G";
-          s1 = !cachedAchievements.achievement_Survival_1000ZombiesKilledHolyBeam || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WrathOfGod_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WrathOfGod_Desc2);
+          s1 = !cachedAchievements.achievement_Survival_1000ZombiesKilledHolyBeam ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WrathOfGod_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WrathOfGod_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_TheFalcon:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_TheFalcon_Name);
           s2 = "5G";
-          s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledAirSlash || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_TheFalcon_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_TheFalcon_Desc2);
+          s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledAirSlash ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_TheFalcon_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_TheFalcon_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_ShakeYourBooty:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_ShakeYourBooty_Name);
           s2 = "10G";
-          s1 = !cachedAchievements.achievement_Survival_100Ungrab || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_ShakeYourBooty_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_ShakeYourBooty_Desc2);
+          s1 = !cachedAchievements.achievement_Survival_100Ungrab ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_ShakeYourBooty_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_ShakeYourBooty_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_OneNunArmy:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_OneNunArmy_Name);
           s2 = "5G";
-          s1 = !cachedAchievements.achievement_Survival_AllWeaponsUpgraded || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_OneNunArmy_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_OneNunArmy_Desc2);
+          s1 = !cachedAchievements.achievement_Survival_AllWeaponsUpgraded ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_OneNunArmy_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_OneNunArmy_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_WayOfTheNunja:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WayOfTheNunja_Name);
           s2 = "5G";
-          s1 = !cachedAchievements.achievement_Survival_AllAbilitiesUpgraded || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WayOfTheNunja_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WayOfTheNunja_Desc2);
+          s1 = !cachedAchievements.achievement_Survival_AllAbilitiesUpgraded ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WayOfTheNunja_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WayOfTheNunja_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_SectorClear:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_SectorClear_Name);
           s2 = "20G";
-          s1 = !cachedAchievements.achievement_Survival_GameFinished || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_SectorClear_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_SectorClear_Desc2);
+          s1 = !cachedAchievements.achievement_Survival_GameFinished ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_SectorClear_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_SectorClear_Desc2);
           break;
         case AchievementsMenuViewController.MenuAwardId.Achievement_Survival_GameFinishedHard:
           empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Survival_GameFinishedHard_Name);
           s2 = "25G";
-          s1 = !cachedAchievements.achievement_Survival_GameFinishedHard || GuideManager.Instance.IsTrialMode() ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Survival_GameFinishedHard_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Survival_GameFinishedHard_Desc2);
+          s1 = !cachedAchievements.achievement_Survival_GameFinishedHard ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Survival_GameFinishedHard_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Survival_GameFinishedHard_Desc2);
           break;
       }
       this.m_t.SetScale(1f);
@@ -429,7 +422,7 @@ namespace Resanctified.Game.UI
       {
         case 0:
           this.m_t.SetPosition(120f, 120f, 0.0f);
-          if (cachedAchievements.achievement_Story_100ZombiesKilled && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Story_100ZombiesKilled)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconStory_100ZombiesKilled, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -440,7 +433,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(180f, 120f, 0.0f);
-          if (cachedAchievements.achievement_Story_500ZombiesKilled && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Story_500ZombiesKilled)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconStory_500ZombiesKilled, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -451,7 +444,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(240f, 120f, 0.0f);
-          if (cachedAchievements.achievement_Story_1000ZombiesKilled && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Story_1000ZombiesKilled)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconStory_1000ZombiesKilled, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -462,7 +455,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(300f, 120f, 0.0f);
-          if (cachedAchievements.achievement_Story_Boss1Killed && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Story_Boss1Killed)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconStory_Boss1Killed, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -473,7 +466,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(360f, 120f, 0.0f);
-          if (cachedAchievements.achievement_Story_Boss2Killed && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Story_Boss2Killed)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconStory_Boss2Killed, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -484,7 +477,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(120f, 60f, 0.0f);
-          if (cachedAchievements.achievement_Story_Boss3Killed && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Story_Boss3Killed)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconStory_Boss3Killed, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -495,7 +488,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(180f, 60f, 0.0f);
-          if (cachedAchievements.achievement_Story_AllWeaponsAndAbilitiesUpgraded && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Story_AllWeaponsAndAbilitiesUpgraded)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconStory_AllWeaponsAndAbilitiesUpgraded, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -506,7 +499,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(240f, 60f, 0.0f);
-          if (cachedAchievements.achievement_Story_GameFinished && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Story_GameFinished)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconStory_GameFinished, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -517,7 +510,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(300f, 60f, 0.0f);
-          if (cachedAchievements.achievement_Story_GameFinishedHard && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Story_GameFinishedHard)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconStory_GameFinishedHard, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -528,11 +521,11 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(360f, 60f, 0.0f);
-          if (cachedAchievements.achievement_Survival_500ZombiesKilledBullet && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Survival_500ZombiesKilledBullet)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconPistolera, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
-          if (this.m_selectedAward == AchievementsMenuViewController.MenuAwardId.Achievement_Pistolera && !GuideManager.Instance.IsTrialMode())
+          if (this.m_selectedAward == AchievementsMenuViewController.MenuAwardId.Achievement_Pistolera)
           {
             this.m_t.SetScale(1.1f);
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconSelector, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -541,7 +534,7 @@ namespace Resanctified.Game.UI
           break;
         case 1:
           this.m_t.SetPosition(120f, 120f, 0.0f);
-          if (cachedAchievements.achievement_Survival_500ZombiesKilledFlameThrower && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Survival_500ZombiesKilledFlameThrower)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconInquisitor, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -552,7 +545,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(180f, 120f, 0.0f);
-          if (cachedAchievements.achievement_Survival_500ZombiesKilledIceGun && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Survival_500ZombiesKilledIceGun)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconIceColdKiller, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -563,7 +556,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(240f, 120f, 0.0f);
-          if (cachedAchievements.achievement_Survival_500ZombiesKilledExplosiveGun && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Survival_500ZombiesKilledExplosiveGun)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconFallout, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -574,7 +567,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(300f, 120f, 0.0f);
-          if (cachedAchievements.achievement_Survival_1000ZombiesKilledHolyBeam && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Survival_1000ZombiesKilledHolyBeam)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconWrathOfGod, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -585,7 +578,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(360f, 120f, 0.0f);
-          if (cachedAchievements.achievement_Survival_500ZombiesKilledAirSlash && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Survival_500ZombiesKilledAirSlash)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconTheFalcon, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -596,7 +589,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(120f, 60f, 0.0f);
-          if (cachedAchievements.achievement_Survival_100Ungrab && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Survival_100Ungrab)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconShakeYourBooty, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -607,7 +600,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(180f, 60f, 0.0f);
-          if (cachedAchievements.achievement_Survival_AllWeaponsUpgraded && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Survival_AllWeaponsUpgraded)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconOneNunArmy, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -618,7 +611,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(240f, 60f, 0.0f);
-          if (cachedAchievements.achievement_Survival_AllAbilitiesUpgraded && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Survival_AllAbilitiesUpgraded)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconWayOfTheNunja, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -629,7 +622,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(300f, 60f, 0.0f);
-          if (cachedAchievements.achievement_Survival_GameFinished && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Survival_GameFinished)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconSectorClear, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
@@ -640,7 +633,7 @@ namespace Resanctified.Game.UI
           }
           this.m_t.SetScale(1f);
           this.m_t.SetPosition(360f, 60f, 0.0f);
-          if (cachedAchievements.achievement_Survival_GameFinishedHard && !GuideManager.Instance.IsTrialMode())
+          if (cachedAchievements.achievement_Survival_GameFinishedHard)
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconSurvival_GameFinishedHard, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);
           else
             instance.DrawQuad<VertexPositionTexture>(this.m_quadIconLocked, VertexFormat.Position3Texture, this.m_t, this.m_awardsTexture);

@@ -104,22 +104,18 @@ namespace Resanctified.Game.FSM.GameState
         if (this.m_endingState != 3 || (double) this.m_timer > 0.0)
           return;
         stateMachine.SetState((IState) GameStateMainMenu.GetInstance());
-        GameApplication.GetInstance().SendScore(GameApplication.GetInstance().Score);
         if (GameApplication.GetInstance().GetGameMode() == GameApplication.GameMode.Story)
         {
           GameStateMainMenu.GetInstance().GetSubStateMachine().SetState((IState) MainMenuStateHighscoresStory.GetInstance());
           GameStateMainMenu.GetInstance().GetHighscoresView().StoryMode = true;
-          GameStateMainMenu.GetInstance().GetLeaderboardView().StoryMode = true;
         }
         else
         {
           GameStateMainMenu.GetInstance().GetSubStateMachine().SetState((IState) MainMenuStateHighscoresSurvival.GetInstance());
           GameStateMainMenu.GetInstance().GetHighscoresView().StoryMode = false;
-          GameStateMainMenu.GetInstance().GetLeaderboardView().StoryMode = false;
         }
         int num = GameApplication.GetInstance().UpdateHighscores();
         GameStateMainMenu.GetInstance().GetHighscoresView().BlinkScore(num + 1);
-        GameStateMainMenu.GetInstance().GetLeaderboardView().BlinkScore(true);
         if (num >= 5)
           return;
         GameApplication.Instance.SaveHighscores();

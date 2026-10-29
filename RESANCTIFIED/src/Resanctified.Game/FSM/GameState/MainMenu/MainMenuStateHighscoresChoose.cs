@@ -43,7 +43,6 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
       {
         stateMachine.SetState((IState) MainMenuStateHighscoresStory.GetInstance());
         GameStateMainMenu.GetInstance().GetHighscoresView().StoryMode = true;
-        GameStateMainMenu.GetInstance().GetLeaderboardView().StoryMode = true;
         GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);
       }
       else
@@ -52,7 +51,6 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
           return;
         stateMachine.SetState((IState) MainMenuStateHighscoresSurvival.GetInstance());
         GameStateMainMenu.GetInstance().GetHighscoresView().StoryMode = false;
-        GameStateMainMenu.GetInstance().GetLeaderboardView().StoryMode = false;
         GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);
       }
     }

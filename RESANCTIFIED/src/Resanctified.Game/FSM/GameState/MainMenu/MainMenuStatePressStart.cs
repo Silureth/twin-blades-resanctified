@@ -31,8 +31,6 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
       GameLocalisation.GetInstance().Initialize(GameApplication.Instance.CurrentLanguage);
       GameApplication.Instance.LoadHighscores();
       GameApplication.Instance.LoadAchievements();
-     //AchievementManager.Instance.ReadAchievements();
-     //AchievementManager.Instance.SynchronizeAchievementsRequest = true;
       Application.GetInstance().AddResponder((Responder) GameStateMainMenu.GetInstance().GetSplashView());
     }
 
