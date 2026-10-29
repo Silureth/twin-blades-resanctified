@@ -25,7 +25,6 @@ namespace Resanctified.Game.UI
         private const float CREDITS_TEXT_COPYRIGHT_Y = 190f;
         private const float CREDITS_TEXT_WEB_Y = 170f;
         private const float CREDITS_TEXT_MAIL_Y = 150f;
-        private const float CREDITS_TEXT_ALSOAVAILABLE_Y = 130f;
         private const float CREDITS_TEXT_1_Y = 160f;
         private const float CREDITS_TEXT_2_Y = 140f;
         private const float CREDITS_TEXT_3_Y = 120f;
@@ -223,8 +222,6 @@ namespace Resanctified.Game.UI
                 Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 4, GameConstant.CREDITS_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.PSSCopyrights));
                 this.m_t.SetPosition(240f, 170f, 0.0f);
                 Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 4, GameConstant.CREDITS_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.PSSWeb));
-                this.m_t.SetPosition(240f, 130f, 0.0f);
-                Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 4, GameConstant.CREDITS_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.AlsoAvailable));
             }
             instance.End2DMode();
         }

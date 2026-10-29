@@ -161,6 +161,7 @@ namespace Resanctified.Game.UI
         private const float HUD_LEFTARROW_Y = 170f;
         private const float HUD_RIGHTARROW_X = 430f;
         private const float HUD_RIGHTARROW_Y = 170f;
+        private const float HUD_CONTROLS_FADE_TIME = 0.25f;
         private static Color HUD_OTHERWEAPON_COLOR = new Color(80, 80, 80, (int)byte.MaxValue);
         public bool HelpScreenEnabled;
         private VertexPositionColor[] m_quadBackground = new VertexPositionColor[4];
@@ -224,6 +225,8 @@ namespace Resanctified.Game.UI
         private StringBuilder m_stringBuilder = new StringBuilder(16);
         private NPCBoss m_boss;
         private int m_bossHitPointsMax;
+        // Opacity of the touch controls: they fade out while the keyboard is used and back in on a touch.
+        private float m_controlsAlpha;
 
         private void HudViewController_1()
         {
@@ -337,6 +340,8 @@ namespace Resanctified.Game.UI
             this.AddSubview(this.m_buttonGun);
             this.AddSubview(this.m_leftThumbstick);
             this.AddSubview(this.m_weaponSwitch);
+            this.m_controlsAlpha = InputManager.GetInstance().KeyboardInUse ? 0.0f : 1f;
+            this.UpdateControlsVisibility();
         }
 
         public override void Cleanup()
@@ -370,17 +375,22 @@ namespace Resanctified.Game.UI
             instance.Begin2DMode(false);
             if (this.HelpScreenEnabled)
                 instance.DrawQuad(this.m_quadBackground, VertexFormat.Position3Color, null, null, GameConstant.INGAME_BLACKBACKGROUND_COLOR);
-            if (this.m_nextWeaponIndex >= 0)
-                instance.DrawQuad(this.m_weaponQuads[this.m_nextWeaponIndex], VertexFormat.Position3Texture, this.m_nextWeaponTransform, this.m_hudTexture, HUD_OTHERWEAPON_COLOR);
-            if (this.m_prevWeaponIndex >= 0)
-                instance.DrawQuad(this.m_weaponQuads[this.m_prevWeaponIndex], VertexFormat.Position3Texture, this.m_prevWeaponTransform, this.m_hudTexture, HUD_OTHERWEAPON_COLOR);
+            if (this.m_controlsAlpha > 0.0)
+            {
+                Color otherWeaponColor = HUD_OTHERWEAPON_COLOR with { A = (byte)(this.m_controlsAlpha * byte.MaxValue) };
+                if (this.m_nextWeaponIndex >= 0)
+                    instance.DrawQuad(this.m_weaponQuads[this.m_nextWeaponIndex], VertexFormat.Position3Texture, this.m_nextWeaponTransform, this.m_hudTexture, otherWeaponColor);
+                if (this.m_prevWeaponIndex >= 0)
+                    instance.DrawQuad(this.m_weaponQuads[this.m_prevWeaponIndex], VertexFormat.Position3Texture, this.m_prevWeaponTransform, this.m_hudTexture, otherWeaponColor);
+            }
             Color white = Color.White with
             {
-                A = (byte)(GameApplication.Instance.HudAlpha * (double)byte.MaxValue)
+                A = (byte)(GameApplication.Instance.HudAlpha * this.m_controlsAlpha * byte.MaxValue)
             };
             this.m_buttonGun.SetCustomColor(white);
             this.m_buttonScythe.SetCustomColor(white);
             this.m_leftThumbstick.SetCustomColor(white);
+            this.m_weaponSwitch.SetCustomColor(Color.White with { A = (byte)(this.m_controlsAlpha * byte.MaxValue) });
             for (int index = 0; index < this.m_subviews.Count; ++index)
                 this.DrawSubview(this.m_subviews[index]);
             instance.DrawQuad(this.m_quadMana, VertexFormat.Position3Texture, this.m_manaTransform, this.m_hudTexture);
@@ -456,6 +466,7 @@ namespace Resanctified.Game.UI
                 return;
             this.Update(elapsedTime);
             this.m_heroHearts = hero.Hearts;
+            this.UpdateControlsFade(elapsedTime);
             float num1 = MathHelper.Clamp(hero.HitPoints / (float)hero.GetHitPointsMax(), 0.0f, 1f);
             Vector2 scale1 = this.m_lifebarTransform.GetScale();
             scale1.X = num1 + (float)((scale1.X - (double)num1) * 0.899999976158142);
@@ -592,6 +603,26 @@ namespace Resanctified.Game.UI
             if (this.m_nextWeaponIndex == -1 || this.m_nextWeaponIndex != this.m_prevWeaponIndex)
                 return;
             this.m_prevWeaponIndex = -1;
+        }
+
+        private void UpdateControlsFade(float elapsedTime)
+        {
+            float step = elapsedTime / HUD_CONTROLS_FADE_TIME;
+            if (InputManager.GetInstance().KeyboardInUse)
+                this.m_controlsAlpha = MathHelper.Max(this.m_controlsAlpha - step, 0.0f);
+            else
+                this.m_controlsAlpha = MathHelper.Min(this.m_controlsAlpha + step, 1f);
+            this.UpdateControlsVisibility();
+        }
+
+        // Hidden controls still take touches: the touch that brings them back acts normally.
+        private void UpdateControlsVisibility()
+        {
+            bool visible = this.m_controlsAlpha > 0.0;
+            this.m_buttonScythe.SetVisible(visible);
+            this.m_buttonGun.SetVisible(visible);
+            this.m_leftThumbstick.SetVisible(visible);
+            this.m_weaponSwitch.SetVisible(visible);
         }
 
         private void CreateManaQuad()

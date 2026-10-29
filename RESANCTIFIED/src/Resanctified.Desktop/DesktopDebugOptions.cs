@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 
 namespace Resanctified.Desktop
 {
     /// <summary>
-    /// Command-line switches for automated checks (screenshots, scripted taps, timed exit).
+    /// Command-line switches for automated checks (screenshots, scripted taps and key presses, timed exit).
     /// All times are seconds of game time; tap positions are virtual screen coordinates (480x320, Y up).
     /// </summary>
     public sealed class DesktopDebugOptions
@@ -18,15 +19,24 @@ namespace Resanctified.Desktop
             "  --capture-window <s> <file.png>  same, but the whole window including letterbox bars\n" +
             "  --window <width>x<height>        initial window size (default 960x640)\n" +
             "  --click <x>,<y>@<seconds>        tap at virtual coords, Y up (repeatable)\n" +
+            "  --key <Key>@<seconds>[:<hold>]   hold a key (XNA Keys name, e.g. Right, LeftControl, W)\n" +
+            "                                   for <hold> seconds, default 0.1 (repeatable)\n" +
             "  --exit-after <seconds>           quit once <seconds> have passed and captures are written";
 
         public sealed record Capture(double Seconds, string FilePath, bool WholeWindow);
 
         public sealed record Click(double Seconds, Vector2 Position);
 
+        public sealed record KeyPress(double Seconds, double HoldSeconds, Keys Key);
+
+        // Long enough to span several frames, so a tap is never lost between two updates.
+        private const double DEFAULT_KEY_HOLD_SECONDS = 0.1;
+
         public IReadOnlyList<Capture> Captures { get; private set; } = Array.Empty<Capture>();
 
         public IReadOnlyList<Click> Clicks { get; private set; } = Array.Empty<Click>();
+
+        public IReadOnlyList<KeyPress> KeyPresses { get; private set; } = Array.Empty<KeyPress>();
 
         public double? ExitAfterSeconds { get; private set; }
 
@@ -41,6 +51,7 @@ namespace Resanctified.Desktop
         {
             List<Capture> captures = new List<Capture>();
             List<Click> clicks = new List<Click>();
+            List<KeyPress> keyPresses = new List<KeyPress>();
             DesktopDebugOptions options = new DesktopDebugOptions();
             for (int index = 0; index < args.Length; ++index)
             {
@@ -58,6 +69,9 @@ namespace Resanctified.Desktop
                     case "--click":
                         clicks.Add(ParseClick(Next(args, ref index)));
                         break;
+                    case "--key":
+                        keyPresses.Add(ParseKeyPress(Next(args, ref index)));
+                        break;
                     case "--exit-after":
                         options.ExitAfterSeconds = ParseSeconds(Next(args, ref index));
                         break;
@@ -68,6 +82,7 @@ namespace Resanctified.Desktop
             }
             options.Captures = captures.OrderBy(c => c.Seconds).ToList();
             options.Clicks = clicks.OrderBy(c => c.Seconds).ToList();
+            options.KeyPresses = keyPresses.OrderBy(k => k.Seconds).ToList();
             return options;
         }
 
@@ -107,6 +122,24 @@ namespace Resanctified.Desktop
                 || !float.TryParse(coords[1], NumberStyles.Float, CultureInfo.InvariantCulture, out float y))
                 throw new ArgumentException("Invalid click, expected <x>,<y>@<seconds>: " + text);
             return new Click(ParseSeconds(timeSplit[1]), new Vector2(x, y));
+        }
+
+        // Format: <Key>@<seconds>[:<holdSeconds>]
+        private static KeyPress ParseKeyPress(string text)
+        {
+            string[] timeSplit = text.Split('@');
+            // Enum.TryParse also takes numbers; only key names are meant here.
+            if (timeSplit.Length != 2
+                || int.TryParse(timeSplit[0], out _)
+                || !Enum.TryParse(timeSplit[0], true, out Keys key)
+                || !Enum.IsDefined(key)
+                || key == Keys.None)
+                throw new ArgumentException("Invalid key, expected <Key>@<seconds>[:<holdSeconds>] with an XNA Keys name: " + text);
+            string[] holdSplit = timeSplit[1].Split(':');
+            if (holdSplit.Length > 2)
+                throw new ArgumentException("Invalid key, expected <Key>@<seconds>[:<holdSeconds>]: " + text);
+            double hold = holdSplit.Length == 2 ? ParseSeconds(holdSplit[1]) : DEFAULT_KEY_HOLD_SECONDS;
+            return new KeyPress(ParseSeconds(holdSplit[0]), hold, key);
         }
     }
 }

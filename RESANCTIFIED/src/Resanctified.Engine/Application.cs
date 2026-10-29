@@ -137,11 +137,12 @@ namespace Resanctified.Engine
 
         /// <summary>
         /// The phone game used an accelerometer shake (e.g. to break free when grabbed). On desktop the right
-        /// mouse button or Space raises the same one-shot shake the accelerometer callback did.
+        /// mouse button or the shake key (Space) raises the same one-shot shake the accelerometer callback did.
         /// </summary>
         private void UpdateShakeEvents()
         {
-            bool down = this.IsActive && (Mouse.GetState().RightButton == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Space));
+            // The key state is last frame's (InputManager updates next), which also includes injected keys.
+            bool down = (this.IsActive && Mouse.GetState().RightButton == ButtonState.Pressed) || InputManager.Instance.IsKeyDown(KeyBindings.Shake);
             if (down && !this.m_shakeInputDown)
             {
                 this.ShakeBegin();

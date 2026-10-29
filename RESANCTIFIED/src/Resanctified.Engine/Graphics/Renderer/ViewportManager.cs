@@ -24,8 +24,10 @@ namespace Resanctified.Engine.Graphics.Renderer
 
         public void Initialize()
         {
-            // Split screens are carved out of the virtual screen, never the window (see VirtualScreen).
-            Viewport viewport1 = new Viewport(0, 0, VirtualScreen.WIDTH, VirtualScreen.HEIGHT);
+            // Split screens are carved out of the virtual screen's render target, never the window (see
+            // VirtualScreen). Viewports are in target pixels, so call this again after a render scale change.
+            int renderScale = VirtualScreen.Instance.GetRenderScale();
+            Viewport viewport1 = new Viewport(0, 0, VirtualScreen.WIDTH * renderScale, VirtualScreen.HEIGHT * renderScale);
             this.m_viewports[0] = viewport1;
             Viewport viewport2 = viewport1;
             viewport2.Height /= 2;

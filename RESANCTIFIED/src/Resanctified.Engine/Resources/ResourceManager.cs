@@ -23,6 +23,7 @@ namespace Resanctified.Engine.Resources
         private Dictionary<string, Resource> m_fontNameIndex;
         private Dictionary<string, Resource> m_soundModelNameIndex;
         private List<KeyValuePair<string, Resource>> m_unusedResourcesList;
+        private TextureSet m_textureSet;
 
         public static ResourceManager Instance => s_instance;
 
@@ -39,6 +40,7 @@ namespace Resanctified.Engine.Resources
         public void Initialize()
         {
             PSSFileReader.RegisterLegacyReaderName();
+            HdTexturePack.Instance.Initialize(Application.Instance.Content.RootDirectory);
             this.m_fontNameIndex.Clear();
             this.m_animModelNameIndex.Clear();
             this.m_textureNameIndex.Clear();
@@ -54,6 +56,26 @@ namespace Resanctified.Engine.Resources
             this.Cleanup(this.m_soundModelNameIndex);
             this.m_unusedResourcesList.Clear();
             Application.Instance.Content.Unload();
+        }
+
+        public TextureSet GetTextureSet() => this.m_textureSet;
+
+        /// <summary>
+        /// Selects the art textures load from. Already loaded textures are reloaded in place, so this is
+        /// safe at any time outside of drawing. A texture missing from the HD pack keeps its original.
+        /// </summary>
+        public void SetTextureSet(TextureSet textureSet)
+        {
+            if (textureSet == this.m_textureSet)
+                return;
+            this.m_textureSet = textureSet;
+            if (this.m_textureNameIndex.Count == 0)
+                return;
+            foreach (Resource resource in this.m_textureNameIndex.Values)
+                ((Texture)resource).Reload();
+            // Decoding a set of HD images takes a moment; without this the fixed-step game loop would
+            // fast-forward to catch up with the lost time.
+            Application.Instance.ResetElapsedTime();
         }
 
         public Texture LoadTexture(string filename)

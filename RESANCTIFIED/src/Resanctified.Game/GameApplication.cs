@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Resanctified.Engine.Graphics;
 using Resanctified.Engine.Input;
 using Resanctified.Engine.IO;
 using Resanctified.Engine.Resources;
@@ -143,9 +144,12 @@ namespace Resanctified.Game
 
         protected override void Initialize()
         {
+            // Before base.Initialize: it creates the render target and loads the first textures,
+            // which should already use the saved graphics settings.
+            FileManager.Instance.Initialize(SAVE_FOLDER_NAME);
+            GraphicsSettings.Instance.Load();
             base.Initialize();
             this.ExitRequest = false;
-            FileManager.Instance.Initialize(SAVE_FOLDER_NAME);
             Prefs.Instance.Initialize();
             GameWorldManager.Instance.Initialize();
             InputManager.GetInstance().SetDeadZones(0.1f, 0.3f);

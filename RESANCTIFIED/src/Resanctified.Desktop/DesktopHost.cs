@@ -1,16 +1,19 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Resanctified.Engine.Graphics;
 using Resanctified.Engine.IO;
+using Resanctified.Engine.Resources;
 
 namespace Resanctified.Desktop
 {
     /// <summary>
     /// Desktop-only behaviour: a resizable window, fullscreen toggle (F11 / Alt+Enter),
-    /// F12 screenshots, and running the <see cref="DesktopDebugOptions"/> script.
+    /// F12 screenshots, F9 / F10 graphics toggles until the options menu has them,
+    /// and running the <see cref="DesktopDebugOptions"/> script.
     /// </summary>
     public sealed class DesktopHost : GameComponent
     {
@@ -61,6 +64,10 @@ namespace Resanctified.Desktop
             bool alt = keyboard.IsKeyDown(Keys.LeftAlt) || keyboard.IsKeyDown(Keys.RightAlt);
             if (this.IsKeyPressed(keyboard, Keys.F11) || alt && this.IsKeyPressed(keyboard, Keys.Enter))
                 this.ToggleFullScreen();
+            if (this.IsKeyPressed(keyboard, Keys.F9))
+                this.ToggleTextureSet();
+            if (this.IsKeyPressed(keyboard, Keys.F10))
+                this.ToggleRenderScale();
             if (this.IsKeyPressed(keyboard, Keys.F12))
             {
                 // Next to the save files: the working directory may be read-only or inside the source tree.
@@ -68,6 +75,28 @@ namespace Resanctified.Desktop
                 VirtualScreen.Instance.RequestScreenshot(path);
             }
             this.m_previousKeyboard = keyboard;
+        }
+
+        private void ToggleTextureSet()
+        {
+            if (!HdTexturePack.Instance.IsAvailable)
+            {
+                Console.WriteLine("Textures: Original (no HD texture pack installed)");
+                return;
+            }
+            GraphicsSettings settings = GraphicsSettings.Instance;
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            settings.SetTextureSet(settings.TextureSet == TextureSet.HD ? TextureSet.Original : TextureSet.HD);
+            settings.Save();
+            Console.WriteLine($"Textures: {settings.TextureSet} (reloaded in {stopwatch.ElapsedMilliseconds} ms)");
+        }
+
+        private void ToggleRenderScale()
+        {
+            GraphicsSettings settings = GraphicsSettings.Instance;
+            settings.SetRenderScale(settings.RenderScale == 1 ? 2 : 1);
+            settings.Save();
+            Console.WriteLine($"Render resolution: {VirtualScreen.WIDTH * settings.RenderScale}x{VirtualScreen.HEIGHT * settings.RenderScale} ({settings.RenderScale}x)");
         }
 
         private bool IsKeyPressed(KeyboardState keyboard, Keys key) => keyboard.IsKeyDown(key) && this.m_previousKeyboard.IsKeyUp(key);

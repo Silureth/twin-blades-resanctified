@@ -16,5 +16,7 @@ catch (ArgumentException ex)
 
 using var game = new GameApplication();
 game.Components.Add(new DesktopHost(game, debugOptions));
+if (debugOptions.KeyPresses.Count > 0)
+    game.Components.Add(new DesktopKeyScript(game, debugOptions.KeyPresses));
 game.Run();
 return 0;

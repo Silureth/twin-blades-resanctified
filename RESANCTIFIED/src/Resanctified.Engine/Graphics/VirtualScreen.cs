@@ -7,9 +7,10 @@ namespace Resanctified.Engine.Graphics
 {
     /// <summary>
     /// The game was authored for a fixed 480x320 landscape screen (origin bottom-left, Y up).
-    /// Every frame is rendered into a render target of exactly that size and then scaled into
-    /// the real window with aspect-preserving letterboxing. Input positions are mapped back
-    /// through the same transform here, so no other code needs to know the window size.
+    /// All game code works in those virtual units. Every frame is rendered into a render target of
+    /// that size times the render scale (e.g. 960x640 at 2x, for sharper art and text) and then scaled
+    /// into the real window with aspect-preserving letterboxing. Input positions are mapped back
+    /// through the same transform here, so no other code needs to know the window or target size.
     /// The shipped WP7 build used a 520x320 back buffer and so stretched the picture about 8% wider;
     /// that is deliberately not reproduced, the art was authored for an undistorted 480x320.
     /// </summary>
@@ -17,10 +18,13 @@ namespace Resanctified.Engine.Graphics
     {
         public const int WIDTH = 480;
         public const int HEIGHT = 320;
+        public const int MIN_RENDER_SCALE = 1;
+        public const int MAX_RENDER_SCALE = 4;
 
         private static readonly VirtualScreen s_instance = new VirtualScreen();
         private GraphicsDevice m_graphics;
         private RenderTarget2D m_renderTarget;
+        private int m_renderScale = MIN_RENDER_SCALE;
         private SpriteBatch m_spriteBatch;
         private string m_pendingScreenshotPath;
         private bool m_pendingScreenshotIsWindow;
@@ -41,9 +45,39 @@ namespace Resanctified.Engine.Graphics
             // WP7 the back buffer kept its contents in practice. On OpenGL this costs nothing.
             // Created once: on DesktopGL it survives resizes and fullscreen toggles. A head with GL context
             // loss (Android backgrounding) must call Initialize again after the device is reset.
-            this.m_renderTarget = new RenderTarget2D(graphics, WIDTH, HEIGHT, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
+            this.m_renderTarget = this.CreateRenderTarget();
             this.m_spriteBatch = new SpriteBatch(graphics);
             this.m_pendingScreenshotPath = null;
+        }
+
+        public int GetRenderScale() => this.m_renderScale;
+
+        public static int ClampRenderScale(int renderScale) => MathHelper.Clamp(renderScale, MIN_RENDER_SCALE, MAX_RENDER_SCALE);
+
+        /// <summary>
+        /// Changes the render target to WIDTH x HEIGHT times <paramref name="renderScale"/>. Before
+        /// Initialize this only sets the size to create; afterwards it must not be called while drawing.
+        /// </summary>
+        public void SetRenderScale(int renderScale)
+        {
+            renderScale = ClampRenderScale(renderScale);
+            if (renderScale == this.m_renderScale)
+                return;
+            this.m_renderScale = renderScale;
+            if (this.m_renderTarget == null)
+                return;
+            RenderTarget2D previous = this.m_renderTarget;
+            this.m_renderTarget = this.CreateRenderTarget();
+            // Some screens draw over the previous frame instead of clearing it, so carry the picture over.
+            this.m_graphics.SetRenderTarget(this.m_renderTarget);
+            this.DrawRenderTarget(previous, new Rectangle(0, 0, this.m_renderTarget.Width, this.m_renderTarget.Height), SamplerState.LinearClamp);
+            this.m_graphics.SetRenderTarget(null);
+            previous.Dispose();
+        }
+
+        private RenderTarget2D CreateRenderTarget()
+        {
+            return new RenderTarget2D(this.m_graphics, WIDTH * this.m_renderScale, HEIGHT * this.m_renderScale, false, SurfaceFormat.Color, DepthFormat.None, 0, RenderTargetUsage.PreserveContents);
         }
 
         public void Cleanup()
@@ -55,7 +89,10 @@ namespace Resanctified.Engine.Graphics
             this.m_graphics = null;
         }
 
-        /// <summary>Redirects all game rendering into the virtual screen (viewport becomes 480x320).</summary>
+        /// <summary>
+        /// Redirects all game rendering into the virtual screen. The viewport becomes the whole render target;
+        /// the 2D and camera projections map virtual units onto it, whatever its pixel size.
+        /// </summary>
         public void BeginFrame()
         {
             if (this.m_renderTarget != null)
@@ -73,7 +110,7 @@ namespace Resanctified.Engine.Graphics
             this.m_graphics.Clear(Color.Black);
             Rectangle destination = this.GetDestinationRectangle();
             if (destination.Width > 0 && destination.Height > 0)
-                this.DrawToBackBuffer(destination);
+                this.DrawRenderTarget(this.m_renderTarget, destination, this.ChooseSampler(destination));
             if (this.m_pendingScreenshotPath != null)
                 this.TrySaveScreenshot(true);
         }
@@ -98,7 +135,7 @@ namespace Resanctified.Engine.Graphics
             }
         }
 
-        private void DrawToBackBuffer(Rectangle destination)
+        private void DrawRenderTarget(RenderTarget2D source, Rectangle destination, SamplerState sampler)
         {
             // The Renderer sets these once and relies on them staying put, so restore them after SpriteBatch.
             BlendState blendState = this.m_graphics.BlendState;
@@ -106,8 +143,8 @@ namespace Resanctified.Engine.Graphics
             RasterizerState rasterizerState = this.m_graphics.RasterizerState;
             SamplerState samplerState = this.m_graphics.SamplerStates[0];
 
-            this.m_spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, ChooseSampler(destination), DepthStencilState.None, RasterizerState.CullNone);
-            this.m_spriteBatch.Draw(this.m_renderTarget, destination, Color.White);
+            this.m_spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.Opaque, sampler, DepthStencilState.None, RasterizerState.CullNone);
+            this.m_spriteBatch.Draw(source, destination, Color.White);
             this.m_spriteBatch.End();
 
             this.m_graphics.BlendState = blendState;
@@ -117,7 +154,7 @@ namespace Resanctified.Engine.Graphics
         }
 
         /// <summary>
-        /// Saves a PNG after the current frame has been rendered: the 480x320 virtual screen, or with
+        /// Saves a PNG after the current frame has been rendered: the virtual screen at its render resolution, or with
         /// <paramref name="wholeWindow"/> the back buffer as the player sees it, letterbox bars included.
         /// </summary>
         public void RequestScreenshot(string path, bool wholeWindow = false)
@@ -192,25 +229,31 @@ namespace Resanctified.Engine.Graphics
             return new Vector2(MathHelper.Clamp(virtualPos.X, 0.0f, WIDTH), MathHelper.Clamp(virtualPos.Y, 0.0f, HEIGHT));
         }
 
+        /// <summary>Whether <paramref name="destination"/> is an exact integer magnification of a 480x320 picture.</summary>
+        public static bool IsIntegerScale(Rectangle destination) => IsIntegerScale(destination, WIDTH, HEIGHT);
+
         /// <summary>
-        /// Exact integer scales (e.g. the default 960x640 window) stay crisp with point sampling.
-        /// At fractional scales point sampling makes uneven pixel columns that shimmer while scrolling,
-        /// and the art is painted/alpha-blended rather than strict pixel art, so linear looks better there.
+        /// Exact integer magnifications (e.g. a 960x640 target in a 1920x1280 window) stay crisp with point
+        /// sampling. At fractional scales point sampling makes uneven pixel columns that shimmer while
+        /// scrolling, and the art is painted/alpha-blended rather than strict pixel art, so linear looks
+        /// better there. Shrinking (a 2x target in a small window) also needs linear, to average the pixels.
         /// </summary>
-        public static bool IsIntegerScale(Rectangle destination)
+        public static bool IsIntegerScale(Rectangle destination, int sourceWidth, int sourceHeight)
         {
-            return destination.Width > 0 && destination.Width % WIDTH == 0 && destination.Height == destination.Width / WIDTH * HEIGHT;
+            return destination.Width >= sourceWidth && destination.Width % sourceWidth == 0
+                && destination.Height == destination.Width / sourceWidth * sourceHeight;
         }
 
-        private static SamplerState ChooseSampler(Rectangle destination)
+        private SamplerState ChooseSampler(Rectangle destination)
         {
-            return IsIntegerScale(destination) ? SamplerState.PointClamp : SamplerState.LinearClamp;
+            return IsIntegerScale(destination, this.m_renderTarget.Width, this.m_renderTarget.Height) ? SamplerState.PointClamp : SamplerState.LinearClamp;
         }
 
         private void SaveScreenshot(string path)
         {
-            using (FileStream stream = CreateScreenshotFile(path))
-                this.m_renderTarget.SaveAsPng(stream, WIDTH, HEIGHT);
+            Color[] pixels = new Color[this.m_renderTarget.Width * this.m_renderTarget.Height];
+            this.m_renderTarget.GetData(pixels);
+            this.SaveOpaquePng(path, pixels, this.m_renderTarget.Width, this.m_renderTarget.Height);
         }
 
         private void SaveWindowScreenshot(string path)
@@ -218,11 +261,20 @@ namespace Resanctified.Engine.Graphics
             PresentationParameters pp = this.m_graphics.PresentationParameters;
             Color[] pixels = new Color[pp.BackBufferWidth * pp.BackBufferHeight];
             this.m_graphics.GetBackBufferData(pixels);
-            using (Texture2D texture = new Texture2D(this.m_graphics, pp.BackBufferWidth, pp.BackBufferHeight))
+            this.SaveOpaquePng(path, pixels, pp.BackBufferWidth, pp.BackBufferHeight);
+        }
+
+        // The game's non-premultiplied blending leaves alpha below 255 in the target (e.g. under the dark
+        // help overlay). The window ignores it, but image viewers would show the picture washed out.
+        private void SaveOpaquePng(string path, Color[] pixels, int width, int height)
+        {
+            for (int index = 0; index < pixels.Length; ++index)
+                pixels[index].A = byte.MaxValue;
+            using (Texture2D texture = new Texture2D(this.m_graphics, width, height))
             using (FileStream stream = CreateScreenshotFile(path))
             {
                 texture.SetData(pixels);
-                texture.SaveAsPng(stream, pp.BackBufferWidth, pp.BackBufferHeight);
+                texture.SaveAsPng(stream, width, height);
             }
         }
 

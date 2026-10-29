@@ -4,7 +4,7 @@ namespace Resanctified.Game
     {
         public const LanguageId LOCALISATION_LANGUAGE_DEFAULT = LanguageId.English;
         private static readonly GameLocalisation m_instance = new GameLocalisation();
-        private string[] m_localisationArray = new string[324];
+        private string[] m_localisationArray = new string[(int)TextId.ArraySize];
 
         public static GameLocalisation Instance => m_instance;
 
@@ -74,14 +74,14 @@ namespace Resanctified.Game
             this.m_localisationArray[16] = "Sfx:";
             this.m_localisationArray[17] = "Flip screen:";
             this.m_localisationArray[18] = "Language:";
-            this.m_localisationArray[19] = "Leaderboards";
+            this.m_localisationArray[19] = "Highscores";
             this.m_localisationArray[20] = "Credits";
             this.m_localisationArray[21] = "Exit Game";
             this.m_localisationArray[24] = "STORY";
             this.m_localisationArray[25] = "SURVIVAL";
             this.m_localisationArray[26] = "OPTIONS";
             this.m_localisationArray[27] = "SETTINGS";
-            this.m_localisationArray[28] = "LEADERBOARDS";
+            this.m_localisationArray[28] = "HIGHSCORES";
             this.m_localisationArray[29] = "ACHIEVEMENTS";
             this.m_localisationArray[30] = "Shooting guns consumes energy.\nSlash zombies to recover some of it.";
             this.m_localisationArray[31] = "Swipe up or down to change gun types.\nUse zombie hearts to buy upgrades\nat the end of the day.";
@@ -299,8 +299,6 @@ namespace Resanctified.Game
             this.m_localisationArray[240] = "Some bosses have shields with rotating vulnerability; so try out another weapon, if the one you are using deals no damage.";
             this.m_localisationArray[212] = "Will you survive 31 days of zombie onslaught?";
             this.m_localisationArray[213] = "The story of Sister Angelika.";
-            this.m_localisationArray[241] = "Buy Full Game";
-            this.m_localisationArray[243] = "Also available on XBox Live Indie Games.";
             this.m_localisationArray[242] = "Achievements";
             this.m_localisationArray[244] = "Achievement unlocked:";
             this.m_localisationArray[245] = "Pistolera";
@@ -363,23 +361,7 @@ namespace Resanctified.Game
             this.m_localisationArray[302] = "Iron Lady";
             this.m_localisationArray[303] = "Finish the story mode in hard difficulty.";
             this.m_localisationArray[304] = "You finished the story mode in hard difficulty.";
-            this.m_localisationArray[305] = "The full version of Twin Blades features:";
-            this.m_localisationArray[306] = "An immersive storyline with epic boss encounters!";
-            this.m_localisationArray[307] = "6 range weapons\nranging from machinegun to explosive nukes";
-            this.m_localisationArray[308] = "Dozens of death animations related to your artillery";
-            this.m_localisationArray[309] = "9 environments discoverable\nat different times of the day or night";
             this.m_localisationArray[312] = "HUD:";
-            this.m_localisationArray[313] = "Friends";
-            this.m_localisationArray[314] = "Weekly";
-            this.m_localisationArray[315] = "To earn achievements you must purchase the full version of the game.";
-            this.m_localisationArray[316] = "Purchase";
-            this.m_localisationArray[317] = "Not now";
-            this.m_localisationArray[318] = "Update available";
-            this.m_localisationArray[319] = "An update is available! This update is required to connect to Xbox LIVE.\nUpdate now?";
-            this.m_localisationArray[320] = "Server unavailable";
-            this.m_localisationArray[321] = "The Twin Blades server is not available at this time. Please try again later.";
-            this.m_localisationArray[322] = "Music";
-            this.m_localisationArray[323] = "Another music is playing, do you want to stop this music?";
         }
 
         private void Initialize_French()
@@ -401,14 +383,14 @@ namespace Resanctified.Game
             this.m_localisationArray[16] = "Effets :";
             this.m_localisationArray[17] = "Inverser écran :";
             this.m_localisationArray[18] = "Langue :";
-            this.m_localisationArray[19] = "Classements";
+            this.m_localisationArray[19] = "Meilleurs scores";
             this.m_localisationArray[20] = "Crédits";
             this.m_localisationArray[21] = "Quitter le jeu";
             this.m_localisationArray[24] = "HISTOIRE";
             this.m_localisationArray[25] = "SURVIE";
             this.m_localisationArray[26] = "OPTIONS";
             this.m_localisationArray[27] = "PARAMETRES";
-            this.m_localisationArray[28] = "CLASSEMENTS";
+            this.m_localisationArray[28] = "MEILLEURS SCORES";
             this.m_localisationArray[29] = "SUCCES";
             this.m_localisationArray[30] = "Tirer consomme de l'énergie.\nFaucher un zombie permet d'en récupérer.";
             this.m_localisationArray[31] = "Glisser vers le haut ou le bas permet de\nchanger le type d'arme.\nLes coeurs de zombie permettent d'acheter\ndes améliorations à la fin de la journée.";
@@ -626,8 +608,6 @@ namespace Resanctified.Game
             this.m_localisationArray[240] = "Certains boss ont des boucliers aux vulnérabilités tournantes, essayez une arme différente si celle que vous utilisez ne leur causent aucun dégâts.";
             this.m_localisationArray[212] = "Survivrez-vous à 31 jours d'infestation zombie?";
             this.m_localisationArray[213] = "L'histoire de Soeur Angelika.";
-            this.m_localisationArray[241] = "Acheter le jeu complet";
-            this.m_localisationArray[243] = "Aussi disponible sur XBox Live Indie Games.";
             this.m_localisationArray[242] = "Succès";
             this.m_localisationArray[244] = "Succès déverrouillé:";
             this.m_localisationArray[245] = "Pistolera";
@@ -690,23 +670,7 @@ namespace Resanctified.Game
             this.m_localisationArray[302] = "La dame de fer";
             this.m_localisationArray[303] = "Terminez le mode histoire en difficile.";
             this.m_localisationArray[304] = "Vous avez terminé le mode histoire en difficile.";
-            this.m_localisationArray[305] = "La version complète de Twin Blades dispose de:";
-            this.m_localisationArray[306] = "Une histoire immersive avec des combats épiques\ncontre de puissants ennemis!";
-            this.m_localisationArray[307] = "6 armes de jet différentes allant de la mitraillette\naux explosions atomiques";
-            this.m_localisationArray[308] = "Des dizaines d'animations différentes\nen fonction des armes utilisées";
-            this.m_localisationArray[309] = "9 environnements différents à explorer\nà différents moments du jour et de la nuit.";
             this.m_localisationArray[312] = "HUD :";
-            this.m_localisationArray[313] = "Amis";
-            this.m_localisationArray[314] = "Hebdomadaire";
-            this.m_localisationArray[315] = "Pour obtenir des succès, vous devez acheter le jeu complet.";
-            this.m_localisationArray[316] = "Acheter";
-            this.m_localisationArray[317] = "Pas maintenant";
-            this.m_localisationArray[318] = "Mise à jour disponible";
-            this.m_localisationArray[319] = "Une mise à jour est disponible! Cette mise à jour est requise pour se connecter à Xbox LIVE.\nMettre à jour maintenant?";
-            this.m_localisationArray[320] = "Serveur indisponible";
-            this.m_localisationArray[321] = "Le serveur de Twin Blades n'est pas disponible actuellement. Veuillez réessayer ultérieurement.";
-            this.m_localisationArray[322] = "Musique";
-            this.m_localisationArray[323] = "Une autre musique est jouée, voulez-vous arrêter cette musique?";
         }
 
         private void Initialize_Italian()
@@ -728,14 +692,14 @@ namespace Resanctified.Game
             this.m_localisationArray[16] = "Effetti";
             this.m_localisationArray[17] = "Gira lo schermo";
             this.m_localisationArray[18] = "Lingua";
-            this.m_localisationArray[19] = "Classifiche";
+            this.m_localisationArray[19] = "Punteggi migliori";
             this.m_localisationArray[20] = "Riconoscimenti";
             this.m_localisationArray[21] = "Esci dal gioco";
             this.m_localisationArray[24] = "STORIA";
             this.m_localisationArray[25] = "SOPRAVVIVENZA";
             this.m_localisationArray[26] = "OPZIONI";
             this.m_localisationArray[27] = "IMPOSTAZIONI";
-            this.m_localisationArray[28] = "CLASSIFICHE";
+            this.m_localisationArray[28] = "PUNTEGGI MIGLIORI";
             this.m_localisationArray[29] = "OBIETTIVI";
             this.m_localisationArray[30] = "Sparare costa energia.\nFalciare uno zombie per recuperare energia.";
             this.m_localisationArray[31] = "Scorrere verso l'alto o verso il basso per\ncambiar e il tipo di arma.\nUtilizzare i cuor i degli zombie per acquistare\nmiglioramenti a fine giornata.";
@@ -953,8 +917,6 @@ namespace Resanctified.Game
             this.m_localisationArray[240] = "Alcuni capi hanno degli scudi con vulnerabilità a rotazione; perciò prova con un'altra arma, se quella che stai usando non riesce a procurare nessun danno.";
             this.m_localisationArray[212] = "Sopravviverai per 31 giorni all'assalto furioso degli zombie?";
             this.m_localisationArray[213] = "La storia di Suor Angelika.";
-            this.m_localisationArray[241] = "Acquista gioco completo";
-            this.m_localisationArray[243] = "Disponibile anche su XBox Live Indie Games.";
             this.m_localisationArray[242] = "Obiettivi";
             this.m_localisationArray[244] = "Obiettivi sbloccate:";
             this.m_localisationArray[245] = "Pistolera";
@@ -1017,23 +979,7 @@ namespace Resanctified.Game
             this.m_localisationArray[302] = "Dama di ferro";
             this.m_localisationArray[303] = "Terminare la modalità storia difficile.";
             this.m_localisationArray[304] = "Hai terminato la modalità storia difficile.";
-            this.m_localisationArray[305] = "La versione completa di Twin Blades offre:";
-            this.m_localisationArray[306] = "Una storia coinvolgente con combattimenti\nepici contro nemici potenti!";
-            this.m_localisationArray[307] = "6 armi da fuoco diverse,\ndalla mitragliatrice alle esplosioni atomiche";
-            this.m_localisationArray[308] = "Dozzine di animazioni differenti in funzione delle armi utilizzate";
-            this.m_localisationArray[309] = "9 ambientazioni differenti da esplorare\nin momenti diversi del giorno e della notte.";
             this.m_localisationArray[312] = "HUD";
-            this.m_localisationArray[313] = "Amici";
-            this.m_localisationArray[314] = "Settimanale";
-            this.m_localisationArray[315] = "Per ottenere delle conquiste, devi sbloccare il gioco completo.";
-            this.m_localisationArray[316] = "Sbloccare";
-            this.m_localisationArray[317] = "Non ora";
-            this.m_localisationArray[318] = "Aggiornamento disponibile";
-            this.m_localisationArray[319] = "Un aggiornamento è disponibile! Questo aggiornamento è necessario per connettersi a Xbox LIVE.\nAggiorna ora?";
-            this.m_localisationArray[320] = "Server non disponibile";
-            this.m_localisationArray[321] = "Il server di Twin Blades non è al momento disponibile. Riprova più tardi.";
-            this.m_localisationArray[322] = "Musica";
-            this.m_localisationArray[323] = "Un'altra musica è suonata, vi fermerà questa musica?";
         }
 
         private void Initialize_German()
@@ -1055,14 +1001,14 @@ namespace Resanctified.Game
             this.m_localisationArray[16] = "Effekte:";
             this.m_localisationArray[17] = "Bild umdrehen";
             this.m_localisationArray[18] = "Sprache:";
-            this.m_localisationArray[19] = "Bestenlisten";
+            this.m_localisationArray[19] = "Bestenliste";
             this.m_localisationArray[20] = "Mitwirkende";
             this.m_localisationArray[21] = "Spiel verlassen";
             this.m_localisationArray[24] = "STORY MODUS";
             this.m_localisationArray[25] = "UBERLEBENSMODUS";
             this.m_localisationArray[26] = "OPTIONEN";
             this.m_localisationArray[27] = "EINSTELLUNGEN";
-            this.m_localisationArray[28] = "BESTENLISTEN";
+            this.m_localisationArray[28] = "BESTENLISTE";
             this.m_localisationArray[29] = "ERFOLGE";
             this.m_localisationArray[30] = "Schiessen verbraucht Energie.\nEinen Zombie niedermähen bringt neue Energie ein.";
             this.m_localisationArray[31] = "Eine Aufwärts-/Abwärtsbewegung ermöglicht\neinen Waffenwechsel.\nMit den Herzen von Zombies können am Ende\ndes Tages Verbesserungen erworben werden.";
@@ -1280,8 +1226,6 @@ namespace Resanctified.Game
             this.m_localisationArray[240] = "Manche Bosse sind mit wechselnder Anfälligkeit ausgestattet; versuchen Sie es mit einer anderen Waffe, wenn die, die Sie gerade verwenden, keinen Schaden zufügt.";
             this.m_localisationArray[212] = "Ob Sie 31 Tage eines ununterbrochenen Zombie-Ansturms überleben?";
             this.m_localisationArray[213] = "Die Geschichte von Schwester Angelika";
-            this.m_localisationArray[241] = "Spiele-Vollversion kaufen";
-            this.m_localisationArray[243] = "Auch erhältlich auf XBox Live Indie Games.";
             this.m_localisationArray[242] = "Erfolge";
             this.m_localisationArray[244] = "Entsperrter Erfolg:";
             this.m_localisationArray[245] = "Pistolera";
@@ -1344,23 +1288,7 @@ namespace Resanctified.Game
             this.m_localisationArray[302] = "Eiserne Lady";
             this.m_localisationArray[303] = "Geschichtsmodus mit Härte-Challenge beenden.";
             this.m_localisationArray[304] = "Sie haben den Geschichtsmodus mit dem Härte-Challenge beendet.";
-            this.m_localisationArray[305] = "Die Vollversion von Twin Blades umfasst Folgendes:";
-            this.m_localisationArray[306] = "Eine atemberaubende, fesselnde Story mit\nepischen Schlachten gegen mächtige Feinde!";
-            this.m_localisationArray[307] = "6 verschiedene Waffentypen\nvom Maschinengewehr bis zur Nuklearbombe.";
-            this.m_localisationArray[308] = "Dutzende Animationen je nach verwendeter Artillerie.";
-            this.m_localisationArray[309] = "9 zu verschiedenen Tages- und\nNachtzeiten zu erkundende Umgebungen.";
             this.m_localisationArray[312] = "HUD:";
-            this.m_localisationArray[313] = "Freunde";
-            this.m_localisationArray[314] = "Wöchentlich";
-            this.m_localisationArray[315] = "Für Erfolge im Spiel muss die Vollversion freigesetzt werden.";
-            this.m_localisationArray[316] = "Freischalten";
-            this.m_localisationArray[317] = "Nicht jetzt";
-            this.m_localisationArray[318] = "Update verfügbar";
-            this.m_localisationArray[319] = "Ein Update ist verfügbar! Dieses Update ist erforderlich, um auf Xbox LIVE verbinden.\nUpdate jetzt?";
-            this.m_localisationArray[320] = "Server nicht verfügbar";
-            this.m_localisationArray[321] = "Der Twin Blades Server ist zurzeit nicht verfügbar. Versuchen Sie es später noch einmal.";
-            this.m_localisationArray[322] = "Musik";
-            this.m_localisationArray[323] = "Eine andere Musik wird gespielt, wollen Sie diese Musik abschalten?";
         }
 
         private void Initialize_Spanish()
@@ -1382,7 +1310,7 @@ namespace Resanctified.Game
             this.m_localisationArray[16] = "Efectos:";
             this.m_localisationArray[17] = "Invertir pantalla:";
             this.m_localisationArray[18] = "Idioma:";
-            this.m_localisationArray[19] = "Marcadores";
+            this.m_localisationArray[19] = "Puntuaciones";
             this.m_localisationArray[20] = "Créditos";
             this.m_localisationArray[21] = "Salir del juego";
             this.m_localisationArray[7] = "Historia";
@@ -1391,7 +1319,7 @@ namespace Resanctified.Game
             this.m_localisationArray[25] = "SUPERVIVENCIA";
             this.m_localisationArray[26] = "OPCIONES";
             this.m_localisationArray[27] = "CONFIGURACION";
-            this.m_localisationArray[28] = "MARCADORES";
+            this.m_localisationArray[28] = "PUNTUACIONES";
             this.m_localisationArray[29] = "LOGROS";
             this.m_localisationArray[30] = "Disparar consume energía.\nAtravesar con la guadaña para recuperar energía.";
             this.m_localisationArray[31] = "Deslizar arriba o abajo para cambiar\nel tipo de pistola.\nUsar corazones de zombis para comprar\nmejoras al fin del día.";
@@ -1609,8 +1537,6 @@ namespace Resanctified.Game
             this.m_localisationArray[240] = "Algunos jefes tienen escudos con vulnerabilidad alterna; pruebe otra arma, si la que está utilizando no causa daños.";
             this.m_localisationArray[212] = "¿Sobrevivirá a 31 días de ataque de los zombis?";
             this.m_localisationArray[213] = "La historia de Sor Angelika.";
-            this.m_localisationArray[241] = "Comprar juego completo";
-            this.m_localisationArray[243] = "También disponible para XBox Live Indie Games.";
             this.m_localisationArray[242] = "Logros";
             this.m_localisationArray[244] = "Logros desbloqueada:";
             this.m_localisationArray[245] = "Pistolera";
@@ -1673,23 +1599,7 @@ namespace Resanctified.Game
             this.m_localisationArray[302] = "La Dama de Hierro";
             this.m_localisationArray[303] = "Finalice el modo historia\nen el nivel alto de dificultad.";
             this.m_localisationArray[304] = "Ha finalizado el modo historia\nen el nivel alto de dificultad.";
-            this.m_localisationArray[305] = "En la versión completa de Twin Blades encontrará:";
-            this.m_localisationArray[306] = "¡Una absorbente historia con\népicos combates contra potentes enemigos!";
-            this.m_localisationArray[307] = "6 armas arrojadizas distintas,\ndesde la ametralladora a explosiones atómicas.";
-            this.m_localisationArray[308] = "Docenas de animaciones diferentes según las armas utilizadas.";
-            this.m_localisationArray[309] = "9 entornos diferentes que descubrir\nen distintos momentos del día o de la noche.";
             this.m_localisationArray[312] = "HUD:";
-            this.m_localisationArray[313] = "Amigos";
-            this.m_localisationArray[314] = "Semanal";
-            this.m_localisationArray[315] = "Para ir consiguiendo éxitos, debe desbloquear la versión completa del juego.";
-            this.m_localisationArray[316] = "Desbloquear";
-            this.m_localisationArray[317] = "Ahora no";
-            this.m_localisationArray[318] = "Disponible la actualización de";
-            this.m_localisationArray[319] = "Una actualización está disponible! Esta actualización es necesaria para conectarse a Xbox LIVE.\nActualizar ahora?";
-            this.m_localisationArray[320] = "Servidor no disponible";
-            this.m_localisationArray[321] = "El servidor de Twin Blades no está disponible en este momento. Vuelve a intentarlo más tarde.";
-            this.m_localisationArray[322] = "Música";
-            this.m_localisationArray[323] = "Otra música es interpretada, ¿quieres poner fin a esta música?";
         }
 
         public enum LanguageId
@@ -1944,8 +1854,10 @@ namespace Resanctified.Game
             Hint_Story_2,
             Hint_Story_3,
             Hint_Boss_1,
+            // Trial-version text, no longer shown; the id stays so the following ids keep their index.
             UnlockFullGame,
             Achievements,
+            // Xbox LIVE Indie Games mention, no longer shown; kept for the same reason.
             AlsoAvailable,
             AchievementUnlocked,
             Achievement_Pistolera_Name,
@@ -2008,6 +1920,7 @@ namespace Resanctified.Game
             Achievement_Story_GameFinishedHard_Name,
             Achievement_Story_GameFinishedHard_Desc,
             Achievement_Story_GameFinishedHard_Desc2,
+            // Trial upsell text of the phone version, no longer shown; the ids stay so the following ids keep their index.
             Features_0,
             Features_1,
             Features_2,
@@ -2016,17 +1929,6 @@ namespace Resanctified.Game
             EONHelp_Shop,
             EONExitConfirmation,
             HUD,
-            Friends,
-            Weekly,
-            EarnAchievementUnlockGame,
-            BuyGame,
-            NotNow,
-            GameUpdateRequired,
-            GameUpdateRequiredDesc,
-            NetworkLost,
-            NetworkLostDesc,
-            UserMusicPlaying,
-            UserMusicPlayingDesc,
             ArraySize,
         }
     }

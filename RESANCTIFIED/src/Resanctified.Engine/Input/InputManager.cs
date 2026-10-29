@@ -15,6 +15,11 @@ namespace Resanctified.Engine.Input
         private int m_padButtonsPressed;
         private int m_padButtonsReleased;
         private int m_padButtonsDown;
+        // Pad buttons held through the keyboard (KeyBindings), kept apart from the touch-driven ones above
+        // because they are re-read from the key state every frame instead of being set by events.
+        private PSSButton m_keyButtonsDown;
+        private PSSButton m_keyButtonsPressed;
+        private PSSButton m_keyButtonsReleased;
         private Vector2[] m_thumbstickPositions;
         private float m_deadZoneX;
         private float m_deadZoneY;
@@ -61,7 +66,20 @@ namespace Resanctified.Engine.Input
 
         public bool IsActive { get; set; }
 
+        /// <summary>
+        /// True since the last gameplay key press, false again as soon as the screen is touched (or clicked),
+        /// so the on-screen controls can step aside while playing with the keyboard.
+        /// </summary>
+        public bool KeyboardInUse { get; private set; }
+
         public bool IsBackPressed() => this.StdBack.IsActive();
+
+        public bool IsPausePressed() => this.StdPause.IsActive();
+
+        public bool IsKeyDown(Keys key) => this.m_keyboard.IsKeyDown(key);
+
+        /// <summary>Holds these keys down on top of the real keyboard from the next update on (automated checks).</summary>
+        public void SetInjectedKeys(IEnumerable<Keys> keys) => this.m_keyboard.SetInjectedKeys(keys);
 
         public void AddGameAction(GameAction action) => this.m_gameActionList.Add(action);
 
@@ -81,6 +99,10 @@ namespace Resanctified.Engine.Input
             this.m_deadZoneY = 0.1f;
             this.m_shaking = false;
             this.m_shakeTime = -1f;
+            this.m_keyButtonsDown = PSSButton.ButtonNone;
+            this.m_keyButtonsPressed = PSSButton.ButtonNone;
+            this.m_keyButtonsReleased = PSSButton.ButtonNone;
+            this.KeyboardInUse = false;
             this.m_responders.Clear();
         }
 
@@ -99,10 +121,14 @@ namespace Resanctified.Engine.Input
                 return;
             this.m_pad.Update(gameTime);
             this.m_keyboard.Update(gameTime);
+            this.UpdateKeyButtons();
             for (int index = 0; index < this.m_gameActionList.Count; ++index)
                 this.UpdateGameAction(this.m_gameActionList[index]);
             if (this.m_standardNavigationGameActionsEnabled)
+            {
                 this.UpdateStdGameAction(this.StdBack);
+                this.UpdateStdGameAction(this.StdPause);
+            }
             this.m_padButtonsPressed = 0;
             this.m_padButtonsReleased = 0;
             if (this.m_shaking)
@@ -115,6 +141,16 @@ namespace Resanctified.Engine.Input
 
         public void DisableStandardNavigationGameActions() => this.m_standardNavigationGameActionsEnabled = false;
 
+        private void UpdateKeyButtons()
+        {
+            PSSButton down = KeyBindings.GetGameplayButtons(this.m_keyboard.GetState());
+            this.m_keyButtonsPressed = down & ~this.m_keyButtonsDown;
+            this.m_keyButtonsReleased = this.m_keyButtonsDown & ~down;
+            this.m_keyButtonsDown = down;
+            if (this.m_keyButtonsPressed != PSSButton.ButtonNone || this.m_keyboard.IsKeyPressed(KeyBindings.Shake))
+                this.KeyboardInUse = true;
+        }
+
         private void UpdateGameAction(GameAction ga)
         {
             if (ga.IsDisabled)
@@ -123,19 +159,22 @@ namespace Resanctified.Engine.Input
             }
             else
             {
+                PSSButton pressed = (PSSButton)this.m_padButtonsPressed | this.m_keyButtonsPressed;
+                PSSButton down = (PSSButton)this.m_padButtonsDown | this.m_keyButtonsDown;
+                PSSButton released = (PSSButton)this.m_padButtonsReleased | this.m_keyButtonsReleased;
                 switch (ga.m_buttonState)
                 {
                     case PSSButtonState.ButtonStatePressed:
-                        ga.m_isActive = ((PSSButton)this.m_padButtonsPressed & ga.m_buttonBits) != PSSButton.ButtonNone;
+                        ga.m_isActive = (pressed & ga.m_buttonBits) != PSSButton.ButtonNone;
                         break;
                     case PSSButtonState.ButtonStateDown:
-                        ga.m_isActive = ((PSSButton)this.m_padButtonsDown & ga.m_buttonBits) != PSSButton.ButtonNone;
+                        ga.m_isActive = (down & ga.m_buttonBits) != PSSButton.ButtonNone;
                         break;
                     case PSSButtonState.ButtonStateReleased:
-                        ga.m_isActive = ((PSSButton)this.m_padButtonsReleased & ga.m_buttonBits) != PSSButton.ButtonNone;
+                        ga.m_isActive = (released & ga.m_buttonBits) != PSSButton.ButtonNone;
                         break;
                     case PSSButtonState.ButtonStateUp:
-                        ga.m_isActive = ((PSSButton)this.m_padButtonsDown & ga.m_buttonBits) == PSSButton.ButtonNone;
+                        ga.m_isActive = (down & ga.m_buttonBits) == PSSButton.ButtonNone;
                         break;
                     default:
                         ga.m_isActive = false;
@@ -187,30 +226,27 @@ namespace Resanctified.Engine.Input
             }
         }
 
-        // Desktop keyboard stand-ins for the phone's hardware buttons: Escape is the Windows Phone "Back" key.
-        private static Keys GetKeyForButton(Buttons button) => button == Buttons.Back ? Keys.Escape : Keys.None;
-
         private bool IsButtonPressed(Buttons button)
         {
-            Keys key = GetKeyForButton(button);
+            Keys key = KeyBindings.GetKeyForButton(button);
             return this.m_pad.IsButtonPressed(button) || key != Keys.None && this.m_keyboard.IsKeyPressed(key);
         }
 
         private bool IsButtonDown(Buttons button)
         {
-            Keys key = GetKeyForButton(button);
+            Keys key = KeyBindings.GetKeyForButton(button);
             return this.m_pad.IsButtonDown(button) || key != Keys.None && this.m_keyboard.IsKeyDown(key);
         }
 
         private bool IsButtonReleased(Buttons button)
         {
-            Keys key = GetKeyForButton(button);
+            Keys key = KeyBindings.GetKeyForButton(button);
             return this.m_pad.IsButtonReleased(button) || key != Keys.None && this.m_keyboard.IsKeyReleased(key);
         }
 
         private bool IsButtonUp(Buttons button)
         {
-            Keys key = GetKeyForButton(button);
+            Keys key = KeyBindings.GetKeyForButton(button);
             return this.m_pad.IsButtonUp(button) && (key == Keys.None || this.m_keyboard.IsKeyUp(key));
         }
 
@@ -333,6 +369,7 @@ namespace Resanctified.Engine.Input
 
         public void TouchesBegan(Touch[] touchArray, int touchCount)
         {
+            this.KeyboardInUse = false;
             for (int index = 0; index < this.m_responders.Count; ++index)
                 this.m_responders[index].TouchesBegan(touchArray, touchCount);
         }

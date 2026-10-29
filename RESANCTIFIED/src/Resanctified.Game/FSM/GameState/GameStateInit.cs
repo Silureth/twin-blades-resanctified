@@ -19,7 +19,7 @@ namespace Resanctified.Game.FSM.GameState
             GameLocalisation.GetInstance().Initialize(GameApplication.Instance.CurrentLanguage);
         }
 
-        public void Update(IFiniteStateMachine stateMachine, float gameTime) => stateMachine.SetState(GameStateLogoMGS.Instance);
+        public void Update(IFiniteStateMachine stateMachine, float gameTime) => stateMachine.SetState(GameStateLogo.Instance);
 
         public void Exit(IFiniteStateMachine stateMachine)
         {

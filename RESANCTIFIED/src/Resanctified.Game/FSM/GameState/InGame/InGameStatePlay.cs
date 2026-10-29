@@ -96,7 +96,7 @@ namespace Resanctified.Game.FSM.GameState.InGame
                             return;
                         }
                     }
-                    if (InputManager.GetInstance().IsBackPressed())
+                    if (InputManager.GetInstance().IsBackPressed() || InputManager.GetInstance().IsPausePressed())
                         this.InGameMenuRequest = true;
                     if (!this.InGameMenuRequest)
                         return;

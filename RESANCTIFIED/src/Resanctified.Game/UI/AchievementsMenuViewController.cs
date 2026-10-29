@@ -299,119 +299,97 @@ namespace Resanctified.Game.UI
                 instance.DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_COLOR, "<<");
             else
                 instance.DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_NOTAVAILABLE_COLOR, "<<");
-            string empty = string.Empty;
-            string s1 = string.Empty;
-            string s2 = string.Empty;
+            // The Xbox gamerscore values ("5G" etc.) are not shown: there is no gamerscore outside Xbox LIVE.
+            string name = string.Empty;
+            string description = string.Empty;
             switch (this.m_selectedAward)
             {
                 case MenuAwardId.Achievement_Story_100ZombiesKilled:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_100ZombiesKilled_Name);
-                    s2 = "5G";
-                    s1 = !cachedAchievements.achievement_Story_100ZombiesKilled ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_100ZombiesKilled_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_100ZombiesKilled_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_100ZombiesKilled_Name);
+                    description = !cachedAchievements.achievement_Story_100ZombiesKilled ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_100ZombiesKilled_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_100ZombiesKilled_Desc2);
                     break;
                 case MenuAwardId.Achievement_Story_500ZombiesKilled:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_500ZombiesKilled_Name);
-                    s2 = "5G";
-                    s1 = !cachedAchievements.achievement_Story_500ZombiesKilled ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_500ZombiesKilled_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_500ZombiesKilled_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_500ZombiesKilled_Name);
+                    description = !cachedAchievements.achievement_Story_500ZombiesKilled ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_500ZombiesKilled_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_500ZombiesKilled_Desc2);
                     break;
                 case MenuAwardId.Achievement_Story_1000ZombiesKilled:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_1000ZombiesKilled_Name);
-                    s2 = "5G";
-                    s1 = !cachedAchievements.achievement_Story_1000ZombiesKilled ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_1000ZombiesKilled_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_1000ZombiesKilled_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_1000ZombiesKilled_Name);
+                    description = !cachedAchievements.achievement_Story_1000ZombiesKilled ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_1000ZombiesKilled_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_1000ZombiesKilled_Desc2);
                     break;
                 case MenuAwardId.Achievement_Story_Boss1Killed:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss1Killed_Name);
-                    s2 = "10G";
-                    s1 = !cachedAchievements.achievement_Story_Boss1Killed ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss1Killed_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss1Killed_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss1Killed_Name);
+                    description = !cachedAchievements.achievement_Story_Boss1Killed ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss1Killed_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss1Killed_Desc2);
                     break;
                 case MenuAwardId.Achievement_Story_Boss2Killed:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss2Killed_Name);
-                    s2 = "10G";
-                    s1 = !cachedAchievements.achievement_Story_Boss2Killed ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss2Killed_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss2Killed_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss2Killed_Name);
+                    description = !cachedAchievements.achievement_Story_Boss2Killed ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss2Killed_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss2Killed_Desc2);
                     break;
                 case MenuAwardId.Achievement_Story_Boss3Killed:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss3Killed_Name);
-                    s2 = "10G";
-                    s1 = !cachedAchievements.achievement_Story_Boss3Killed ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss3Killed_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss3Killed_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss3Killed_Name);
+                    description = !cachedAchievements.achievement_Story_Boss3Killed ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss3Killed_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_Boss3Killed_Desc2);
                     break;
                 case MenuAwardId.Achievement_Story_AllWeaponsAndAbilitiesUpgraded:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_AllWeaponsAndAbilitiesUpgraded_Name);
-                    s2 = "15G";
-                    s1 = !cachedAchievements.achievement_Story_AllWeaponsAndAbilitiesUpgraded ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_AllWeaponsAndAbilitiesUpgraded_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_AllWeaponsAndAbilitiesUpgraded_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_AllWeaponsAndAbilitiesUpgraded_Name);
+                    description = !cachedAchievements.achievement_Story_AllWeaponsAndAbilitiesUpgraded ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_AllWeaponsAndAbilitiesUpgraded_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_AllWeaponsAndAbilitiesUpgraded_Desc2);
                     break;
                 case MenuAwardId.Achievement_Story_GameFinished:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinished_Name);
-                    s2 = "20G";
-                    s1 = !cachedAchievements.achievement_Story_GameFinished ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinished_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinished_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinished_Name);
+                    description = !cachedAchievements.achievement_Story_GameFinished ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinished_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinished_Desc2);
                     break;
                 case MenuAwardId.Achievement_Story_GameFinishedHard:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinishedHard_Name);
-                    s2 = "25G";
-                    s1 = !cachedAchievements.achievement_Story_GameFinishedHard ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinishedHard_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinishedHard_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinishedHard_Name);
+                    description = !cachedAchievements.achievement_Story_GameFinishedHard ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinishedHard_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Story_GameFinishedHard_Desc2);
                     break;
                 case MenuAwardId.Achievement_Pistolera:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Pistolera_Name);
-                    s2 = "5G";
-                    s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledBullet ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Pistolera_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Pistolera_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Pistolera_Name);
+                    description = !cachedAchievements.achievement_Survival_500ZombiesKilledBullet ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Pistolera_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Pistolera_Desc2);
                     break;
                 case MenuAwardId.Achievement_Inquisitor:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Inquisitor_Name);
-                    s2 = "5G";
-                    s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledFlameThrower ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Inquisitor_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Inquisitor_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Inquisitor_Name);
+                    description = !cachedAchievements.achievement_Survival_500ZombiesKilledFlameThrower ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Inquisitor_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Inquisitor_Desc2);
                     break;
                 case MenuAwardId.Achievement_IceColdKiller:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_IceColdKiller_Name);
-                    s2 = "5G";
-                    s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledIceGun ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_IceColdKiller_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_IceColdKiller_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_IceColdKiller_Name);
+                    description = !cachedAchievements.achievement_Survival_500ZombiesKilledIceGun ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_IceColdKiller_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_IceColdKiller_Desc2);
                     break;
                 case MenuAwardId.Achievement_Fallout:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Fallout_Name);
-                    s2 = "5G";
-                    s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledExplosiveGun ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Fallout_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Fallout_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Fallout_Name);
+                    description = !cachedAchievements.achievement_Survival_500ZombiesKilledExplosiveGun ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Fallout_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Fallout_Desc2);
                     break;
                 case MenuAwardId.Achievement_WrathOfGod:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WrathOfGod_Name);
-                    s2 = "5G";
-                    s1 = !cachedAchievements.achievement_Survival_1000ZombiesKilledHolyBeam ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WrathOfGod_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WrathOfGod_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WrathOfGod_Name);
+                    description = !cachedAchievements.achievement_Survival_1000ZombiesKilledHolyBeam ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WrathOfGod_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WrathOfGod_Desc2);
                     break;
                 case MenuAwardId.Achievement_TheFalcon:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_TheFalcon_Name);
-                    s2 = "5G";
-                    s1 = !cachedAchievements.achievement_Survival_500ZombiesKilledAirSlash ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_TheFalcon_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_TheFalcon_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_TheFalcon_Name);
+                    description = !cachedAchievements.achievement_Survival_500ZombiesKilledAirSlash ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_TheFalcon_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_TheFalcon_Desc2);
                     break;
                 case MenuAwardId.Achievement_ShakeYourBooty:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_ShakeYourBooty_Name);
-                    s2 = "10G";
-                    s1 = !cachedAchievements.achievement_Survival_100Ungrab ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_ShakeYourBooty_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_ShakeYourBooty_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_ShakeYourBooty_Name);
+                    description = !cachedAchievements.achievement_Survival_100Ungrab ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_ShakeYourBooty_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_ShakeYourBooty_Desc2);
                     break;
                 case MenuAwardId.Achievement_OneNunArmy:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_OneNunArmy_Name);
-                    s2 = "5G";
-                    s1 = !cachedAchievements.achievement_Survival_AllWeaponsUpgraded ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_OneNunArmy_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_OneNunArmy_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_OneNunArmy_Name);
+                    description = !cachedAchievements.achievement_Survival_AllWeaponsUpgraded ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_OneNunArmy_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_OneNunArmy_Desc2);
                     break;
                 case MenuAwardId.Achievement_WayOfTheNunja:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WayOfTheNunja_Name);
-                    s2 = "5G";
-                    s1 = !cachedAchievements.achievement_Survival_AllAbilitiesUpgraded ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WayOfTheNunja_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WayOfTheNunja_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WayOfTheNunja_Name);
+                    description = !cachedAchievements.achievement_Survival_AllAbilitiesUpgraded ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WayOfTheNunja_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_WayOfTheNunja_Desc2);
                     break;
                 case MenuAwardId.Achievement_SectorClear:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_SectorClear_Name);
-                    s2 = "20G";
-                    s1 = !cachedAchievements.achievement_Survival_GameFinished ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_SectorClear_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_SectorClear_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_SectorClear_Name);
+                    description = !cachedAchievements.achievement_Survival_GameFinished ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_SectorClear_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_SectorClear_Desc2);
                     break;
                 case MenuAwardId.Achievement_Survival_GameFinishedHard:
-                    empty = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Survival_GameFinishedHard_Name);
-                    s2 = "25G";
-                    s1 = !cachedAchievements.achievement_Survival_GameFinishedHard ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Survival_GameFinishedHard_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Survival_GameFinishedHard_Desc2);
+                    name = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Survival_GameFinishedHard_Name);
+                    description = !cachedAchievements.achievement_Survival_GameFinishedHard ? GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Survival_GameFinishedHard_Desc) : GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.Achievement_Survival_GameFinishedHard_Desc2);
                     break;
             }
             this.m_t.SetScale(1f);
             this.m_t.SetPosition(240f, 208f, 0.0f);
-            Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_SELECTED_COLOR, empty);
-            this.m_t.SetPosition(430f, 208f, 0.0f);
-            Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 9, GameConstant.MENU_TEXT_COLOR, s2);
+            Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_SELECTED_COLOR, name);
             this.m_t.SetPosition(240f, 182f, 0.0f);
-            Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_COLOR, s1);
+            Engine.Graphics.Renderer.Renderer.GetInstance().DrawString(font, this.m_t, 12, GameConstant.MENU_TEXT_COLOR, description);
             switch (this.m_pageIndex)
             {
                 case 0:
