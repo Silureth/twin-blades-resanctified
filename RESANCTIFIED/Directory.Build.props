@@ -1,0 +1,11 @@
+<Project>
+  <!-- Settings shared by every project in the solution. -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <!-- The code base is decompiled XNA code: no implicit usings, no nullable annotations. -->
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+    <MonoGameVersion>3.8.4.1</MonoGameVersion>
+  </PropertyGroup>
+</Project>
