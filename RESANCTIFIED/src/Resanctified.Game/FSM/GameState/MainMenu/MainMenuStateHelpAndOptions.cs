@@ -9,6 +9,7 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
         private static MainMenuStateHelpAndOptions m_instance = new MainMenuStateHelpAndOptions();
         public bool BackRequest;
         public bool HelpRequest;
+        public bool KeyboardRequest;
         public bool SettingsRequest;
         public bool CreditsRequest;
         public bool AboutRequest;
@@ -21,6 +22,7 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
         {
             this.BackRequest = false;
             this.HelpRequest = false;
+            this.KeyboardRequest = false;
             this.SettingsRequest = false;
             this.CreditsRequest = false;
             this.AboutRequest = false;
@@ -39,6 +41,11 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
             else if (this.HelpRequest)
             {
                 stateMachine.SetState(MainMenuStateHelp.GetInstance());
+                GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);
+            }
+            else if (this.KeyboardRequest)
+            {
+                stateMachine.SetState(MainMenuStateKeyboard.GetInstance());
                 GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);
             }
             else if (this.SettingsRequest)
@@ -64,6 +71,7 @@ namespace Resanctified.Game.FSM.GameState.MainMenu
         {
             this.BackRequest = false;
             this.HelpRequest = false;
+            this.KeyboardRequest = false;
             this.SettingsRequest = false;
             this.CreditsRequest = false;
             this.AboutRequest = false;

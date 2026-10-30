@@ -19,6 +19,7 @@ namespace Resanctified.Game.FSM.GameState
         private DifficultyMenuViewController m_difficultyViewController = new DifficultyMenuViewController();
         private HelpAndOptionsMenuViewController m_helpAndOptionsViewController = new HelpAndOptionsMenuViewController();
         private AboutMenuViewController m_aboutViewController = new AboutMenuViewController();
+        private KeyboardMenuViewController m_keyboardViewController = new KeyboardMenuViewController();
         private OptionsMenuViewController m_optionsViewController = new OptionsMenuViewController();
         private HelpViewController m_helpViewController = new HelpViewController();
         private HighscoresChooseMenuViewController m_highscoresChooseViewController = new HighscoresChooseMenuViewController();
@@ -57,6 +58,8 @@ namespace Resanctified.Game.FSM.GameState
         public HelpAndOptionsMenuViewController GetHelpAndOptionsView() => this.m_helpAndOptionsViewController;
 
         public AboutMenuViewController GetAboutView() => this.m_aboutViewController;
+
+        public KeyboardMenuViewController GetKeyboardView() => this.m_keyboardViewController;
 
         public HelpViewController GetHelpView() => this.m_helpViewController;
 
@@ -118,6 +121,7 @@ namespace Resanctified.Game.FSM.GameState
             this.m_difficultyViewController.Initialize();
             this.m_helpAndOptionsViewController.Initialize(true);
             this.m_aboutViewController.Initialize();
+            this.m_keyboardViewController.Initialize(true);
             this.m_helpViewController.Initialize(true);
             this.m_optionsViewController.Initialize(true);
             this.m_languageSelectionViewController.Initialize(true);
@@ -236,6 +240,7 @@ namespace Resanctified.Game.FSM.GameState
             this.m_difficultyViewController.Cleanup();
             this.m_helpAndOptionsViewController.Cleanup();
             this.m_aboutViewController.Cleanup();
+            this.m_keyboardViewController.Cleanup();
             this.m_helpViewController.Cleanup();
             this.m_optionsViewController.Cleanup();
             this.m_languageSelectionViewController.Cleanup();

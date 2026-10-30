@@ -8,6 +8,7 @@ namespace Resanctified.Game.FSM.GameState.InGame
     {
         public bool SettingsRequest;
         public bool HelpRequest;
+        public bool KeyboardRequest;
         public bool CreditsRequest;
         public bool BackRequest;
         private static InGameMenuStateHelpAndOptions m_instance = new InGameMenuStateHelpAndOptions();
@@ -20,6 +21,7 @@ namespace Resanctified.Game.FSM.GameState.InGame
         {
             this.SettingsRequest = false;
             this.HelpRequest = false;
+            this.KeyboardRequest = false;
             this.BackRequest = false;
         }
 
@@ -27,6 +29,7 @@ namespace Resanctified.Game.FSM.GameState.InGame
         {
             this.BackRequest = false;
             this.HelpRequest = false;
+            this.KeyboardRequest = false;
             this.SettingsRequest = false;
             Application.GetInstance().AddResponder(GameApplication.GetInstance().GetInGameHelpAndOptionsView());
         }
@@ -50,6 +53,11 @@ namespace Resanctified.Game.FSM.GameState.InGame
                     stateMachine.SetState(InGameStateHelpEON.GetInstance());
                 GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);
             }
+            else if (this.KeyboardRequest)
+            {
+                stateMachine.SetState(InGameMenuStateKeyboard.GetInstance());
+                GameApplication.GetInstance().PlayOutgameSound(GameApplication.OutgameSound.Validate);
+            }
             else
             {
                 if (!this.SettingsRequest)
@@ -63,6 +71,7 @@ namespace Resanctified.Game.FSM.GameState.InGame
         {
             this.BackRequest = false;
             this.HelpRequest = false;
+            this.KeyboardRequest = false;
             this.SettingsRequest = false;
             Application.GetInstance().RemoveResponder(GameApplication.GetInstance().GetInGameHelpAndOptionsView());
         }

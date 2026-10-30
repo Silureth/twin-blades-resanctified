@@ -362,6 +362,21 @@ namespace Resanctified.Game
             this.m_localisationArray[303] = "Finish the story mode in hard difficulty.";
             this.m_localisationArray[304] = "You finished the story mode in hard difficulty.";
             this.m_localisationArray[312] = "HUD:";
+            this.m_localisationArray[313] = "Keyboard";
+            this.m_localisationArray[314] = "KEYBOARD";
+            this.m_localisationArray[315] = "Move";
+            this.m_localisationArray[316] = "Jump";
+            this.m_localisationArray[317] = "Change gun";
+            this.m_localisationArray[318] = "Break free";
+            this.m_localisationArray[319] = "Full screen";
+            this.m_localisationArray[320] = "Screenshot";
+            this.m_localisationArray[321] = "HD textures";
+            this.m_localisationArray[322] = "Resolution";
+            this.m_localisationArray[323] = "Ctrl";
+            this.m_localisationArray[324] = "Shift";
+            this.m_localisationArray[325] = "Space";
+            this.m_localisationArray[326] = "Enter";
+            this.m_localisationArray[327] = "Esc";
         }
 
         private void Initialize_French()
@@ -671,6 +686,21 @@ namespace Resanctified.Game
             this.m_localisationArray[303] = "Terminez le mode histoire en difficile.";
             this.m_localisationArray[304] = "Vous avez terminé le mode histoire en difficile.";
             this.m_localisationArray[312] = "HUD :";
+            this.m_localisationArray[313] = "Clavier";
+            this.m_localisationArray[314] = "CLAVIER";
+            this.m_localisationArray[315] = "Se déplacer";
+            this.m_localisationArray[316] = "Sauter";
+            this.m_localisationArray[317] = "Changer d'arme";
+            this.m_localisationArray[318] = "Se libérer";
+            this.m_localisationArray[319] = "Plein écran";
+            this.m_localisationArray[320] = "Capture d'écran";
+            this.m_localisationArray[321] = "Textures HD";
+            this.m_localisationArray[322] = "Résolution";
+            this.m_localisationArray[323] = "Ctrl";
+            this.m_localisationArray[324] = "Maj";
+            this.m_localisationArray[325] = "Espace";
+            this.m_localisationArray[326] = "Entrée";
+            this.m_localisationArray[327] = "Échap";
         }
 
         private void Initialize_Italian()
@@ -980,6 +1010,21 @@ namespace Resanctified.Game
             this.m_localisationArray[303] = "Terminare la modalità storia difficile.";
             this.m_localisationArray[304] = "Hai terminato la modalità storia difficile.";
             this.m_localisationArray[312] = "HUD";
+            this.m_localisationArray[313] = "Tastiera";
+            this.m_localisationArray[314] = "TASTIERA";
+            this.m_localisationArray[315] = "Muoversi";
+            this.m_localisationArray[316] = "Saltare";
+            this.m_localisationArray[317] = "Cambia arma";
+            this.m_localisationArray[318] = "Liberarsi";
+            this.m_localisationArray[319] = "Schermo intero";
+            this.m_localisationArray[320] = "Screenshot";
+            this.m_localisationArray[321] = "Texture HD";
+            this.m_localisationArray[322] = "Risoluzione";
+            this.m_localisationArray[323] = "Ctrl";
+            this.m_localisationArray[324] = "Maiusc";
+            this.m_localisationArray[325] = "Spazio";
+            this.m_localisationArray[326] = "Invio";
+            this.m_localisationArray[327] = "Esc";
         }
 
         private void Initialize_German()
@@ -1289,6 +1334,21 @@ namespace Resanctified.Game
             this.m_localisationArray[303] = "Geschichtsmodus mit Härte-Challenge beenden.";
             this.m_localisationArray[304] = "Sie haben den Geschichtsmodus mit dem Härte-Challenge beendet.";
             this.m_localisationArray[312] = "HUD:";
+            this.m_localisationArray[313] = "Tastatur";
+            this.m_localisationArray[314] = "TASTATUR";
+            this.m_localisationArray[315] = "Bewegen";
+            this.m_localisationArray[316] = "Springen";
+            this.m_localisationArray[317] = "Waffe wechseln";
+            this.m_localisationArray[318] = "Befreien";
+            this.m_localisationArray[319] = "Vollbild";
+            this.m_localisationArray[320] = "Bildschirmfoto";
+            this.m_localisationArray[321] = "HD-Texturen";
+            this.m_localisationArray[322] = "Auflösung";
+            this.m_localisationArray[323] = "Strg";
+            this.m_localisationArray[324] = "Umschalt";
+            this.m_localisationArray[325] = "Leertaste";
+            this.m_localisationArray[326] = "Enter";
+            this.m_localisationArray[327] = "Esc";
         }
 
         private void Initialize_Spanish()
@@ -1600,6 +1660,21 @@ namespace Resanctified.Game
             this.m_localisationArray[303] = "Finalice el modo historia\nen el nivel alto de dificultad.";
             this.m_localisationArray[304] = "Ha finalizado el modo historia\nen el nivel alto de dificultad.";
             this.m_localisationArray[312] = "HUD:";
+            this.m_localisationArray[313] = "Teclado";
+            this.m_localisationArray[314] = "TECLADO";
+            this.m_localisationArray[315] = "Moverse";
+            this.m_localisationArray[316] = "Saltar";
+            this.m_localisationArray[317] = "Cambiar arma";
+            this.m_localisationArray[318] = "Liberarse";
+            this.m_localisationArray[319] = "Pantalla completa";
+            this.m_localisationArray[320] = "Captura";
+            this.m_localisationArray[321] = "Texturas HD";
+            this.m_localisationArray[322] = "Resolución";
+            this.m_localisationArray[323] = "Ctrl";
+            this.m_localisationArray[324] = "Mayús";
+            this.m_localisationArray[325] = "Espacio";
+            this.m_localisationArray[326] = "Intro";
+            this.m_localisationArray[327] = "Esc";
         }
 
         public enum LanguageId
@@ -1929,6 +2004,22 @@ namespace Resanctified.Game
             EONHelp_Shop,
             EONExitConfirmation,
             HUD,
+            // Help & Options > Keyboard (desktop only); key names as printed on that language's keyboards.
+            Keyboard,
+            KeyboardBig,
+            Keyboard_Move,
+            Keyboard_Jump,
+            Keyboard_ChangeGun,
+            Keyboard_BreakFree,
+            Keyboard_FullScreen,
+            Keyboard_Screenshot,
+            Keyboard_HDTextures,
+            Keyboard_Resolution,
+            Key_Ctrl,
+            Key_Shift,
+            Key_Space,
+            Key_Enter,
+            Key_Esc,
             ArraySize,
         }
     }

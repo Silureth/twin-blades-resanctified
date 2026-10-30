@@ -29,6 +29,7 @@ namespace Resanctified.Game
         private HelpMapViewController m_inGameHelpMapViewController = new HelpMapViewController();
         private EONHelpViewController m_inGameHelpEONViewController = new EONHelpViewController();
         private OptionsMenuViewController m_inGameOptionsViewController = new OptionsMenuViewController();
+        private KeyboardMenuViewController m_inGameKeyboardViewController = new KeyboardMenuViewController();
         private HelpAndOptionsMenuViewController m_inGameHelpAndOptionsViewController = new HelpAndOptionsMenuViewController();
         private LanguageMenuViewController m_inGameLanguageSelectionViewController = new LanguageMenuViewController();
         private BackToMapConfirmationViewController m_inGameBackToMapConfirmationViewController = new BackToMapConfirmationViewController();
@@ -77,6 +78,8 @@ namespace Resanctified.Game
         public HelpAndOptionsMenuViewController GetInGameHelpAndOptionsView() => this.m_inGameHelpAndOptionsViewController;
 
         public OptionsMenuViewController GetInGameOptionsView() => this.m_inGameOptionsViewController;
+
+        public KeyboardMenuViewController GetInGameKeyboardView() => this.m_inGameKeyboardViewController;
 
         public LanguageMenuViewController GetInGameLanguageSelectionView() => this.m_inGameLanguageSelectionViewController;
 
@@ -193,6 +196,7 @@ namespace Resanctified.Game
             this.GetInGameHelpEONView().Initialize();
             this.GetInGameHelpAndOptionsView().Initialize(false);
             this.GetInGameOptionsView().Initialize(false);
+            this.GetInGameKeyboardView().Initialize(false);
             this.GetInGameLanguageSelectionView().Initialize(false);
             this.GetInGameBackToMapConfirmationView().Initialize();
             this.GetInGameBackToMainMenuConfirmationView().Initialize();
@@ -277,6 +281,7 @@ namespace Resanctified.Game
             this.GetInGameHelpEONView().Cleanup();
             this.GetInGameHelpAndOptionsView().Cleanup();
             this.GetInGameOptionsView().Cleanup();
+            this.GetInGameKeyboardView().Cleanup();
             this.GetInGameLanguageSelectionView().Cleanup();
             this.GetInGameBackToMapConfirmationView().Cleanup();
             this.GetInGameBackToMainMenuConfirmationView().Cleanup();

@@ -5,6 +5,7 @@ namespace Resanctified.Engine.Input
     /// <summary>
     /// The whole keyboard layout in one place. Gameplay keys press the same virtual pad buttons the
     /// on-screen controls press (see HudViewController.Action), so the hero logic sees no difference.
+    /// Help &amp; Options &gt; Keyboard (KeyboardMenuViewController) shows this layout to the player; keep it in step.
     /// </summary>
     public static class KeyBindings
     {

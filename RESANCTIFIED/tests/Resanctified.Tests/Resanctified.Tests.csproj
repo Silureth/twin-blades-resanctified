@@ -12,5 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Resanctified.Engine\Resanctified.Engine.csproj" />
+    <ProjectReference Include="..\..\src\Resanctified.Game\Resanctified.Game.csproj" />
   </ItemGroup>
 </Project>
