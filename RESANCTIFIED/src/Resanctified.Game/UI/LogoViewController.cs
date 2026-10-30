@@ -11,7 +11,11 @@ namespace Resanctified.Game.UI
         private const float LOGO_BG_HEIGHT = 320f;
         private Button m_buttonNext;
 
-        public LogoViewController() => this.m_buttonNext = new Button();
+        public LogoViewController()
+        {
+            this.m_buttonNext = new Button();
+            this.DefaultButton = this.m_buttonNext;
+        }
 
         public override void Initialize()
         {

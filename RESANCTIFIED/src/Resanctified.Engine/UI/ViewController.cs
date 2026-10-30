@@ -8,6 +8,12 @@ namespace Resanctified.Engine.UI
 
         public ViewController() => this.m_responders = new List<Responder>(64);
 
+        /// <summary>
+        /// The OK, Next or full-screen "tap to continue" button, or null. While the view takes touches, the
+        /// Validate key clicks it (see Application), so keyboard players never need the mouse to move on.
+        /// </summary>
+        public Button DefaultButton { get; protected set; }
+
         public override void Initialize()
         {
             base.Initialize();

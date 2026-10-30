@@ -27,6 +27,7 @@ namespace Resanctified.Game.UI
             this.Request = ExitRequest.None;
             this.m_buttonBack = new Button();
             this.m_buttonOk = new Button();
+            this.DefaultButton = this.m_buttonOk;
             QuadFactory.CreateAnchoredQuad(this.m_quadBack, 89f, 452f, 56f, 56f, 512f, 512f, Anchor.HCenter | Anchor.VCenter);
             QuadFactory.CreateAnchoredQuad(this.m_quadOk, 5f, 452f, 56f, 56f, 512f, 512f, Anchor.HCenter | Anchor.VCenter);
             QuadFactory.CreateAnchoredQuad(this.m_quadBackground, 0.0f, 0.0f, 480f, 320f, 512f, 512f, Anchor.Bottom);

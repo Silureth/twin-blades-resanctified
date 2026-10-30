@@ -39,6 +39,7 @@ namespace Resanctified.Game.UI
             this.m_epilogTexture = null;
             this.m_suicideEnding = false;
             this.m_buttonOk = new Button();
+            this.DefaultButton = this.m_buttonOk;
             this.m_textPairs = new List<OLPair>(20);
         }
 

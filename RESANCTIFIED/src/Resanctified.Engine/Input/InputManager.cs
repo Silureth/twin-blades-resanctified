@@ -76,6 +76,9 @@ namespace Resanctified.Engine.Input
 
         public bool IsPausePressed() => this.StdPause.IsActive();
 
+        // Alt+Enter is the desktop full-screen toggle, not a confirmation.
+        public bool IsValidatePressed() => this.StdValidate.IsActive() && !this.m_keyboard.IsKeyDown(Keys.LeftAlt) && !this.m_keyboard.IsKeyDown(Keys.RightAlt);
+
         public bool IsKeyDown(Keys key) => this.m_keyboard.IsKeyDown(key);
 
         /// <summary>Holds these keys down on top of the real keyboard from the next update on (automated checks).</summary>
@@ -128,6 +131,7 @@ namespace Resanctified.Engine.Input
             {
                 this.UpdateStdGameAction(this.StdBack);
                 this.UpdateStdGameAction(this.StdPause);
+                this.UpdateStdGameAction(this.StdValidate);
             }
             this.m_padButtonsPressed = 0;
             this.m_padButtonsReleased = 0;

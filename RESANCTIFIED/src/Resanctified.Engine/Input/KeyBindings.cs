@@ -42,6 +42,9 @@ namespace Resanctified.Engine.Input
         /// <summary>Stands in for shaking the phone, which breaks free from a zombie's grab.</summary>
         public const Keys Shake = Keys.Space;
 
+        /// <summary>Presses the OK or Next button of the screen on show, like a gamepad's A button (see Application).</summary>
+        public const Keys Validate = Keys.Enter;
+
         /// <summary>The virtual pad buttons held down through the gameplay keys.</summary>
         public static PSSButton GetGameplayButtons(KeyboardState keyboard)
         {
@@ -63,6 +66,8 @@ namespace Resanctified.Engine.Input
                     return Back;
                 case Buttons.Start:
                     return Pause;
+                case Buttons.A:
+                    return Validate;
                 default:
                     return Keys.None;
             }

@@ -43,6 +43,7 @@ namespace Resanctified.Game.UI
             this.m_timer = 0.0f;
             this.m_pressStartVisible = true;
             this.m_buttonStart = new Button();
+            this.DefaultButton = this.m_buttonStart;
         }
 
         public override void Initialize()

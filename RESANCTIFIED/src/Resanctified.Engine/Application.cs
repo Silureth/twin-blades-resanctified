@@ -88,6 +88,7 @@ namespace Resanctified.Engine
             InputManager.Instance.Update(this.m_elapsedTimeSinceLastFrame);
             AudioManager.Instance.Update();
             this.UpdateTouchEvents();
+            this.UpdateValidateEvents();
             base.Update(gameTime);
         }
 
@@ -149,6 +150,18 @@ namespace Resanctified.Engine
                 this.ShakeEnded();
             }
             this.m_shakeInputDown = down;
+        }
+
+        /// <summary>
+        /// The Validate key (Enter) clicks the default button of every view taking touches, right after the
+        /// touches themselves, so it behaves exactly like tapping that button.
+        /// </summary>
+        private void UpdateValidateEvents()
+        {
+            if (!InputManager.Instance.IsValidatePressed())
+                return;
+            for (int index = 0; index < this.m_responders.Count; ++index)
+                (this.m_responders[index] as ViewController)?.DefaultButton?.Click();
         }
 
         private void UpdateNativeTouchEvents()

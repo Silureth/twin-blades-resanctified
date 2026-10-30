@@ -31,6 +31,7 @@ namespace Resanctified.Game.UI
             this.m_texturedBackground = false;
             this.m_menuTexture = null;
             this.m_buttonOk = new Button();
+            this.DefaultButton = this.m_buttonOk;
             this.m_buttonCancel = new Button();
         }
 

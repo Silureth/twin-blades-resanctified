@@ -438,6 +438,7 @@ namespace Resanctified.Game.UI
                 this.m_nunUpgradeButtons[index] = new CircularButton();
             this.m_buttonBack = new Button();
             this.m_buttonNext = new Button();
+            this.DefaultButton = this.m_buttonNext;
             this.m_weaponLevels = new int[6];
             this.m_nunUpgradeLevels = new int[5];
             QuadFactory.CreateAnchoredQuad(this.m_backgroundQuad, 0.0f, 0.0f, 480f, 320f, 512f, 512f, Anchor.Left);

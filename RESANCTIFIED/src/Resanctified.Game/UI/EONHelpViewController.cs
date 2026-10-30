@@ -17,7 +17,11 @@ namespace Resanctified.Game.UI
         private VertexPositionColor[] m_quadBackgroundBlack = new VertexPositionColor[4];
         private Transform m_t = new Transform();
 
-        public EONHelpViewController() => this.m_buttonNext = new Button();
+        public EONHelpViewController()
+        {
+            this.m_buttonNext = new Button();
+            this.DefaultButton = this.m_buttonNext;
+        }
 
         public override void Initialize()
         {

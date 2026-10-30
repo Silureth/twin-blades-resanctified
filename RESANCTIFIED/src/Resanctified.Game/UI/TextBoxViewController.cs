@@ -134,6 +134,7 @@ namespace Resanctified.Game.UI
             this.m_currentPage = 0;
             this.m_numPages = 0;
             this.m_buttonTextzone = new Button();
+            this.DefaultButton = this.m_buttonTextzone;
             this.m_buttonLive = new Button();
             this.m_buttonDie = new Button();
             this.m_textPairs = new List<OLPair>(8);

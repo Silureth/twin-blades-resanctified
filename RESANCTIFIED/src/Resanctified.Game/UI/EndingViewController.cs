@@ -30,6 +30,7 @@ namespace Resanctified.Game.UI
         {
             this.m_endingTexture = null;
             this.m_buttonNext = new Button();
+            this.DefaultButton = this.m_buttonNext;
         }
 
         public override void Initialize()

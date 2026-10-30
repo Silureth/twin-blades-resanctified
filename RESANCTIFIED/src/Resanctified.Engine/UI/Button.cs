@@ -35,6 +35,21 @@ namespace Resanctified.Engine.UI
         {
         }
 
+        /// <summary>Does what a tap on the button does: a pressed then a released action, unless it is inactive or already held.</summary>
+        public void Click()
+        {
+            if (!this.m_active || this.m_touch != null || this.m_viewController == null)
+                return;
+            this.m_viewController.Action(this, new ButtonActionEvent()
+            {
+                buttonState = PSSButtonState.ButtonStatePressed
+            });
+            this.m_viewController.Action(this, new ButtonActionEvent()
+            {
+                buttonState = PSSButtonState.ButtonStateReleased
+            });
+        }
+
         public float GetWidth() => this.m_width;
 
         public float GetHeight() => this.m_height;

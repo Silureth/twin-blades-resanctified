@@ -47,6 +47,7 @@ namespace Resanctified.Game.UI
         public HelpViewController()
         {
             this.m_buttonNext = new Button();
+            this.DefaultButton = this.m_buttonNext;
             this.m_pageIndex = 0;
             this.m_menuTexture = null;
             this.m_texturedBackground = false;
