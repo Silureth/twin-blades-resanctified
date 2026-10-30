@@ -46,6 +46,12 @@ namespace Resanctified.Engine.Input
         /// <summary>Presses the OK or Next button of the screen on show, like a gamepad's A button (see Application).</summary>
         public const Keys Validate = Keys.Enter;
 
+        // Window keys, handled by the desktop host rather than the game (Alt+Validate also toggles full screen).
+        public const Keys FullScreen = Keys.F11;
+        public const Keys Screenshot = Keys.F12;
+        public const Keys ToggleHdTextures = Keys.F9;
+        public const Keys ToggleResolution = Keys.F10;
+
         /// <summary>The virtual pad buttons held down through the gameplay keys.</summary>
         public static PSSButton GetGameplayButtons(KeyboardState keyboard)
         {

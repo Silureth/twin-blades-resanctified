@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Resanctified.Engine.Graphics;
+using Resanctified.Engine.Input;
 using Resanctified.Engine.IO;
 using Resanctified.Engine.Resources;
 
@@ -62,13 +63,13 @@ namespace Resanctified.Desktop
         {
             KeyboardState keyboard = Keyboard.GetState();
             bool alt = keyboard.IsKeyDown(Keys.LeftAlt) || keyboard.IsKeyDown(Keys.RightAlt);
-            if (this.IsKeyPressed(keyboard, Keys.F11) || alt && this.IsKeyPressed(keyboard, Keys.Enter))
+            if (this.IsKeyPressed(keyboard, KeyBindings.FullScreen) || alt && this.IsKeyPressed(keyboard, KeyBindings.Validate))
                 this.ToggleFullScreen();
-            if (this.IsKeyPressed(keyboard, Keys.F9))
+            if (this.IsKeyPressed(keyboard, KeyBindings.ToggleHdTextures))
                 this.ToggleTextureSet();
-            if (this.IsKeyPressed(keyboard, Keys.F10))
+            if (this.IsKeyPressed(keyboard, KeyBindings.ToggleResolution))
                 this.ToggleRenderScale();
-            if (this.IsKeyPressed(keyboard, Keys.F12))
+            if (this.IsKeyPressed(keyboard, KeyBindings.Screenshot))
             {
                 // Next to the save files: the working directory may be read-only or inside the source tree.
                 string path = Path.Combine(FileManager.Instance.BaseDirectory, SCREENSHOT_DIRECTORY, "screenshot_" + DateTime.Now.ToString("yyyyMMdd_HHmmss_fff") + ".png");

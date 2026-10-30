@@ -37,7 +37,7 @@ namespace Resanctified.Tests
         [Fact]
         public void NonGameplayKeysPressNoButton()
         {
-            KeyboardState keyboard = new KeyboardState(KeyBindings.Back, KeyBindings.Pause, KeyBindings.Shake, KeyBindings.Validate, Keys.F12);
+            KeyboardState keyboard = new KeyboardState(KeyBindings.Back, KeyBindings.Pause, KeyBindings.Shake, KeyBindings.Validate, KeyBindings.Screenshot);
             Assert.Equal(PSSButton.ButtonNone, KeyBindings.GetGameplayButtons(keyboard));
         }
 

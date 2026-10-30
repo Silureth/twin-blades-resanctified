@@ -55,14 +55,14 @@ namespace Resanctified.Game.UI
             public Keys[][] KeyGroups { get; }
         }
 
-        // Mirrors KeyBindings; F9-F12 are the window keys handled by the desktop host.
+        // Mirrors KeyBindings.
         private static readonly Row[] GAME_ROWS =
         {
             new Row(GameLocalisation.TextId.Keyboard_Move, new[] { Keys.A, Keys.D }, new[] { Keys.Left, Keys.Right }),
             new Row(GameLocalisation.TextId.Keyboard_Jump, new[] { Keys.W }, new[] { Keys.Up }),
             new Row(GameLocalisation.TextId.Help_Slash, new[] { Keys.LeftControl }),
             new Row(GameLocalisation.TextId.Help_Fire, new[] { Keys.LeftShift }),
-            new Row(GameLocalisation.TextId.Keyboard_ChangeGun, new[] { Keys.Q, Keys.E }),
+            new Row(GameLocalisation.TextId.Keyboard_ChangeGun, new[] { Keys.Q, Keys.E }, new[] { Keys.Tab }),
             new Row(GameLocalisation.TextId.Keyboard_BreakFree, new[] { KeyBindings.Shake }),
         };
 
@@ -71,10 +71,10 @@ namespace Resanctified.Game.UI
             new Row(GameLocalisation.TextId.Ok, new[] { KeyBindings.Validate }),
             new Row(GameLocalisation.TextId.Back, new[] { KeyBindings.Back }),
             new Row(GameLocalisation.TextId.PauseGame, new[] { KeyBindings.Pause }),
-            new Row(GameLocalisation.TextId.Keyboard_FullScreen, new[] { Keys.F11 }),
-            new Row(GameLocalisation.TextId.Keyboard_Screenshot, new[] { Keys.F12 }),
-            new Row(GameLocalisation.TextId.Keyboard_HDTextures, new[] { Keys.F9 }),
-            new Row(GameLocalisation.TextId.Keyboard_Resolution, new[] { Keys.F10 }),
+            new Row(GameLocalisation.TextId.Keyboard_FullScreen, new[] { KeyBindings.FullScreen }),
+            new Row(GameLocalisation.TextId.Keyboard_Screenshot, new[] { KeyBindings.Screenshot }),
+            new Row(GameLocalisation.TextId.Keyboard_HDTextures, new[] { KeyBindings.ToggleHdTextures }),
+            new Row(GameLocalisation.TextId.Keyboard_Resolution, new[] { KeyBindings.ToggleResolution }),
         };
 
         private VertexPositionColor[] m_quadBackgroundBlack = new VertexPositionColor[4];
