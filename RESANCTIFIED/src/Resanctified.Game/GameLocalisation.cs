@@ -377,6 +377,7 @@ namespace Resanctified.Game
             this.m_localisationArray[325] = "Space";
             this.m_localisationArray[326] = "Enter";
             this.m_localisationArray[327] = "Esc";
+            this.m_localisationArray[328] = "Unofficial preservation port, not affiliated with Press Start Studio.";
         }
 
         private void Initialize_French()
@@ -701,6 +702,7 @@ namespace Resanctified.Game
             this.m_localisationArray[325] = "Espace";
             this.m_localisationArray[326] = "Entrée";
             this.m_localisationArray[327] = "Échap";
+            this.m_localisationArray[328] = "Portage de préservation non officiel, non affilié à Press Start Studio.";
         }
 
         private void Initialize_Italian()
@@ -1025,6 +1027,7 @@ namespace Resanctified.Game
             this.m_localisationArray[325] = "Spazio";
             this.m_localisationArray[326] = "Invio";
             this.m_localisationArray[327] = "Esc";
+            this.m_localisationArray[328] = "Port di conservazione non ufficiale, non affiliato a Press Start Studio.";
         }
 
         private void Initialize_German()
@@ -1349,6 +1352,7 @@ namespace Resanctified.Game
             this.m_localisationArray[325] = "Leertaste";
             this.m_localisationArray[326] = "Enter";
             this.m_localisationArray[327] = "Esc";
+            this.m_localisationArray[328] = "Inoffizieller Erhaltungsport, nicht mit Press Start Studio verbunden.";
         }
 
         private void Initialize_Spanish()
@@ -1675,6 +1679,7 @@ namespace Resanctified.Game
             this.m_localisationArray[325] = "Espacio";
             this.m_localisationArray[326] = "Intro";
             this.m_localisationArray[327] = "Esc";
+            this.m_localisationArray[328] = "Port de preservación no oficial, sin relación con Press Start Studio.";
         }
 
         public enum LanguageId
@@ -2020,6 +2025,8 @@ namespace Resanctified.Game
             Key_Space,
             Key_Enter,
             Key_Esc,
+            // About screen: this port is not the original release.
+            UnofficialPort,
             ArraySize,
         }
     }

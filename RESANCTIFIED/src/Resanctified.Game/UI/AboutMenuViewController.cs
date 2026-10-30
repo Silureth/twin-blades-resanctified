@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Resanctified.Engine.Graphics;
@@ -20,6 +21,9 @@ namespace Resanctified.Game.UI
         private const float TEXT_2_Y = 150f;
         private const float TEXT_3_Y = 120f;
         private const float TEXT_4_Y = 90f;
+        private const float NOTICE_TOP_Y = 58f;
+        // Small enough that the longest translation stays clear of the Back button on the left.
+        private const float NOTICE_SCALE = 0.7f;
         private VertexPositionTexture[] m_quadBackground = new VertexPositionTexture[4];
         private VertexPositionTexture[] m_quadBack = new VertexPositionTexture[4];
         private Engine.Resources.Texture m_menuTexture;
@@ -85,6 +89,12 @@ namespace Resanctified.Game.UI
             instance.DrawString(font, this.m_t, 4, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.PSSWeb));
             this.m_t.SetPosition(240f, 90f);
             instance.DrawString(font, this.m_t, 4, GameConstant.MENU_TEXT_COLOR, GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.PSSSupport));
+            // DrawString's anchors measure the unscaled string, so the smaller notice is centered by hand.
+            string notice = GameLocalisation.GetInstance().GetString(GameLocalisation.TextId.UnofficialPort);
+            this.m_t.SetScale(NOTICE_SCALE);
+            this.m_t.SetPosition((float)Math.Floor(TEXT_X - font.GetStringWidth(notice) * NOTICE_SCALE * 0.5f), NOTICE_TOP_Y);
+            instance.DrawString(font, this.m_t, 0, GameConstant.MENU_TEXT_COLOR, notice);
+            this.m_t.SetScale(1f);
             instance.End2DMode();
         }
 
