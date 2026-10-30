@@ -5,7 +5,7 @@ that resolution. The game loads the pack when HD is on and falls back to the `.x
 
 | Folder | Contents | In git |
 |---|---|---|
-| `art/original/<key>.png` | The original textures as editable PNGs: straight alpha, same size as the `.xnb` | yes |
+| `art/original/<key>.png` | The original textures as editable PNGs: straight alpha, same size as the `.xnb` | no (regenerable from the `.xnb` files) |
 | `art/upscaled-x4/<key>.png` | Raw 4x Real-ESRGAN output | no (regenerable, about 1 GB) |
 | `Content/hd/<key>.png` + `manifest.json` | The shipped pack: exactly 2x, straight alpha | yes |
 
@@ -50,9 +50,9 @@ The pack was made with torch 2.11.0+cu128, spandrel 0.4.2 and an RTX 3080 Ti.
    address the texture with normalized coordinates.
 2. Run `upscale.py <key>`, then `build_pack.py`.
 
-Don't rerun `export_textures.py` after editing: it overwrites `art/original` from the `.xnb` files. The
-`.xnb` files themselves don't change. If an edited original should also be used in non-HD mode, it has to
-be converted back to `.xnb` separately.
+`art/` is not in git, so keep a copy of edited originals elsewhere. Don't rerun `export_textures.py` after
+editing: it overwrites `art/original` from the `.xnb` files. The `.xnb` files themselves don't change. If an
+edited original should also be used in non-HD mode, it has to be converted back to `.xnb` separately.
 
 ## How the textures are made
 
